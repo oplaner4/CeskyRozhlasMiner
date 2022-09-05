@@ -1,0 +1,75 @@
+﻿<Window x:Class="RadiozurnalMiner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:local="clr-namespace:RadiozurnalMiner"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        Icon="Assets/Icon/favicon.ico"
+>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="20"></RowDefinition>
+      <RowDefinition Height="30"></RowDefinition>
+      <RowDefinition Height="*"></RowDefinition>
+      <RowDefinition Height="25"></RowDefinition>
+    </Grid.RowDefinitions>
+    <Menu Grid.Row="0">
+      <MenuItem Header="File">
+        <MenuItem Header="Save" Name="FileSave" Click="FileSave_Click"></MenuItem>
+        <MenuItem Header="Open" Name="FileOpen" Click="FileOpen_Click"></MenuItem>
+        <Separator></Separator>
+        <MenuItem Header="Exit" Name="Exit" Click="Exit_Click"></MenuItem>
+      </MenuItem>
+      <MenuItem Header="Settings">
+        <MenuItem Header="Edit" Name="EditSettings" Click="EditSettings_Click"></MenuItem>
+      </MenuItem>
+      <MenuItem Header="Playlist">
+        <MenuItem Header="Leader board" Name="LeaderBoard" Click="LeaderBoard_Click"></MenuItem>
+      </MenuItem>
+      <MenuItem Header="About">
+        <MenuItem Header="Website" Click="AboutWebsite_Click"></MenuItem>
+      </MenuItem>
+    </Menu>
+    <ToolBar Grid.Row="1">
+      <Button Click="FileSave_Click" Margin="0 0 4 0">Save file</Button>
+      <Separator Width="1"></Separator>
+      <Button Click="EditSettings_Click" Margin="0 0 4 0">
+        Edit settings
+      </Button>
+      <Separator Width="1"></Separator>
+      <Button Click="LeaderBoard_Click" Margin="0 0 4 0">
+        See leader board
+      </Button>
+      <Separator Width="1"></Separator>
+      <TextBlock FontWeight="Bold" Name="FetchDateRange" Margin="10 0 10 0" VerticalAlignment="Center">Today</TextBlock>
+      <Button Click="Fetch_Click" Name="FetchBtn" Margin="0 0 4 0">
+        Fetch again
+      </Button>
+      <fa:ImageAwesome Name="FetchSpinner" Icon="Spinner" Spin="True" Height="15" Width="15" Visibility="Hidden" />
+    </ToolBar>
+    <DataGrid Name="DataList" Grid.Row="2"
+              AutoGenerateColumns="False"
+              ItemsSource="{Binding}"
+              BeginningEdit="DataListItem_Click">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="280"></DataGridTextColumn>
+        <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" Width="230"></DataGridTextColumn>
+        <DataGridTextColumn Header="Station" Binding="{Binding SourceStation}" Width="100"></DataGridTextColumn>
+        <DataGridTextColumn Header="At" Binding="{Binding PlayedAt, StringFormat='HH:mm, dd.MM.yyyy'}" Width="100"></DataGridTextColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+    <StatusBar Grid.Row="3">
+      <TextBlock>Songs</TextBlock>
+      <TextBlock FontWeight="Bold" Name="SongsFetched">0</TextBlock>
+      <TextBlock>Most played</TextBlock>
+      <TextBlock FontWeight="Bold" Name="MostPlayed">-</TextBlock>
+      <TextBlock>Most frequent artist</TextBlock>
+      <TextBlock FontWeight="Bold" Name="MostFrequentArtist">-</TextBlock>
+      <TextBlock>Last fetched</TextBlock>
+      <TextBlock FontWeight="Bold" Name="LastFetched">-</TextBlock>
+    </StatusBar>
+  </Grid>
+</Window>

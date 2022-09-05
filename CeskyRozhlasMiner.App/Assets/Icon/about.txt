@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: Kolker Brush
+- Font Author: Copyright 2004 The Kolker Brush Project Authors (https://github.com/googlefonts/kolker-brush)
+- Font Source: http://fonts.gstatic.com/s/kolkerbrush/v3/iJWDBXWRZjfKWdvmzwvvog3-7KJ6x8qNUQ.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))

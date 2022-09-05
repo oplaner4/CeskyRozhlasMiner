@@ -1,0 +1,36 @@
+﻿<Window x:Class="RadiozurnalMiner.Dialogs.LeaderBoardDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RadiozurnalMiner.Dialogs"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        Title="LeaderBoardDialog" Height="350" Width="500">
+    <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="40"></RowDefinition>
+      <RowDefinition Height="*"></RowDefinition>
+      <RowDefinition Height="40"></RowDefinition>
+    </Grid.RowDefinitions>
+    <StackPanel Orientation="Vertical" Grid.Row="0">
+      <StackPanel Margin="10" Orientation="Horizontal">
+        <TextBlock VerticalAlignment="Center">Take songs</TextBlock>
+        <Separator Width="10" Visibility="Hidden"></Separator>
+        <TextBox Width="40" Name="TakeSongs" Margin="0 0 10 0"></TextBox>
+        <Button Name="TakeSongsSetBtn" Click="TakeSongsSetBtn_Click" FontSize="13" Padding="10 0">Set</Button>
+      </StackPanel>
+    </StackPanel>
+    <DataGrid Name="DataList" AutoGenerateColumns="False" ItemsSource="{Binding}" Grid.Row="1" BeginningEdit="DataList_BeginningEdit">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Song" Binding="{Binding Key}"></DataGridTextColumn>
+        <DataGridTextColumn Header="Played count" Binding="{Binding Value}"></DataGridTextColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Grid.Row="2">
+      <StackPanel Margin="10" Orientation="Horizontal">
+        <Button Name="CancelBtn" Click="BackBtn_Click" FontSize="13" Padding="10 0">Back</Button>
+      </StackPanel>
+    </StackPanel>
+  </Grid>
+</Window>
