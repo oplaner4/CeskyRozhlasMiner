@@ -29,9 +29,6 @@
       <MenuItem Header="Playlist">
         <MenuItem Header="Leader board" Name="LeaderBoard" Click="LeaderBoard_Click"></MenuItem>
       </MenuItem>
-      <MenuItem Header="About">
-        <MenuItem Header="Website" Click="AboutWebsite_Click"></MenuItem>
-      </MenuItem>
     </Menu>
     <ToolBar Grid.Row="1">
       <Button Click="FileSave_Click" Margin="0 0 4 0">Save file</Button>

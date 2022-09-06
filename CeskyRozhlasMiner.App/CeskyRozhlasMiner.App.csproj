@@ -7,6 +7,13 @@
     <Nullable>disable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Assets\Icon\favicon.ico</ApplicationIcon>
+    <RepositoryUrl>https://github.com/oplaner4/CeskyRozhlasMiner.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>favicon-32x32.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/oplaner4/CeskyRozhlasMiner</PackageProjectUrl>
+    <Copyright>Ondrej Planer (oplaner4@gmail.com)</Copyright>
+    <Title>Cesky Rozhlas miner</Title>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +30,35 @@
 
   <ItemGroup>
     <Folder Include="Diagnostics\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\Icon\favicon-32x32.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

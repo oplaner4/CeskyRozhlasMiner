@@ -198,11 +198,6 @@ namespace RadiozurnalMiner
             dialog.ShowDialog();
         }
 
-        private void AboutWebsite_Click(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("");
-        }
-
         void Timer_Tick(object sender, EventArgs e)
         {
             Fetch();

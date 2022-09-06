@@ -15,5 +15,7 @@ namespace RadiozurnalMiner
             string.Format("*.{0}|*.{0}|All files (*.*)|*.*", "csv");
 
         public static readonly TimeSpan AutoFetchInterval = TimeSpan.FromMinutes(5);
+
+        public const string SourceRepository = "https://github.com/oplaner4/CeskyRozhlasMiner";
     }
 }
