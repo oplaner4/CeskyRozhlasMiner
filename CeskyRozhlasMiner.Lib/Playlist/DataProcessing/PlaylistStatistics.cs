@@ -10,6 +10,12 @@ namespace RadiozurnalMiner.Lib.Playlist.DataProcessing
     {
         private readonly IEnumerable<PlaylistSong> _songs;
 
+        /// <summary>
+        /// Initializes class
+        /// </summary>
+        /// <param name="songs">Source data for the statistics. At
+        /// least one song is expected.</param>
+        /// <exception cref="ArgumentNullException">Songs enumerable was null</exception>
         public PlaylistStatistics(IEnumerable<PlaylistSong> songs)
         {
             if (songs == null || !songs.Any())
