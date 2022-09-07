@@ -1,7 +1,7 @@
 # CeskyRozhlasMiner
 Free, easy to use, .NET desktop application for analysing playlists from Cesky Rozhlas api.
 
-Current stable version: **1.0**
+Current stable version: **1.0.2**
 
 ### Features
 CeskyRozhlasMiner supports:
