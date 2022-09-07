@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:RadiozurnalMiner.Dialogs"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Title="SettingsDialog" Height="500" Width="510">
+        SizeToContent="Height"
+        Title="SettingsDialog" Height="auto" Width="510">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="*"></RowDefinition>

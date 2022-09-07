@@ -48,7 +48,7 @@ namespace RadiozurnalMiner
 
         private void UpdateUi()
         {
-            FetchBtn.Foreground = ShouldRefetch ? Brushes.DarkGreen : Brushes.Black;
+            FetchBtn.Foreground = ShouldRefetch ? FetchProgress.Foreground : Brushes.Black;
 
             var filteredSongs = Songs.Where(song =>
                 SettingsModel.MatchesCriteria(song)).OrderByDescending(
@@ -103,10 +103,10 @@ namespace RadiozurnalMiner
 
         private void Fetch_Click(object sender, RoutedEventArgs e)
         {
-            Fetch();
+            Fetch(true);
         }
 
-        private async void Fetch()
+        private async void Fetch(bool inform = false)
         {
             FetchBtn.IsEnabled = false;
             ShouldRefetch = false;
@@ -114,16 +114,28 @@ namespace RadiozurnalMiner
 
             Songs.Clear();
 
-            await foreach (PlaylistSong song in Miner.GetSongs())
+            await foreach (PlaylistSong song in Miner.GetSongs(percent =>
+            {
+                FetchProgress.Value = percent;
+            }))
             {
                 Songs.Add(song);
             }
 
+            FetchProgress.Value = 0;
             LastFetched.Text = DateTime.Now.ToString();
             UpdateUi();
 
             FetchBtn.IsEnabled = true;
             FetchSpinner.Visibility = Visibility.Hidden;
+
+            if (inform)
+            {
+                new MessageDialog("Done", "Successfully fetched")
+                {
+                    Owner = this,
+                }.ShowDialog();
+            }
         }
 
         private void EditSettings_Click(object sender, RoutedEventArgs e)

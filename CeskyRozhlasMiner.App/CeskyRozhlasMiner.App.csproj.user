@@ -18,6 +18,9 @@
     <Page Update="Dialogs\LeaderBoardDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Dialogs\MessageDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Dialogs\SettingsDialog.xaml">
       <SubType>Designer</SubType>
     </Page>

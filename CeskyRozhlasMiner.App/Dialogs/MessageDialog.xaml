@@ -1,0 +1,26 @@
+﻿<Window x:Class="RadiozurnalMiner.Dialogs.MessageDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RadiozurnalMiner.Dialogs"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="WidthAndHeight"
+        Title="MessageDialog" Height="auto" MinWidth="350" MaxWidth="500">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"></RowDefinition>
+      <RowDefinition Height="40"></RowDefinition>
+    </Grid.RowDefinitions>
+    <StackPanel Orientation="Vertical" Grid.Row="0" Margin="10">
+      <TextBlock TextAlignment="Center" TextWrapping="Wrap" Name="MessageBlock" FontSize="14">Text</TextBlock>
+    </StackPanel>
+    <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Right">
+      <StackPanel Margin="10" Orientation="Horizontal">
+        <Button Name="OkBtn" Click="OkBtn_Click" FontSize="13" Padding="10 0">Ok</Button>
+        <Button Name="CancelBtn" Click="CancelBtn_Click" FontSize="13" Padding="10 0" Width="0">Cancel</Button>
+      </StackPanel>
+    </StackPanel>
+  </Grid>
+</Window>

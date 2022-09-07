@@ -14,7 +14,8 @@
       <RowDefinition Height="20"></RowDefinition>
       <RowDefinition Height="30"></RowDefinition>
       <RowDefinition Height="*"></RowDefinition>
-      <RowDefinition Height="25"></RowDefinition>
+      <RowDefinition Height="10"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
     </Grid.RowDefinitions>
     <Menu Grid.Row="0">
       <MenuItem Header="File">
@@ -58,15 +59,51 @@
         <DataGridTextColumn Header="At" Binding="{Binding PlayedAt, StringFormat='HH:mm, dd.MM.yyyy'}" Width="100"></DataGridTextColumn>
       </DataGrid.Columns>
     </DataGrid>
-    <StatusBar Grid.Row="3">
-      <TextBlock>Songs</TextBlock>
-      <TextBlock FontWeight="Bold" Name="SongsFetched">0</TextBlock>
-      <TextBlock>Most played</TextBlock>
-      <TextBlock FontWeight="Bold" Name="MostPlayed">-</TextBlock>
-      <TextBlock>Most frequent artist</TextBlock>
-      <TextBlock FontWeight="Bold" Name="MostFrequentArtist">-</TextBlock>
-      <TextBlock>Last fetched</TextBlock>
-      <TextBlock FontWeight="Bold" Name="LastFetched">-</TextBlock>
+
+    <ProgressBar Name="FetchProgress" Grid.Row="3" Foreground="#ed2e38"></ProgressBar>
+    
+    <StatusBar Grid.Row="4" Padding="10 5">
+      <StatusBar.ItemsPanel>
+        <ItemsPanelTemplate>
+          <Grid >
+            <Grid.RowDefinitions>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="20" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+          </Grid>
+        </ItemsPanelTemplate>
+      </StatusBar.ItemsPanel>
+      <StatusBarItem Grid.Row="0" Grid.Column="0">
+        <TextBlock>
+          <TextBlock>Songs:</TextBlock>
+          <TextBlock FontWeight="Bold" Name="SongsFetched">0</TextBlock>
+        </TextBlock>
+      </StatusBarItem>
+      <Separator Grid.Row="0" Grid.Column="1" Visibility="Hidden" />
+      <StatusBarItem Grid.Row="0" Grid.Column="2">
+        <TextBlock>
+          <TextBlock>Most played:</TextBlock>
+          <TextBlock FontWeight="Bold" Name="MostPlayed">-</TextBlock>
+        </TextBlock>
+      </StatusBarItem>
+      <StatusBarItem Grid.Row="1" Grid.Column="0">
+        <TextBlock>
+          <TextBlock>Last fetched:</TextBlock>
+          <TextBlock FontWeight="Bold" Name="LastFetched">-</TextBlock>
+        </TextBlock>
+      </StatusBarItem>
+      <Separator Grid.Row="1" Grid.Column="1" Visibility="Hidden" />
+      <StatusBarItem Grid.Row="1" Grid.Column="2">
+        <TextBlock>
+          <TextBlock>Most frequent artist:</TextBlock>
+          <TextBlock FontWeight="Bold" Name="MostFrequentArtist">-</TextBlock>
+        </TextBlock>
+      </StatusBarItem>
     </StatusBar>
   </Grid>
 </Window>

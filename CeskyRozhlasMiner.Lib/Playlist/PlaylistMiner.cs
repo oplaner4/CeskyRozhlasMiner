@@ -112,33 +112,46 @@ namespace RadiozurnalMiner.Lib.Playlist
             return this;
         }
 
-        public async IAsyncEnumerable<PlaylistSong> GetSongs()
+        public async IAsyncEnumerable<PlaylistSong> GetSongs(Action<int> onProgress)
         {
-            DateOnly inspected = From;
-            while (inspected <= To)
+            int stationOrder = 1;
+
+            foreach (RozhlasStation station in SourceStations)
             {
-                await foreach (PlaylistSong song in GetSongsInDay(inspected))
+                DateOnly inspected = From;
+
+                while (inspected <= To)
                 {
-                    yield return song;
+                    await foreach (PlaylistSong song in GetSongsInDayForStation(
+                        inspected, station, stationOrder, onProgress))
+                    {
+                        yield return song;
+                    }
+
+                    inspected = inspected.AddDays(1);
                 }
 
-                inspected = inspected.AddDays(1);
+                stationOrder++;
             }
         }
 
-        private async IAsyncEnumerable<PlaylistSong> GetSongsInDay(DateOnly date)
+        public static string GetPlaylistUri(DateOnly date, RozhlasStation station)
         {
-            foreach (RozhlasStation station in SourceStations)
+            return new UriBuilder(Settings.RozhlasApi)
             {
-                await foreach (PlaylistSong song in GetSongsInDayForStation(date, station))
-                {
-                    yield return song;
-                }
-            }
+                Path = Path.Combine(
+                Settings.RozhlasApiPlaylistDayPath,
+                    date.Year.ToString(),
+                    date.Month.ToString("D2"),
+                date.Day.ToString("D2"),
+                    Settings.RozhlasApiStation[station] +
+                        Settings.RozhlasApiPlaylistJsonExtension
+                )
+            }.ToString();
         }
 
         private async IAsyncEnumerable<PlaylistSong> GetSongsInDayForStation(
-            DateOnly date, RozhlasStation station)
+            DateOnly date, RozhlasStation station, int stationOrder, Action<int> onProgress)
         {
             HttpResponseMessage response = null;
 
@@ -185,24 +198,23 @@ namespace RadiozurnalMiner.Lib.Playlist
                     yield return song;
                 }
             }
+
+            onProgress(CountPercentDone(date, stationOrder));
         }
 
-        public static string GetPlaylistUri(DateOnly date, RozhlasStation station)
+        private int CountPercentDone(DateOnly date, int stationOrder)
         {
-            return new UriBuilder(Settings.RozhlasApi)
-            {
-                Path = Path.Combine(
-                Settings.RozhlasApiPlaylistDayPath,
-                    date.Year.ToString(),
-                    date.Month.ToString("D2"),
-                date.Day.ToString("D2"),
-                    Settings.RozhlasApiStation[station] +
-                        Settings.RozhlasApiPlaylistJsonExtension
-                )
-            }.ToString();
+            int daysTotal = To.DayNumber - From.DayNumber + 1;
+            int daysUntilDate = date.DayNumber + 1 - From.DayNumber;
+
+            double daysDone = (stationOrder - 1) * daysTotal + daysUntilDate;
+
+            double done = daysDone;
+            double total = SourceStations.Count * daysTotal;
+            return (int)Math.Round(100 * done / total);
         }
 
-        private void SetSourceAllStations()
+        public void SetSourceAllStations()
         {
             SourceStations = new();
 
