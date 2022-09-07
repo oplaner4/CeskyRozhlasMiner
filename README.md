@@ -3,6 +3,8 @@ Free, easy to use, .NET desktop application for analysing playlists from Cesky R
 
 Current stable version: **1.0.2**
 
+![alt text](https://raw.githubusercontent.com/oplaner4/CeskyRozhlasMiner/master/CeskyRozhlasMiner.App/preview.png)
+
 ### Features
 CeskyRozhlasMiner supports:
 * See playlists of most Cesky Rozhlas stations
