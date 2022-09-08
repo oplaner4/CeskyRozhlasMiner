@@ -40,7 +40,7 @@ namespace RadiozurnalMiner.Lib.Playlist.DataProcessing
         }
 
         /// <summary>
-        /// Gets the artist whose songs were played the most times.
+        /// Gets the artist whose tracks were played the most times.
         /// In case that more artists match these criteria,
         /// the first is considered the most frequent.
         /// </summary>
