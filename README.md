@@ -1,22 +1,23 @@
 # CeskyRozhlasMiner
 Free, easy to use, .NET desktop application for analysing playlists from Cesky Rozhlas api.
 
-Current stable version: **1.0.2**
+Current stable version: **1.1.0**
 
 ![alt text](https://raw.githubusercontent.com/oplaner4/CeskyRozhlasMiner/master/CeskyRozhlasMiner.App/preview.png)
 
 ### Features
 CeskyRozhlasMiner supports:
-* See playlists of most Cesky Rozhlas stations
-* Set specific date range
-* Set source stations
+* Playlists of most Cesky Rozhlas stations
+* Ability to set specific date range
+* Selection of source stations
 * Filter options
+* Currently playing songs
 * See leader board (hit-parade)
 * Data processing / statistics
 
 ### Dependencies
-* FamilyTreeTools works on windows 7 or higher.
-* Net framework **6.0**
+* FamilyTreeTools works on **windows 7** or **higher**.
+* Net framework **6.0** (runtime)
 
 ### License
 CeskyRozhlasMiner may be freely distributed under the MIT license.

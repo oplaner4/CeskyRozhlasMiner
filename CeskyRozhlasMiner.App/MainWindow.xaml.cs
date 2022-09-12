@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -20,44 +21,43 @@ namespace RadiozurnalMiner
     /// </summary>
     public partial class MainWindow : Window
     {
-        public PlaylistMiner Miner { get; private set; }
-        public ObservableCollection<PlaylistSong> Songs { get; private set; }
-
-        public SettingsDialogModel SettingsModel { get; private set; }
-
-        public bool ShouldRefetch { get; private set; }
+        private DispatcherTimer _autoFetchTimer;
+        private DispatcherTimer _songPlayingNowTimer;
+        private PlaylistMiner _miner;
+        private readonly ObservableCollection<PlaylistSong> _songs;
+        private readonly List<PlaylistSong> _songsPlayingNow;
+        private IEnumerator<PlaylistSong> _songsPlayingNowEnumerator;
+        private SettingsDialogModel _settingsModel;
+        private bool _shouldRefetch;
 
         public MainWindow()
         {
             InitializeComponent();
             Title = App.Title;
-            Miner = new();
-            SettingsModel = new(Miner);
-            Songs = new();
-
-            DispatcherTimer timer = new()
-            {
-                Interval = App.AutoFetchInterval,
-            };
-
-            timer.Tick += Timer_Tick;
-            timer.Start();
-
-            Fetch();
+            _miner = new();
+            _settingsModel = new(_miner);
+            _songs = new();
+            _songsPlayingNow = new List<PlaylistSong>();
+            _songsPlayingNowEnumerator = _songsPlayingNow.GetEnumerator();
+            FetchSongs();
+            FetchSongsPlayingNow();
         }
 
         private void UpdateUi()
         {
-            FetchBtn.Foreground = ShouldRefetch ? FetchProgress.Foreground : Brushes.Black;
+            FetchBtn.Foreground = _shouldRefetch ? FetchProgress.Foreground : Brushes.Black;
 
-            var filteredSongs = Songs.Where(song =>
-                SettingsModel.MatchesCriteria(song)).OrderByDescending(
+            var filteredSongs = _songs.Where(song =>
+                _settingsModel.MatchesCriteria(song)).OrderByDescending(
                     song => song.PlayedAt);
 
             DataList.ItemsSource = filteredSongs;
 
+            _songsPlayingNowEnumerator = _songsPlayingNow.Where(song =>
+                _settingsModel.MatchesCriteria(song)).GetEnumerator();
+
             SongsFetched.Text = filteredSongs.Count().ToString();
-            FetchDateRange.Text = SettingsModel.ToString();
+            FetchDateRange.Text = _settingsModel.ToString();
             MostPlayed.Text = "-";
             MostFrequentArtist.Text = "-";
 
@@ -76,14 +76,14 @@ namespace RadiozurnalMiner
 
         private void LoadData(string fileName)
         {
-            Songs.Clear();
+            _songs.Clear();
 
             using (StreamReader reader = new(fileName))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    Songs.Add(PlaylistSong.FromCsvRow(line, Settings.CsvSeparator));
+                    _songs.Add(PlaylistSong.FromCsvRow(line, Settings.CsvSeparator));
                 }
             }
 
@@ -94,7 +94,7 @@ namespace RadiozurnalMiner
         {
             using (StreamWriter writer = new(fileName))
             {
-                foreach (PlaylistSong song in Songs)
+                foreach (PlaylistSong song in _songs)
                 {
                     writer.WriteLine(song.ToCsvRow(Settings.CsvSeparator));
                 }
@@ -103,23 +103,23 @@ namespace RadiozurnalMiner
 
         private void Fetch_Click(object sender, RoutedEventArgs e)
         {
-            Fetch(true);
+            FetchSongs(true);
         }
 
-        private async void Fetch(bool inform = false)
+        private async void FetchSongs(bool inform = false)
         {
             FetchBtn.IsEnabled = false;
-            ShouldRefetch = false;
+            _shouldRefetch = false;
             FetchSpinner.Visibility = Visibility.Visible;
 
-            Songs.Clear();
+            _songs.Clear();
 
-            await foreach (PlaylistSong song in Miner.GetSongs(percent =>
+            await foreach (PlaylistSong song in _miner.GetSongs(percent =>
             {
                 FetchProgress.Value = percent;
             }))
             {
-                Songs.Add(song);
+                _songs.Add(song);
             }
 
             FetchProgress.Value = 0;
@@ -128,6 +128,8 @@ namespace RadiozurnalMiner
 
             FetchBtn.IsEnabled = true;
             FetchSpinner.Visibility = Visibility.Hidden;
+
+            FetchSongsPlayingNow();
 
             if (inform)
             {
@@ -138,6 +140,85 @@ namespace RadiozurnalMiner
             }
         }
 
+        private async void FetchSongsPlayingNow()
+        {
+            if (_songPlayingNowTimer != null)
+            {
+                _songPlayingNowTimer.Stop();
+            }
+
+            if (_autoFetchTimer != null)
+            {
+                _autoFetchTimer.Stop();
+            }
+
+            _songsPlayingNow.Clear();
+
+            await foreach (PlaylistSong song in _miner.GetSongsNow())
+            {
+                _songsPlayingNow.Add(song);
+            }
+
+            UpdateUi();
+
+            SetNextSongPlayingNow();
+            SetSongPlayingNowTimer();
+
+            SetAutoFetchTimer();
+        }
+
+        private void SetAutoFetchTimer()
+        {         
+            _autoFetchTimer = new()
+            {
+                Interval = App.AutoFetchInterval,
+            };
+
+            _autoFetchTimer.Tick += AutoFetchTimer_Tick;
+            _autoFetchTimer.Start();
+        }
+
+        private void AutoFetchTimer_Tick(object sender, EventArgs e)
+        {
+            FetchSongsPlayingNow();
+        }
+
+        private void SetSongPlayingNowTimer()
+        {
+            _songPlayingNowTimer = new()
+            {
+                Interval = App.ChangeSongPlayingNowInterval,
+            };
+
+            _songPlayingNowTimer.Tick += SetSongPlayingNowTimer_Tick;
+            _songPlayingNowTimer.Start();
+        }
+
+        private void SetSongPlayingNowTimer_Tick(object sender, EventArgs e)
+        {
+            SetNextSongPlayingNow();
+        }
+
+        private void SetNextSongPlayingNow()
+        {
+            if (!_songsPlayingNowEnumerator.MoveNext()) {
+                _songsPlayingNowEnumerator = _songsPlayingNow.GetEnumerator();
+                _songsPlayingNowEnumerator.MoveNext();
+            }
+
+            PlaylistSong song = _songsPlayingNowEnumerator.Current;
+
+            if (song == null)
+            {
+                PlayingNow.Text = $"no songs";
+            }
+            else
+            {
+                PlayingNow.Text = $"{song} ({song.SourceStation})";
+            }
+            
+        }
+
         private void EditSettings_Click(object sender, RoutedEventArgs e)
         {
             EditSettingsDialog();
@@ -145,27 +226,27 @@ namespace RadiozurnalMiner
 
         private void EditSettingsDialog()
         {
-            SettingsDialog dialog = new(SettingsModel)
+            SettingsDialog dialog = new(_settingsModel)
             {
                 Owner = this,
             };
 
             if (dialog.ShowDialog() == true)
             {
-                SettingsModel = dialog.Model;
+                _settingsModel = dialog.Model;
                 UpdateShouldRefetch();
-                Miner = new PlaylistMiner(SettingsModel.From, SettingsModel.To)
-                    .SetSourceStations(SettingsModel.SourceStations);
+                _miner = new PlaylistMiner(_settingsModel.From, _settingsModel.To)
+                    .SetSourceStations(_settingsModel.SourceStations);
                 UpdateUi();
             }
         }
 
         private void UpdateShouldRefetch()
         {
-            ShouldRefetch = SettingsModel.From < Miner.From
-                || SettingsModel.To > Miner.To
-                || SettingsModel.SourceStations.Any(st =>
-                    !Miner.SourceStations.Contains(st));
+            _shouldRefetch = _settingsModel.From < _miner.From
+                || _settingsModel.To > _miner.To
+                || _settingsModel.SourceStations.Any(st =>
+                    !_miner.SourceStations.Contains(st));
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -201,8 +282,8 @@ namespace RadiozurnalMiner
 
         private void LeaderBoard_Click(object sender, RoutedEventArgs e)
         {
-            LeaderBoardDialog dialog = new(Songs.Where(song =>
-                SettingsModel.MatchesCriteria(song)))
+            LeaderBoardDialog dialog = new(_songs.Where(song =>
+                _settingsModel.MatchesCriteria(song)))
             {
                 Owner = this,
             };
@@ -210,18 +291,13 @@ namespace RadiozurnalMiner
             dialog.ShowDialog();
         }
 
-        void Timer_Tick(object sender, EventArgs e)
-        {
-            Fetch();
-        }
-
         private void DataListItem_Click(
-            object sender, System.Windows.Controls.DataGridBeginningEditEventArgs e)
+            object sender, DataGridBeginningEditEventArgs e)
         {
             PlaylistSong song = (PlaylistSong)e.Row.DataContext;
 
-            SettingsModel.Tracks = new() { song.Title };
-            SettingsModel.Artists = new() { song.Artist };
+            _settingsModel.Tracks = new() { song.Title };
+            _settingsModel.Artists = new() { song.Artist };
 
             e.Cancel = true;
             EditSettingsDialog();

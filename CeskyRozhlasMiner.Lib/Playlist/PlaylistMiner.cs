@@ -1,22 +1,23 @@
-﻿using RadiozurnalMiner.Lib.Common;
-using RadiozurnalMiner.Lib.Diagnostics;
-using RadiozurnalMiner.Lib.Playlist.Json;
+﻿using CeskyRozhlasMiner.Lib;
+using CeskyRozhlasMiner.Lib.Playlist.Json.Day;
+using CeskyRozhlasMiner.Lib.Playlist.Json.Now;
+using CeskyRozhlasMiner.Lib.Playlist.Json.Now.Data;
+using RadiozurnalMiner.Lib.Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace RadiozurnalMiner.Lib.Playlist
 {
+    /// <summary>
+    /// Fetches songs from Rozhlas api
+    /// </summary>
     public class PlaylistMiner
     {
         private static DateOnly _today = DateOnly.FromDateTime(DateTime.Now);
         private DateOnly _from = _today;
         private DateOnly _to = _today;
-
-        private readonly HttpClient _client = new();
 
         /// <summary>
         /// Stations to mine from.
@@ -112,6 +113,12 @@ namespace RadiozurnalMiner.Lib.Playlist
             return this;
         }
 
+        /// <summary>
+        /// Fetches songs using given settings with ability to monitor progress.
+        /// </summary>
+        /// <param name="onProgress">Action to handle progress. Its first argument 
+        /// means count of percent done.</param>
+        /// <returns>Asynchronous enumerable collection of songs</returns>
         public async IAsyncEnumerable<PlaylistSong> GetSongs(Action<int> onProgress)
         {
             int stationOrder = 1;
@@ -122,12 +129,12 @@ namespace RadiozurnalMiner.Lib.Playlist
 
                 while (inspected <= To)
                 {
-                    await foreach (PlaylistSong song in GetSongsInDayForStation(
-                        inspected, station, stationOrder, onProgress))
+                    await foreach (PlaylistSong song in GetSongsInDayForStation(inspected, station))
                     {
                         yield return song;
                     }
 
+                    onProgress(CountPercentDone(inspected, stationOrder));
                     inspected = inspected.AddDays(1);
                 }
 
@@ -135,71 +142,74 @@ namespace RadiozurnalMiner.Lib.Playlist
             }
         }
 
-        public static string GetPlaylistUri(DateOnly date, RozhlasStation station)
+        /// <summary>
+        /// Fetches currently played songs using given settings on the stations
+        /// with status 'onair'.
+        /// </summary>
+        /// <returns>Asynchronous enumerable collection of songs</returns>
+        public async IAsyncEnumerable<PlaylistSong> GetSongsNow()
         {
-            return new UriBuilder(Settings.RozhlasApi)
+            int stationOrder = 1;
+
+            foreach (RozhlasStation station in SourceStations)
             {
-                Path = Path.Combine(
-                Settings.RozhlasApiPlaylistDayPath,
-                    date.Year.ToString(),
-                    date.Month.ToString("D2"),
-                date.Day.ToString("D2"),
-                    Settings.RozhlasApiStation[station] +
-                        Settings.RozhlasApiPlaylistJsonExtension
-                )
-            }.ToString();
+                PlaylistSong song = await GetSongNowForStation(station);
+
+                if (song != null)
+                {
+                    yield return song;
+                }
+
+                stationOrder++;
+            }
         }
 
-        private async IAsyncEnumerable<PlaylistSong> GetSongsInDayForStation(
-            DateOnly date, RozhlasStation station, int stationOrder, Action<int> onProgress)
+        /// <summary>
+        /// Sets all available stations as a source.
+        /// </summary>
+        public void SetSourceAllStations()
         {
-            HttpResponseMessage response = null;
+            SourceStations = new();
 
-            string briefLogInfo = $"Date: {date} Station: {station}";
-
-            try
+            foreach (RozhlasStation station in Enum.GetValues(typeof(RozhlasStation)))
             {
-                response = await _client.GetAsync(GetPlaylistUri(date, station).ToString());
-
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    Logging.SaveRecord(Logging.Severity.Error, nameof(GetSongsInDayForStation),
-                        $"{briefLogInfo}. Request to access Json file failed with status {response.StatusCode}.");
-                    yield break;
-                }
+                SourceStations.Add(station);
             }
-            catch (HttpRequestException ex)
+        }
+
+        private static async Task<PlaylistSong> GetSongNowForStation(RozhlasStation station)
+        {
+            string briefLogInfo = $"{nameof(GetSongsInDayForStation)} Station: {station}";
+            string uri = new PlaylistUriConstructor(station).Now();
+
+            JsonMiner<PlaylistNow> miner = new(uri, briefLogInfo);
+            (bool success, PlaylistNow now) = await miner.Fetch();
+
+            if (success && now.Data.InterpretStatus() == PlaylistNowDataStatus.OnAir)
             {
-                Logging.SaveRecord(Logging.Severity.Error, nameof(GetSongsInDayForStation),
-                    $"{briefLogInfo}. Unable to make http request. {ex.Message}");
-                yield break;
+                return new PlaylistSong(now.Data.Interpret, now.Data.Track,
+                    now.Data.Since, station);
             }
 
-            using (Stream jsonStream = await response.Content.ReadAsStreamAsync())
+            return null;
+        }
+
+        private static async IAsyncEnumerable<PlaylistSong> GetSongsInDayForStation(DateOnly date,
+            RozhlasStation station)
+        {
+            string uri = new PlaylistUriConstructor(station).Day(date);
+            string briefLogInfo = $"{nameof(GetSongsInDayForStation)} Date: {date} Station: {station}";
+
+            JsonMiner<PlaylistDay> miner = new(uri, briefLogInfo);
+            (bool success, PlaylistDay day) = await miner.Fetch();
+
+            if (success)
             {
-                PlaylistDay day = null;
-
-                try
-                {
-                    day = await JsonSerializer.DeserializeAsync<PlaylistDay>(
-                    jsonStream, Settings.SerializeSettings);
-
-                }
-                catch (JsonException ex)
-                {
-                    Logging.SaveRecord(Logging.Severity.Error, nameof(GetSongsInDayForStation),
-                        $"{briefLogInfo}. Error while deserializing json. {ex.Message}");
-                    yield break;
-                }
-
-
                 foreach (PlaylistSong song in day.Data.Select(d => new PlaylistSong(d, station)))
                 {
                     yield return song;
                 }
             }
-
-            onProgress(CountPercentDone(date, stationOrder));
         }
 
         private int CountPercentDone(DateOnly date, int stationOrder)
@@ -212,16 +222,6 @@ namespace RadiozurnalMiner.Lib.Playlist
             double done = daysDone;
             double total = SourceStations.Count * daysTotal;
             return (int)Math.Round(100 * done / total);
-        }
-
-        public void SetSourceAllStations()
-        {
-            SourceStations = new();
-
-            foreach (RozhlasStation station in Enum.GetValues(typeof(RozhlasStation)))
-            {
-                SourceStations.Add(station);
-            }
         }
     }
 }

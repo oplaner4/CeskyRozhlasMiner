@@ -14,12 +14,11 @@ namespace RadiozurnalMiner.Dialogs
     /// </summary>
     public partial class SettingsDialog : Window
     {
+        private ObservableCollection<CheckBoxModel<RozhlasStation>> _sourceStationsObservable;
+        private ObservableCollection<CheckBoxModel<DayOfWeek>> _daysOfWeekObservable;
+        private const char _hashsetSeparator = ',';
+
         public SettingsDialogModel Model { get; private set; }
-
-        public ObservableCollection<CheckBoxModel<RozhlasStation>> SourceStationsObservable { get; set; }
-        public ObservableCollection<CheckBoxModel<DayOfWeek>> DaysOfWeekObservable { get; set; }
-
-        private const char HashsetSeparator = ',';
 
         public SettingsDialog(SettingsDialogModel model)
         {
@@ -49,19 +48,19 @@ namespace RadiozurnalMiner.Dialogs
             PlayedToSecond.Text = Model.PlayedTo.Seconds.ToString();
 
             ArtistsBox.Text = Model.Artists == null ? string.Empty :
-                string.Join($"{HashsetSeparator} ", Model.Artists);
+                string.Join($"{_hashsetSeparator} ", Model.Artists);
 
             TracksBox.Text = Model.Tracks == null ? string.Empty :
-                string.Join($"{HashsetSeparator} ", Model.Tracks);
+                string.Join($"{_hashsetSeparator} ", Model.Tracks);
         }
 
         private void SetDaysInWeekByModel()
         {
-            DaysOfWeekObservable = new();
+            _daysOfWeekObservable = new();
 
             foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
             {
-                DaysOfWeekObservable.Add(new CheckBoxModel<DayOfWeek>()
+                _daysOfWeekObservable.Add(new CheckBoxModel<DayOfWeek>()
                 {
                     Label = day.ToString(),
                     IsChecked = Model.DaysOfWeek.Contains(day),
@@ -69,17 +68,17 @@ namespace RadiozurnalMiner.Dialogs
                 });
             }
 
-            DaysOfWeek.ItemsSource = DaysOfWeekObservable;
+            DaysOfWeek.ItemsSource = _daysOfWeekObservable;
         }
 
         private void SetSourceStationsByModel()
         {
-            SourceStationsObservable = new();
+            _sourceStationsObservable = new();
 
             foreach (RozhlasStation station in
                 Enum.GetValues(typeof(RozhlasStation)))
             {
-                SourceStationsObservable.Add(new CheckBoxModel<RozhlasStation>()
+                _sourceStationsObservable.Add(new CheckBoxModel<RozhlasStation>()
                 {
                     Label = station.ToString(),
                     IsChecked = Model.SourceStations.Contains(station),
@@ -87,7 +86,7 @@ namespace RadiozurnalMiner.Dialogs
                 });
             }
 
-            SourceStations.ItemsSource = SourceStationsObservable;
+            SourceStations.ItemsSource = _sourceStationsObservable;
         }
 
         private bool Validate()
@@ -185,13 +184,13 @@ namespace RadiozurnalMiner.Dialogs
 
         private void UpdateModelSourceStations()
         {
-            Model.SourceStations = SourceStationsObservable
+            Model.SourceStations = _sourceStationsObservable
                 .Where(st => st.IsChecked).Select(st => st.Value).ToHashSet();
         }
 
         private void UpdateModelDaysOfWeek()
         {
-            Model.DaysOfWeek = DaysOfWeekObservable
+            Model.DaysOfWeek = _daysOfWeekObservable
                 .Where(st => st.IsChecked).Select(d => d.Value).ToHashSet();
         }
 
@@ -203,7 +202,7 @@ namespace RadiozurnalMiner.Dialogs
             }
             else
             {
-                Model.Artists = ArtistsBox.Text.Split(HashsetSeparator)
+                Model.Artists = ArtistsBox.Text.Split(_hashsetSeparator)
                     .Select(artist => artist.Trim())
                     .ToHashSet(StringComparer.OrdinalIgnoreCase);
             }
@@ -217,7 +216,7 @@ namespace RadiozurnalMiner.Dialogs
             }
             else
             {
-                Model.Tracks = TracksBox.Text.Split(HashsetSeparator)
+                Model.Tracks = TracksBox.Text.Split(_hashsetSeparator)
                     .Select(artist => artist.Trim())
                     .ToHashSet(StringComparer.OrdinalIgnoreCase);
             }

@@ -1,16 +1,12 @@
-﻿using RadiozurnalMiner.Lib.Common;
+﻿using CeskyRozhlasMiner.Lib.Playlist.Json.Day.Data;
+using RadiozurnalMiner.Lib.Common;
 using RadiozurnalMiner.Lib.Diagnostics;
-using RadiozurnalMiner.Lib.Playlist.Json;
 using System;
 
 namespace RadiozurnalMiner.Lib.Playlist
 {
     public class PlaylistSong : IEquatable<PlaylistSong>
     {
-        public PlaylistSong()
-        {
-        }
-
         public PlaylistSong(PlaylistDayDataSong song,
             RozhlasStation sourceStation)
         {
@@ -20,10 +16,29 @@ namespace RadiozurnalMiner.Lib.Playlist
             SourceStation = sourceStation;
         }
 
+        public PlaylistSong(string artist, string title,
+            DateTime playedAt, RozhlasStation sourceStation)
+        {
+            Artist = artist;
+            Title = title;
+            PlayedAt = playedAt;
+            SourceStation = sourceStation;
+        }
+
         public string Artist { get; set; }
         public string Title { get; set; }
         public DateTime PlayedAt { get; set; }
         public RozhlasStation SourceStation { get; set; }
+
+        public override bool Equals(object other)
+        {
+            if (other is PlaylistSong song)
+            {
+                return Equals(song);
+            }
+
+            return false;
+        }
 
         public bool Equals(PlaylistSong other)
         {
@@ -57,21 +72,18 @@ namespace RadiozurnalMiner.Lib.Playlist
                     out object station)
             )
             {
-                return new()
-                {
-                    Artist = parts[0],
-                    Title = parts[1],
-                    PlayedAt = playedAt,
-                    SourceStation = (RozhlasStation)station,
-                };
+                return new(parts[0], parts[1], playedAt, (RozhlasStation)station);
             }
-            else
-            {
-                string message = $"Unable to parse csv row: {row}";
-                Logging.SaveRecord(Logging.Severity.Error, nameof(FromCsvRow),
-                    message);
-                throw new FormatException(message);
-            }
+
+            string message = $"Unable to parse csv row: {row}";
+            Logging.SaveRecord(Logging.Severity.Error, nameof(FromCsvRow),
+                message);
+            throw new FormatException(message);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

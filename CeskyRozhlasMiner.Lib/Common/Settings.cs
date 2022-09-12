@@ -7,6 +7,7 @@ namespace RadiozurnalMiner.Lib.Common
     {
         public const string RozhlasApi = "https://api.rozhlas.cz";
         public const string RozhlasApiPlaylistDayPath = "data/v2/playlist/day";
+        public const string RozhlasApiPlaylistNowPath = "data/v2/playlist/now";
 
         public static readonly Dictionary<RozhlasStation, string>
             RozhlasApiStation = new()
