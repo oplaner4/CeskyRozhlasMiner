@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:fa="clr-namespace:Meziantou.WpfFontAwesome;assembly=Meziantou.WpfFontAwesome"
         xmlns:local="clr-namespace:RadiozurnalMiner"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
@@ -47,7 +47,7 @@
       <Button Click="Fetch_Click" Name="FetchBtn" Margin="0 0 4 0">
         Fetch again
       </Button>
-      <fa:ImageAwesome Name="FetchSpinner" Icon="Spinner" Spin="True" Height="15" Width="15" Visibility="Hidden" />
+      <fa:FontAwesomeIcon Name="FetchSpinner" SolidIcon="Spinner" AnimationType="Spin" FontSize="16" Visibility="Hidden" />
     </ToolBar>
 
     <StackPanel Grid.Row="2" Margin="10" Orientation="Horizontal">

@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
+    <PackageReference Include="Meziantou.WpfFontAwesome" Version="5.15.4" />
   </ItemGroup>
 
   <ItemGroup>
