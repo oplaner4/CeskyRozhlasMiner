@@ -8,7 +8,15 @@
     }
   },
   "profiles": {
-    "IIS Express": {
+    "CeskyRozhlasMiner.API.Development": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "CeskyRozhlasMiner.API.Local": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "launchUrl": "swagger",
@@ -16,14 +24,13 @@
         "ASPNETCORE_ENVIRONMENT": "Local"
       }
     },
-    "Console": {
+    "CeskyRozhlasMiner.API.Console": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Local"
-      },
-      "applicationUrl": "https://localhost:44345/"
+      }
     }
   }
 }

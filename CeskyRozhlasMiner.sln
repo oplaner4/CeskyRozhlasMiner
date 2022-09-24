@@ -12,11 +12,24 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A309176-FB97-49DB-B0D6-20DD14945C55}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "CeskyRozhlasMiner.WebApp.Client", "CeskyRozhlasMiner.WebApp\client\CeskyRozhlasMiner.WebApp.Client.esproj", "{2B476AB7-4541-4634-8BEC-8B16B563D298}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeskyRozhlasMiner.WebApp.API", "CeskyRozhlasMiner.WebApp\service\CeskyRozhlasMiner.WebApp.API\CeskyRozhlasMiner.WebApp.API.csproj", "{49DB7546-B600-4FD8-BA58-C37F370855C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApp", "WebApp", "{D7A1DC98-D6E5-4697-92FC-B6DCE81571FC}"
+	ProjectSection(SolutionItems) = preProject
+		CeskyRozhlasMiner.WebApp\README.md = CeskyRozhlasMiner.WebApp\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{BFA2FEB1-B3F8-48A8-9326-328C5763B4EB}"
+	ProjectSection(SolutionItems) = preProject
+		CeskyRozhlasMiner.WebApp\.dockerignore = CeskyRozhlasMiner.WebApp\.dockerignore
+		CeskyRozhlasMiner.WebApp\docker-compose.yml = CeskyRozhlasMiner.WebApp\docker-compose.yml
+		CeskyRozhlasMiner.WebApp\dockerfile = CeskyRozhlasMiner.WebApp\dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -145,6 +158,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D7A1DC98-D6E5-4697-92FC-B6DCE81571FC} = {1A309176-FB97-49DB-B0D6-20DD14945C55}
+		{BFA2FEB1-B3F8-48A8-9326-328C5763B4EB} = {D7A1DC98-D6E5-4697-92FC-B6DCE81571FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1141DBC2-9C0C-4E20-9A1B-6341FAA9BC99}

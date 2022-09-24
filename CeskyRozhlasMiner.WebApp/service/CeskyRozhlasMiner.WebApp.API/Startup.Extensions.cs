@@ -91,7 +91,7 @@ namespace Microsoft.DSX.ProjectTemplate.API
                      config.PostProcess = document =>
                      {
                          document.Info.Version = "v1";
-                         document.Info.Title = "Project Template API";
+                         document.Info.Title = "CeskyRozhlasMiner API";
                          document.Info.Contact = new NSwag.OpenApiContact
                          {
                              Name = "Devices Software Experiences"

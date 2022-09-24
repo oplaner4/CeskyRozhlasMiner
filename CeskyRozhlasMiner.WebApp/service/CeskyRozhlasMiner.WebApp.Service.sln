@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.645
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeskyRozhlasMiner.WebApp.API", "CeskyRozhlasMiner.WebApp.API\CeskyRozhlasMiner.WebApp.API.csproj", "{B0A17A24-AB1B-42FA-A193-43EFEA3E5429}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeskyRozhlasMiner.WebApp.Te
 		{1FB553DF-4D97-41DD-8F05-3A25ADC2233D} = {1FB553DF-4D97-41DD-8F05-3A25ADC2233D}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CeskyRozhlasMiner.WebApp.Command", "CeskyRozhlasMiner.WebApp.Command\CeskyRozhlasMiner.WebApp.Command.csproj", "{1FB553DF-4D97-41DD-8F05-3A25ADC2233D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeskyRozhlasMiner.WebApp.Command", "CeskyRozhlasMiner.WebApp.Command\CeskyRozhlasMiner.WebApp.Command.csproj", "{1FB553DF-4D97-41DD-8F05-3A25ADC2233D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
