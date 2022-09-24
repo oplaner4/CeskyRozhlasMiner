@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CeskyRozhlasMiner.App": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\oplan\\source\\repos\\CeskyRozhlasMiner\\CeskyRozhlasMiner.App\\bin\\Release\\net6.0-windows\\x.zip"
+    }
+  }
+}

@@ -175,11 +175,8 @@ namespace RadiozurnalMiner.Dialogs
 
         private void UpdateModelDateRange()
         {
-            DateOnly newFrom = DateOnly.FromDateTime(MineFrom.SelectedDate.Value);
-            DateOnly newTo = DateOnly.FromDateTime(MineTo.SelectedDate.Value);
-
-            Model.From = newFrom;
-            Model.To = newTo;
+            Model.From = MineFrom.SelectedDate.Value;
+            Model.To = MineTo.SelectedDate.Value.AddDays(1).AddMilliseconds(-1);
         }
 
         private void UpdateModelSourceStations()

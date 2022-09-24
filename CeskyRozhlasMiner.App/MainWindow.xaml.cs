@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -39,7 +41,18 @@ namespace RadiozurnalMiner
             _songs = new();
             _songsPlayingNow = new List<PlaylistSong>();
             _songsPlayingNowEnumerator = _songsPlayingNow.GetEnumerator();
-            FetchSongs();
+
+            string[] args = Environment.GetCommandLineArgs();
+
+            if (args.Length > 1)
+            {
+                LoadData(args[1]);
+            }
+            else
+            {
+                FetchSongs();
+            }
+
             FetchSongsPlayingNow();
         }
 
@@ -78,27 +91,64 @@ namespace RadiozurnalMiner
         {
             _songs.Clear();
 
-            using (StreamReader reader = new(fileName))
+            try
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                using (ZipArchive archive = new(File.OpenRead(fileName), ZipArchiveMode.Read))
                 {
-                    _songs.Add(PlaylistSong.FromCsvRow(line, Settings.CsvSeparator));
-                }
-            }
+                    ZipArchiveEntry songsEntry = archive.GetEntry(App.CsvSongsEntryName);
 
-            UpdateUi();
+                    using (StreamReader reader = new(songsEntry.Open()))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            _songs.Add(PlaylistSong.FromCsvRow(line, Settings.CsvSeparator));
+                        }
+                    }
+
+                    ZipArchiveEntry settingsEntry = archive.GetEntry(App.JsonSettingsEntryName);
+                    using (Stream stream = settingsEntry.Open())
+                    {
+                        _settingsModel = JsonSerializer.Deserialize<SettingsDialogModel>(stream);
+                    }
+                }
+
+                UpdateUi();
+            }
+            catch (InvalidDataException)
+            {
+                 new MessageDialog("Invalid/corrupted file", $"Unable to open {fileName}")
+                 {
+                     Owner = this,
+                 }.ShowDialog();
+            }
         }
 
         private void SaveData(string fileName)
         {
-            using (StreamWriter writer = new(fileName))
+            using (ZipArchive archive = new(File.OpenWrite(fileName), ZipArchiveMode.Create))
             {
-                foreach (PlaylistSong song in _songs)
+                ZipArchiveEntry songsEntry = archive.CreateEntry(App.CsvSongsEntryName);
+
+                using (StreamWriter writer = new(songsEntry.Open()))
                 {
-                    writer.WriteLine(song.ToCsvRow(Settings.CsvSeparator));
+                    foreach (PlaylistSong song in _songs)
+                    {
+                        writer.WriteLine(song.ToCsvRow(Settings.CsvSeparator));
+                    }
                 }
+
+                ZipArchiveEntry settingsEntry = archive.CreateEntry(App.JsonSettingsEntryName);
+                using (Stream stream = settingsEntry.Open())
+                {
+                    JsonSerializer.Serialize(stream, _settingsModel);
+                }            
             }
+
+            new MessageDialog("Done", $"Data successfully saved into {fileName}")
+            {
+                Owner = this,
+            }.ShowDialog();
         }
 
         private void Fetch_Click(object sender, RoutedEventArgs e)
@@ -235,7 +285,7 @@ namespace RadiozurnalMiner
             {
                 _settingsModel = dialog.Model;
                 UpdateShouldRefetch();
-                _miner = new PlaylistMiner(_settingsModel.From, _settingsModel.To)
+                _miner = new PlaylistMiner(DateOnly.FromDateTime(_settingsModel.From), DateOnly.FromDateTime(_settingsModel.To))
                     .SetSourceStations(_settingsModel.SourceStations);
                 UpdateUi();
             }
@@ -243,8 +293,8 @@ namespace RadiozurnalMiner
 
         private void UpdateShouldRefetch()
         {
-            _shouldRefetch = _settingsModel.From < _miner.From
-                || _settingsModel.To > _miner.To
+            _shouldRefetch = _settingsModel.From < _miner.From.ToDateTime(new TimeOnly(0))
+                || _settingsModel.To > _miner.To.ToDateTime(new TimeOnly(23, 59, 59, 999))
                 || _settingsModel.SourceStations.Any(st =>
                     !_miner.SourceStations.Contains(st));
         }

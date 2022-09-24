@@ -6,8 +6,15 @@ using System.Linq;
 
 namespace RadiozurnalMiner.Models
 {
+    [Serializable]
     public class SettingsDialogModel
     {
+        /// <summary>
+        /// Constructor used just for deserialization
+        /// </summary>
+        public SettingsDialogModel()
+        {}
+
         public SettingsDialogModel(PlaylistMiner miner)
         {
             DaysOfWeek = new()
@@ -21,16 +28,16 @@ namespace RadiozurnalMiner.Models
                 DayOfWeek.Saturday,
             };
 
-            From = miner.From;
-            To = miner.To;
+            From = miner.From.ToDateTime(TimeOnly.MinValue);
+            To = miner.To.ToDateTime(new TimeOnly(23, 59, 59, 999));
             SourceStations = miner.SourceStations.ToHashSet();
 
             PlayedFrom = new TimeSpan(0, 0, 0);
             PlayedTo = new TimeSpan(23, 59, 59);
         }
 
-        public DateOnly From { get; set; }
-        public DateOnly To { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
 
         public HashSet<RozhlasStation> SourceStations { get; set; }
 
@@ -52,14 +59,12 @@ namespace RadiozurnalMiner.Models
 
         public override string ToString()
         {
-            return $"{From} - {To}";
+            return $"{From:d} - {To:d}";
         }
 
         public bool MatchesCriteria(PlaylistSong song)
         {
-            DateOnly playedAt = DateOnly.FromDateTime(song.PlayedAt);
-
-            return playedAt >= From && playedAt <= To
+            return song.PlayedAt >= From && song.PlayedAt <= To
                 && song.PlayedAt.TimeOfDay >= PlayedFrom
                 && song.PlayedAt.TimeOfDay <= PlayedTo
                 && DaysOfWeek.Contains(song.PlayedAt.DayOfWeek)
