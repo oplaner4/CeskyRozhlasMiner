@@ -1,34 +1,50 @@
-import { DetailsList, DetailsListLayoutMode, IColumn, Spinner, SpinnerSize } from '@fluentui/react';
 import { ApiClient, IGroupDto } from 'app/generated/backend';
 import React, { useEffect, useState } from 'react';
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Box } from '@mui/material';
+import { useSetRecoilState } from 'recoil';
+import { appAlertsAtom } from 'app/state/atom';
+
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 90 },
+  {
+    field: 'name',
+    headerName: 'Name',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'isActive',
+    headerName: 'Active',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'createdDate',
+    headerName: 'Created date',
+    type: 'number',
+    width: 110,
+    editable: false,
+    valueGetter: (params: GridValueGetterParams) => `${params.value.toLocaleString()}`,
+  },
+  {
+    field: 'updatedDate',
+    headerName: 'Updated Date',
+    sortable: false,
+    width: 160,
+    valueGetter: (params: GridValueGetterParams) => `${params.value.toLocaleString()}`,
+  },
+];
 
 const Groups: React.FC = () => {
+  const setAppAlerts = useSetRecoilState(appAlertsAtom);
+
     const [data, setData] = useState({
         groups: [] as IGroupDto[],
         isFetching: false
     });
-
-    const groupKeys: IGroupDto = {
-        id: 0,
-        name: '',
-        isActive: false,
-        createdDate: new Date(),
-        updatedDate: new Date()
-    };
-
-    const columns = Object.keys(groupKeys).map((key): IColumn => {
-        return {
-            key,
-            name: key.replace(/([A-Z])/g, ' $1').replace(/^./, (str: string) => {
-                return str.toUpperCase();
-            }),
-            fieldName: key,
-            minWidth: 100,
-            maxWidth: 200,
-            isResizable: true
-        };
-    });
-
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -37,6 +53,13 @@ const Groups: React.FC = () => {
                 setData({ groups: result, isFetching: false });
             } catch (e) {
                 console.log(e);
+                setAppAlerts((appAlerts) => [
+                  ...appAlerts,
+                  {
+                    text: 'Unable to load',
+                    severity: 'error',
+                  }
+                ])
                 setData({ groups: data.groups, isFetching: false });
             }
         };
@@ -47,20 +70,18 @@ const Groups: React.FC = () => {
 
     return (
         <>
-            <h2>Groups</h2>
-            <DetailsList
-                items={data.groups.map((group) => {
-                    return {
-                        ...group,
-                        createdDate: group.createdDate.toLocaleString(),
-                        updatedDate: group.updatedDate.toLocaleString(),
-                        isActive: group.isActive.toString()
-                    };
-                })}
+            <Box component="div" style={{ height: 400, width: '100%' }}>
+              <DataGrid
+                rows={data.groups}
                 columns={columns}
-                layoutMode={DetailsListLayoutMode.justified}
-            />
-            {data.isFetching && <Spinner size={SpinnerSize.large} />}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                checkboxSelection
+                disableSelectionOnClick
+              />
+            </Box>
+
+            {data.isFetching && <CircularProgress />}
         </>
     );
 };

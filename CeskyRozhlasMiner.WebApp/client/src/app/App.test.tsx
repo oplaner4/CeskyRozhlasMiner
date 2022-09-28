@@ -4,6 +4,6 @@ import App from 'app/App';
 
 describe('<App />', () => {
     it('renders without crashing', () => {
-        render(<App />);
+        render(<App brand="" authors={[]} />);
     });
 });

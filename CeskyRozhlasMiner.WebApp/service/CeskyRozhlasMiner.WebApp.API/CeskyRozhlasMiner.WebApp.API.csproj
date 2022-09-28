@@ -7,6 +7,8 @@
     <Company>Microsoft</Company>
     <Product />
     <Authors>Devices Software Experiences</Authors>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +27,11 @@
   <ItemGroup>
     <ProjectReference Include="..\CeskyRozhlasMiner.WebApp.Command\CeskyRozhlasMiner.WebApp.Command.csproj" />
     <ProjectReference Include="..\CeskyRozhlasMiner.WebApp.Data\CeskyRozhlasMiner.WebApp.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Authorization\Policies\Handlers\" />
+    <Folder Include="Authorization\Policies\Requirements\" />
   </ItemGroup>
 
   <!-- https://github.com/RicoSuter/NSwag/wiki/Assembly-loading#net-core -->

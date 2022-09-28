@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeskyRozhlasMiner.WebApp.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeskyRozhlasMiner.WebApp.Command", "CeskyRozhlasMiner.WebApp.Command\CeskyRozhlasMiner.WebApp.Command.csproj", "{1FB553DF-4D97-41DD-8F05-3A25ADC2233D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeskyRozhlasMiner.Lib", "..\..\CeskyRozhlasMiner.Lib\CeskyRozhlasMiner.Lib.csproj", "{93DA0D95-4E59-4852-93C9-38B4B6610412}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{1FB553DF-4D97-41DD-8F05-3A25ADC2233D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FB553DF-4D97-41DD-8F05-3A25ADC2233D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FB553DF-4D97-41DD-8F05-3A25ADC2233D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93DA0D95-4E59-4852-93C9-38B4B6610412}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93DA0D95-4E59-4852-93C9-38B4B6610412}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93DA0D95-4E59-4852-93C9-38B4B6610412}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93DA0D95-4E59-4852-93C9-38B4B6610412}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

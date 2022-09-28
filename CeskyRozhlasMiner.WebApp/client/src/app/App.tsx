@@ -1,86 +1,88 @@
-import { IButtonProps, Icon, Image, initializeIcons, Nav, Text } from '@fluentui/react';
-import About from 'app/pages/about/About';
-import Groups from 'app/pages/groups/Groups';
-import Home from 'app/pages/home/Home';
-import msftLogo from 'app/static/msftLogo.png';
-import 'office-ui-fabric-core/dist/css/fabric.css';
-import React, { useState } from 'react';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import * as serviceWorker from '../serviceWorker';
-import styles from './App.module.scss';
+import ResponsiveBar from './components/ResponsiveBar';
 
-initializeIcons();
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import './App.module.scss';
+import { Box, Typography } from '@mui/material';
+import { AppRoutes, iterateThroughRoutes } from './routing/appRoutes';
 
-const App: React.FC = () => {
-    const [page, setPage] = useState<string | undefined>('home');
-    return (
-        <BrowserRouter>
-            <React.Fragment>
-                <div className="ms-Grid" dir="ltr">
-                    <div className="ms-Grid-row">
-                        <div className={styles.header}>
-                            <Image height={30} src={msftLogo} className={styles.msftLogo} />
-                            <div className={styles.headerDivider} />
-                            <Text className={styles.headerTitle}>My First React App</Text>
-                        </div>
-                        <div className={'ms-Grid-col ms-sm12 ms-lg4 ms-xl2'}>
-                            <Nav
-                                linkAs={onRenderLink}
-                                onLinkClick={(_, item) => setPage(item?.key)}
-                                selectedKey={page}
-                                groups={[
-                                    {
-                                        collapseAriaLabel: 'Collapse',
-                                        expandAriaLabel: 'Expand',
-                                        links: [
-                                            {
-                                                name: 'Home',
-                                                url: '/',
-                                                key: 'home'
-                                            },
-                                            {
-                                                name: 'About',
-                                                url: '/about',
-                                                key: 'about'
-                                            },
-                                            {
-                                                name: 'Groups',
-                                                url: '/groups',
-                                                key: 'groups'
-                                            }
-                                        ]
-                                    }
-                                ]}
-                            />
-                        </div>
-                        <div className="ms-Grid-col ms-sm12 ms-lg8 msxl-10">
-                            <Routes>
-                                <Route path="/" element={<Home />} />
-                                <Route path="/about" element={<About />} />
-                                <Route path="/groups" element={<Groups />} />
-                            </Routes>
-                        </div>
-                    </div>
-                </div>
-            </React.Fragment>
-        </BrowserRouter>
-    );
+import { Alert, IconButton, Grid } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
+import { useRecoilState } from 'recoil';
+import { appAlertsAtom } from './state/atom';
+
+export interface AppProps {
+    brand: string;
+    authors: string[];
 };
 
-// custom component to make react-router-dom Link component work in fabric Nav
-const onRenderLink = (props: IButtonProps) => {
+const App: React.FC<AppProps> = ({brand, authors}: AppProps) => {
+    const [appAlerts, setAppAlerts] = useRecoilState(appAlertsAtom);
+
+    useEffect(() => {
+        document.title = brand;
+    });
+
+    const theme = createTheme({
+      palette: {
+        primary: {
+          main: '#0157aa',
+        },
+        secondary: {
+          main: '#6c757d',
+        }
+      },
+    });
+
     return (
-        <Link
-            onClick={props.onClick}
-            className={props.className}
-            style={{ color: 'inherit', boxSizing: 'border-box' }}
-            to={props.href ?? '/'}>
-            <span style={{ display: 'flex' }}>
-                {!!props.iconProps && <Icon style={{ margin: '0 4px' }} {...props.iconProps} />}
-                {props.children}
-            </span>
-        </Link>
+        <BrowserRouter>
+            <ThemeProvider theme={theme}>
+                <ResponsiveBar />
+                <Box component={Grid} container px={4} pt={3} pb={5} mb={2} justifyContent="center">
+                    <Grid item lg={8}>
+                        <Box component="div" mb={appAlerts.length === 0 ? 0 : 3}>
+                            {appAlerts.map((alert, i) => 
+                                <Box
+                                    key={i}
+                                    component={Alert}
+                                    severity={alert.severity}
+                                    action={
+                                      <IconButton aria-label="close" color="inherit" size="small"
+                                        onClick={() => {
+                                          setAppAlerts(appAlerts.filter((_, inx) => inx !== i));
+                                        }}
+                                      >
+                                        <CloseIcon fontSize="inherit" />
+                                      </IconButton>
+                                    }
+                                    mb={1}
+                                >
+                                    {alert.text}
+                                </Box>
+                            )}
+                        </Box>
+                        <Routes>
+                            {iterateThroughRoutes().map(route => {
+                                return <Route
+                                    key={route}
+                                    path={AppRoutes[route].path}
+                                    element={AppRoutes[route].element}
+                                />
+                            })}
+                        </Routes>
+                    </Grid>
+                </Box>
+                <Box component="div" position="fixed" bottom={0} width="100%" py={2} px={3} boxSizing="border-box">
+                    <Typography variant="subtitle1" color="secondary" align="center">
+                        @{new Date().getFullYear()}, {authors.join(', ')}, All rights reserved
+                    </Typography>
+                </Box>
+            </ThemeProvider>
+        </BrowserRouter>
     );
 };
 

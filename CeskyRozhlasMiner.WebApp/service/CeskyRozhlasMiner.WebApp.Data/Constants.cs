@@ -14,5 +14,10 @@
         {
             public const int StringColumn = 512;
         }
+
+        public static class MimimumLengths
+        {
+            public const int Password = 8;
+        }
     }
 }

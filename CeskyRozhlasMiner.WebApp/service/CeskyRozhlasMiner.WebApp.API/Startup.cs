@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +8,8 @@ using Microsoft.DSX.ProjectTemplate.Command;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using System;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace Microsoft.DSX.ProjectTemplate.API
@@ -42,7 +46,18 @@ namespace Microsoft.DSX.ProjectTemplate.API
                 .AddMediatR(typeof(HandlerBase))
                 .AddCors()
                 .AddSwaggerDocument()
+                .AddDistributedMemoryCache()
+                .AddSession(options =>
+                {
+                    options.IdleTimeout = TimeSpan.FromSeconds(10);
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+                    options.Cookie.Name = ".CeskyRozhlasMiner.Session";
+                })
                 .AddControllers();
+
+                services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                   .AddCookie();
         }
 
         /// <summary>
@@ -68,7 +83,9 @@ namespace Microsoft.DSX.ProjectTemplate.API
                 .UseRouting()
                 .UseCors("CorsPolicy")
                 .UseAuthorization()
-                .UseEndpoints(endpoints => endpoints.MapControllers());
+                .UseAuthentication()
+                .UseEndpoints(endpoints => endpoints.MapControllers())
+                .UseSession();
         }
     }
 }

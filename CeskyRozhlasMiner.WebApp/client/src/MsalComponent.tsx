@@ -18,7 +18,7 @@ const msalInstance = new msal.PublicClientApplication(msalConfig);
 const MsalComponent: React.FC = () => {
     return (
         <MsalProvider instance={msalInstance}>
-            <App />
+            <App brand="CeskyRozhlas Miner" authors={['Ondrej Planer']} />
         </MsalProvider>
     );
 };

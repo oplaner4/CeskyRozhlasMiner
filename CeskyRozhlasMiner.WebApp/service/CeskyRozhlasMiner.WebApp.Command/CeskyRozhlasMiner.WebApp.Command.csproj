@@ -5,6 +5,8 @@
     <LangVersion>8.0</LangVersion>
     <Authors>Devices Software Experiences</Authors>
     <Company>Microsoft</Company>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CeskyRozhlasMiner.Lib\CeskyRozhlasMiner.Lib.csproj" />
     <ProjectReference Include="..\CeskyRozhlasMiner.WebApp.Data\CeskyRozhlasMiner.WebApp.Data.csproj" />
   </ItemGroup>
 

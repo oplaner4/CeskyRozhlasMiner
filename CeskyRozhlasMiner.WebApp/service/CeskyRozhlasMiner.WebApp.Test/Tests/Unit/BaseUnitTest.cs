@@ -23,13 +23,13 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit
     {
         protected ILoggerFactory LoggerFactory { get; set; }
 
-        protected Mock<IMediator> MockMediator { get; set; } = new Mock<IMediator>();
+        protected Mock<IMediator> MockMediator { get; set; } = new();
 
         protected static IMapper Mapper => new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>()).CreateMapper();
 
-        protected Mock<IAuthorizationService> MockAuthorizationService { get; set; } = new Mock<IAuthorizationService>();
+        protected Mock<IAuthorizationService> MockAuthorizationService { get; set; } = new();
 
-        protected Mock<IEmailService> MockEmailService { get; set; } = new Mock<IEmailService>();
+        protected Mock<IEmailService> MockEmailService { get; set; } = new();
 
         protected BaseUnitTest()
         {
