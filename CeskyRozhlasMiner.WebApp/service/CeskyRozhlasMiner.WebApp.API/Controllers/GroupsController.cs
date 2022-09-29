@@ -1,10 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DSX.ProjectTemplate.Command.Group;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Microsoft.DSX.ProjectTemplate.API.Controllers

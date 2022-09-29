@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +7,6 @@ using Microsoft.DSX.ProjectTemplate.Command;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using System;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
@@ -58,8 +56,8 @@ namespace Microsoft.DSX.ProjectTemplate.API
                 .AddHttpContextAccessor()
                 .AddControllers();
 
-                services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                   .AddCookie();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+               .AddCookie();
         }
 
         /// <summary>

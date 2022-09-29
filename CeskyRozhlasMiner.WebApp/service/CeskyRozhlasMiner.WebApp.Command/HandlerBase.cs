@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CeskyRozhlasMiner.WebApp.Command.State;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
 

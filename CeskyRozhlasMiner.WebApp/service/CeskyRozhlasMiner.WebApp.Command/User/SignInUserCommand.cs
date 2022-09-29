@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
-using CeskyRozhlasMiner.WebApp.Command.State;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.DSX.ProjectTemplate.Data;
@@ -10,8 +7,6 @@ using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 

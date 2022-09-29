@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using CeskyRozhlasMiner.WebApp.Command.State;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
@@ -32,7 +30,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Group
             {
                 throw new EntityNotFoundException($"{nameof(Data.Models.User)} cannot be found.");
             }
-            
+
             return Mapper.Map<UserDto>(innerResult);
         }
     }

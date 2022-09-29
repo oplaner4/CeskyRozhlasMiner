@@ -1,4 +1,4 @@
-﻿using CeskyRozhlasMiner.WebApp.API.State;
+﻿using CeskyRozhlasMiner.WebApp.Command.State;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

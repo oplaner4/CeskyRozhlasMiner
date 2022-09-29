@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
