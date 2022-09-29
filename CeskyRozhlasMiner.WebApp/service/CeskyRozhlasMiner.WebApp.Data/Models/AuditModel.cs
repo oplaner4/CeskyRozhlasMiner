@@ -15,5 +15,10 @@ namespace Microsoft.DSX.ProjectTemplate.Data.Models
         /// </summary>
         /// <remarks>Managed at the Entity Framework-level. Do not manually set.</remarks>
         public DateTime UpdatedDate { get; internal set; }
+
+        /// <summary>
+        /// True means that this entity has been already deleted.
+        /// </summary>
+        public bool Deleted { get; set; }
     }
 }
