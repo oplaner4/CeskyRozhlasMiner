@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.Abstractions;
 using Microsoft.DSX.ProjectTemplate.Data.Events;
@@ -20,10 +21,10 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Group
             IMediator mediator,
             ProjectTemplateDbContext database,
             IMapper mapper,
-            IAuthorizationService authorizationService,
+            IHttpContextAccessor httpContextAccessor,
             IEmailService emailService,
             ILogger<GroupCreatedEventHandler> logger)
-            : base(mediator, database, mapper, authorizationService)
+            : base(mediator, database, mapper, httpContextAccessor)
         {
             _emailService = emailService;
             _logger = logger;

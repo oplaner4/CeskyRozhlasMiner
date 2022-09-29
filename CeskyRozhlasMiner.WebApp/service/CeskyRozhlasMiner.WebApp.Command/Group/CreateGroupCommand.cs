@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using Microsoft.DSX.ProjectTemplate.Data.Events;
@@ -23,8 +24,8 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Group
             IMediator mediator,
             ProjectTemplateDbContext database,
             IMapper mapper,
-            IAuthorizationService authorizationService)
-            : base(mediator, database, mapper, authorizationService)
+            IHttpContextAccessor httpContextAccessor)
+            : base(mediator, database, mapper, httpContextAccessor)
         {
         }
 

@@ -7,6 +7,7 @@ using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CeskyRozhlasMiner.WebApp.API.State;
 
 namespace Microsoft.DSX.ProjectTemplate.API.Controllers
 {
@@ -31,21 +32,39 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         }
 
         /// <summary>
+        /// Signs User in.
+        /// </summary>
+        /// <param name="dto">A UserAuthenticate dto</param>
+        /// <returns></returns>
+        [HttpPost(nameof(SignUserIn))]
+        public async Task<ActionResult<UserDto>> SignUserIn([FromBody] UserAuthenticateDto dto)
+        {
+            return Ok(await Mediator.Send(new SignInUserCommand()
+            {
+                User = dto
+            }));
+        }
+
+        /// <summary>
+        /// Signs User out.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost(nameof(SignUserOut))]
+        public ActionResult<bool> SignUserOut()
+        {
+            new SessionManipulator(HttpContext.Session).SetUserId(SessionManipulator.UserIdNotFound);
+            return Ok(true);
+        }
+
+
+        /// <summary>
         /// Create a new User.
         /// </summary>
         /// <param name="dto">A UserCreate DTO.</param>
-        [HttpPost]
-        public async Task<ActionResult<GroupDto>> CreateUser([FromBody] UserCreateDto dto)
+        [HttpPost(nameof(CreateUser))]
+        public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserCreateDto dto)
         {
             UserDto created = await Mediator.Send(new CreateUserCommand() { User = dto });
-
-            var claims = new List<Claim>
-            {
-                new Claim("Id", created.Id.ToString()),
-            };
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme)));
-                
             return Ok(created);
         }
     }

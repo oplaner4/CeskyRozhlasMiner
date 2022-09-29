@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using CeskyRozhlasMiner.WebApp.Command.State;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
 
 namespace Microsoft.DSX.ProjectTemplate.Command
@@ -16,18 +18,21 @@ namespace Microsoft.DSX.ProjectTemplate.Command
 
         protected IMapper Mapper { get; }
 
-        protected IAuthorizationService AuthorizationService { get; }
+        protected IHttpContextAccessor HttpContextAccessor { get; }
+
+        protected SessionManipulator Manipulator { get; }
 
         protected HandlerBase(
             IMediator mediator,
             ProjectTemplateDbContext database,
             IMapper mapper,
-            IAuthorizationService authorizationService)
+            IHttpContextAccessor httpContextAccessor)
         {
             Mediator = mediator;
             Database = database;
             Mapper = mapper;
-            AuthorizationService = authorizationService;
+            HttpContextAccessor = httpContextAccessor;
+            Manipulator = new SessionManipulator(HttpContextAccessor.HttpContext.Session);
         }
     }
 }

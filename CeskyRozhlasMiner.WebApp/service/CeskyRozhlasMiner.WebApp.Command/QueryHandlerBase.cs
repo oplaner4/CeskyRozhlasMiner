@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
 
 namespace Microsoft.DSX.ProjectTemplate.Command
@@ -14,8 +15,8 @@ namespace Microsoft.DSX.ProjectTemplate.Command
             IMediator mediator,
             ProjectTemplateDbContext database,
             IMapper mapper,
-            IAuthorizationService authorizationService)
-            : base(mediator, database, mapper, authorizationService)
+            IHttpContextAccessor httpContextAccessor)
+            : base(mediator, database, mapper, httpContextAccessor)
         {
             // queries do not make changes to the database so we do not need ChangeTracker
             database.ChangeTracker.QueryTrackingBehavior = EntityFrameworkCore.QueryTrackingBehavior.NoTracking;

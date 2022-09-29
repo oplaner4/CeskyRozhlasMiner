@@ -54,8 +54,6 @@ namespace Microsoft.DSX.ProjectTemplate.Data
 
             ConfigureRelationships(modelBuilder);
 
-            ConfigurePropertyConversion(modelBuilder);
-
             ConfigureSeedData(modelBuilder);
         }
 
@@ -84,15 +82,6 @@ namespace Microsoft.DSX.ProjectTemplate.Data
         {
             modelBuilder.Entity<Library>()
                 .OwnsOne(lib => lib.Address);
-        }
-
-        private static void ConfigurePropertyConversion(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<User>()
-                .Property(b => b.Metadata)
-                .HasConversion(
-                    v => JsonConvert.SerializeObject(v),
-                    v => JsonConvert.DeserializeObject<Dictionary<string, string>>(v));
         }
 
         private static void ConfigureSeedData(ModelBuilder modelBuilder)

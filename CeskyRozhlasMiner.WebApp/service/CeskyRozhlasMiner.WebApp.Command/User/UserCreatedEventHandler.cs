@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Command;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.Abstractions;
@@ -21,10 +22,10 @@ namespace CeskyRozhlasMiner.WebApp.Command.User
             IMediator mediator,
             ProjectTemplateDbContext database,
             IMapper mapper,
-            IAuthorizationService authorizationService,
+            IHttpContextAccessor httpContextAccessor,
             IEmailService emailService,
             ILogger<UserCreatedEventHandler> logger)
-            : base(mediator, database, mapper, authorizationService)
+            : base(mediator, database, mapper, httpContextAccessor)
         {
             _emailService = emailService;
             _logger = logger;

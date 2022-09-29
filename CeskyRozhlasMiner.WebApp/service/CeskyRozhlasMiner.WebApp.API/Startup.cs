@@ -53,7 +53,9 @@ namespace Microsoft.DSX.ProjectTemplate.API
                     options.Cookie.HttpOnly = true;
                     options.Cookie.IsEssential = true;
                     options.Cookie.Name = ".CeskyRozhlasMiner.Session";
+                    options.Cookie.Expiration = TimeSpan.FromMinutes(40);
                 })
+                .AddHttpContextAccessor()
                 .AddControllers();
 
                 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -82,10 +84,10 @@ namespace Microsoft.DSX.ProjectTemplate.API
                 .UseSwaggerUi3()
                 .UseRouting()
                 .UseCors("CorsPolicy")
+                .UseSession()
                 .UseAuthorization()
                 .UseAuthentication()
-                .UseEndpoints(endpoints => endpoints.MapControllers())
-                .UseSession();
+                .UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }

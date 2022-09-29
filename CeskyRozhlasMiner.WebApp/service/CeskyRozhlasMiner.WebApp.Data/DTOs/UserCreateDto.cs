@@ -5,23 +5,15 @@ using System.Linq;
 
 namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
 {
-    public class UserCreateDto : AuditDto<int>
+    public class UserCreateDto : UserDto
     {
-        public string Email { get; set; }
-
-        public string Password { get; set; }
-
         public string PasswordConfirm { get; set; }
-
-        public string DisplayName { get; set; }
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             ValidationHelper<UserCreateDto> helper = new ValidationHelper<UserCreateDto>(this);
 
-            foreach (var result in helper.CheckStringNotEmptyAndCorrectLength(nameof(DisplayName))
-                .Concat(helper.CheckStringNotEmptyAndCorrectLength(nameof(Password)))
-                .Concat(helper.CheckStringNotEmptyAndCorrectLength(nameof(PasswordConfirm)))
+            foreach (var result in helper.CheckStringsNotEmptyAndCorrectLength(nameof(DisplayName), nameof(Password), nameof(PasswordConfirm))
                 .Concat(helper.CheckStringValidEmailAdress(nameof(Email))))
             {
                 yield return result;

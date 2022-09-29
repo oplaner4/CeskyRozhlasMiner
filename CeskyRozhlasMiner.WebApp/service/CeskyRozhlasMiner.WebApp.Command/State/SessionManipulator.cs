@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace CeskyRozhlasMiner.WebApp.API.State
+namespace CeskyRozhlasMiner.WebApp.Command.State
 {
     /// <summary>
     /// Utility for manipulating with session.

@@ -4,6 +4,7 @@ using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Microsoft.DSX.ProjectTemplate.Data.Migrations
 {
     [DbContext(typeof(ProjectTemplateDbContext))]
-    partial class ProjectTemplateDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220929170207_29092022")]
+    partial class _29092022
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,6 +198,9 @@ namespace Microsoft.DSX.ProjectTemplate.Data.Migrations
                     b.Property<string>("Email")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
+
+                    b.Property<string>("Metadata")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .HasMaxLength(512)

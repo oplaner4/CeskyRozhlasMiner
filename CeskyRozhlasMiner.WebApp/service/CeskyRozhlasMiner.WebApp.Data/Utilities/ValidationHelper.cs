@@ -25,7 +25,7 @@ namespace CeskyRozhlasMiner.WebApp.Data.Utilities
             Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
             if (!regex.Match(email).Success)
             {
-                yield return new($"is not valid email adress", new[] { prop });
+                yield return new ValidationResult($"is not valid email adress", new[] { prop });
             }
         }
 
@@ -43,5 +43,15 @@ namespace CeskyRozhlasMiner.WebApp.Data.Utilities
             }
         }
 
+        public IEnumerable<ValidationResult> CheckStringsNotEmptyAndCorrectLength(params string[] props)
+        {
+            foreach (var prop in props)
+            {
+                foreach (var result in CheckStringNotEmptyAndCorrectLength(prop))
+                {
+                    yield return result;
+                }
+            }
+        }
     }
 }

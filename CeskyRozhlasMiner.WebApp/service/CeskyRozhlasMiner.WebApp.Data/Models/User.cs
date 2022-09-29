@@ -12,11 +12,6 @@ namespace Microsoft.DSX.ProjectTemplate.Data.Models
         public string PasswordHash { get; set; }
 
         [MaxLength(Constants.MaximumLengths.StringColumn)]
-        public string PasswordSalt { get; set; }
-
-        [MaxLength(Constants.MaximumLengths.StringColumn)]
         public string Email { get; set; }
-
-        public IDictionary<string, string> Metadata { get; set; }
     }
 }
