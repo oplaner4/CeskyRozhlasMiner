@@ -60,8 +60,7 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         [HttpPost(nameof(CreateUser))]
         public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserCreateDto dto)
         {
-            UserDto created = await Mediator.Send(new CreateUserCommand() { User = dto });
-            return Ok(created);
+            return Ok(await Mediator.Send(new CreateUserCommand() { User = dto }));
         }
     }
 }
