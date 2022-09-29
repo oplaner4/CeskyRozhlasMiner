@@ -51,7 +51,6 @@ namespace Microsoft.DSX.ProjectTemplate.API
                     options.Cookie.HttpOnly = true;
                     options.Cookie.IsEssential = true;
                     options.Cookie.Name = ".CeskyRozhlasMiner.Session";
-                    options.Cookie.Expiration = TimeSpan.FromMinutes(40);
                 })
                 .AddHttpContextAccessor()
                 .AddControllers();
