@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
+using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
 using Microsoft.DSX.ProjectTemplate.Data.State;
 
 namespace Microsoft.DSX.ProjectTemplate.Command
@@ -32,6 +33,14 @@ namespace Microsoft.DSX.ProjectTemplate.Command
             Mapper = mapper;
             HttpContextAccessor = httpContextAccessor;
             Manipulator = new SessionManipulator(HttpContextAccessor.HttpContext.Session);
+        }
+
+        protected void EnsureSignedIn()
+        {
+            if (!Manipulator.IsSignedIn())
+            {
+                throw new UnauthorizedException("Not signed in");
+            }
         }
     }
 }

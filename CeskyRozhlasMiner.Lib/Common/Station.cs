@@ -1,4 +1,4 @@
-﻿namespace RadiozurnalMiner.Lib.Common
+﻿namespace CeskyRozhlasMiner.Lib.Common
 {
     public enum RozhlasStation
     {

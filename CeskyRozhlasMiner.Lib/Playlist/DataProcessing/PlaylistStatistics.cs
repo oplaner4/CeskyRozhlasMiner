@@ -1,10 +1,10 @@
-﻿using RadiozurnalMiner.Lib.Utils;
+﻿using CeskyRozhlasMiner.Lib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using StatisticsPair = System.Collections.Generic.KeyValuePair<string, int>;
 
-namespace RadiozurnalMiner.Lib.Playlist.DataProcessing
+namespace CeskyRozhlasMiner.Lib.Playlist.DataProcessing
 {
     public class PlaylistStatistics
     {

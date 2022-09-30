@@ -1,7 +1,7 @@
 using Xunit;
-using RadiozurnalMiner.Lib.Playlist;
-using RadiozurnalMiner.Lib.Playlist.DataProcessing;
-using RadiozurnalMiner.Lib.Common;
+using CeskyRozhlasMiner.Lib.Playlist;
+using CeskyRozhlasMiner.Lib.Playlist.DataProcessing;
+using CeskyRozhlasMiner.Lib.Common;
 using System.Linq;
 
 namespace CeskyRozhlasMiner.Test

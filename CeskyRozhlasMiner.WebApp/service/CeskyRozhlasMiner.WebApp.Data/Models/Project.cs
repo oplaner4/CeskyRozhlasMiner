@@ -13,7 +13,5 @@ namespace Microsoft.DSX.ProjectTemplate.Data.Models
         public virtual Group Group { get; set; }
 
         public int GroupId { get; set; }
-
-        public virtual User Owner { get; set; }
     }
 }

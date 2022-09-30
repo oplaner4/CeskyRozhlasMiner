@@ -1,5 +1,4 @@
 ﻿using CeskyRozhlasMiner.Lib.Playlist.Json.Now.Data;
-using RadiozurnalMiner.Lib.Playlist.Json;
 
 namespace CeskyRozhlasMiner.Lib.Playlist.Json.Now
 {

@@ -1,5 +1,5 @@
-﻿using RadiozurnalMiner.Lib.Common;
-using RadiozurnalMiner.Lib.Diagnostics;
+﻿using CeskyRozhlasMiner.Lib.Common;
+using CeskyRozhlasMiner.Lib.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;

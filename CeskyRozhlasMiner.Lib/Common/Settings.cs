@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
 
-namespace RadiozurnalMiner.Lib.Common
+namespace CeskyRozhlasMiner.Lib.Common
 {
     public class Settings
     {

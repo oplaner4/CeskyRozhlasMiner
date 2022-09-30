@@ -1,8 +1,8 @@
-﻿using RadiozurnalMiner.Lib.Common;
+﻿using CeskyRozhlasMiner.Lib.Common;
 using System;
 using System.IO;
 
-namespace RadiozurnalMiner.Lib.Diagnostics
+namespace CeskyRozhlasMiner.Lib.Diagnostics
 {
     public class Logging
     {

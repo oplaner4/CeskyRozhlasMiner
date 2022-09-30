@@ -1,9 +1,9 @@
-﻿using CeskyRozhlasMiner.Lib.Playlist.Json.Day.Data;
-using RadiozurnalMiner.Lib.Common;
-using RadiozurnalMiner.Lib.Diagnostics;
+﻿using CeskyRozhlasMiner.Lib.Common;
+using CeskyRozhlasMiner.Lib.Diagnostics;
+using CeskyRozhlasMiner.Lib.Playlist.Json.Day.Data;
 using System;
 
-namespace RadiozurnalMiner.Lib.Playlist
+namespace CeskyRozhlasMiner.Lib.Playlist
 {
     public class PlaylistSong : IEquatable<PlaylistSong>
     {

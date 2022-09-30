@@ -19,6 +19,8 @@ namespace Microsoft.DSX.ProjectTemplate.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Playlist> Playlists { get; set; }
+        public DbSet<PlaylistSourceStation> PlaylistSourceStations { get; set; }
 
         public override int SaveChanges()
         {
@@ -80,6 +82,14 @@ namespace Microsoft.DSX.ProjectTemplate.Data
         {
             modelBuilder.Entity<Library>()
                 .OwnsOne(lib => lib.Address);
+
+            modelBuilder.Entity<Playlist>()
+                .HasOne(playlist => playlist.Owner)
+                .WithMany(owner => owner.Playlists)
+                .HasForeignKey(playlist => playlist.OwnerId);
+
+            modelBuilder.Entity<Playlist>()
+                .OwnsMany(playlist => playlist.SourceStations);
         }
 
         private static void ConfigureSeedData(ModelBuilder modelBuilder)
@@ -119,6 +129,10 @@ namespace Microsoft.DSX.ProjectTemplate.Data
 
             modelBuilder.Entity<Library>()
                 .HasIndex(x => x.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Playlist>()
+                .HasIndex(x => new { x.OwnerId, x.Name })
                 .IsUnique();
         }
     }

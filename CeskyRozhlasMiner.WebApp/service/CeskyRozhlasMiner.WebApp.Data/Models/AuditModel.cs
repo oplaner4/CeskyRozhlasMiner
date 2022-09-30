@@ -17,7 +17,8 @@ namespace Microsoft.DSX.ProjectTemplate.Data.Models
         public DateTime UpdatedDate { get; internal set; }
 
         /// <summary>
-        /// True means that this entity has been already deleted.
+        /// True indicates that this entity has been already deleted and should not be used 
+        /// in command handlers.
         /// </summary>
         public bool Deleted { get; set; }
     }

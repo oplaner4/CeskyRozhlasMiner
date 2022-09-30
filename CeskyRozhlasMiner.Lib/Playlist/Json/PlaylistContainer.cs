@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RadiozurnalMiner.Lib.Playlist.Json
+namespace CeskyRozhlasMiner.Lib.Playlist.Json
 {
     public class PlaylistContainer
     {

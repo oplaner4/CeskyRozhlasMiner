@@ -1,14 +1,13 @@
-﻿using CeskyRozhlasMiner.Lib;
+﻿using CeskyRozhlasMiner.Lib.Common;
 using CeskyRozhlasMiner.Lib.Playlist.Json.Day;
 using CeskyRozhlasMiner.Lib.Playlist.Json.Now;
 using CeskyRozhlasMiner.Lib.Playlist.Json.Now.Data;
-using RadiozurnalMiner.Lib.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RadiozurnalMiner.Lib.Playlist
+namespace CeskyRozhlasMiner.Lib.Playlist
 {
     /// <summary>
     /// Fetches songs from Rozhlas api

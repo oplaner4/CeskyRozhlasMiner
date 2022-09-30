@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RadiozurnalMiner.Lib.Utils
+namespace CeskyRozhlasMiner.Lib.Utils
 {
     public class StatisticsUtil
     {
