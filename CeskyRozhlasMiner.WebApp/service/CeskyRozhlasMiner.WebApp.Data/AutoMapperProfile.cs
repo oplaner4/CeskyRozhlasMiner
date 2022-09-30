@@ -10,6 +10,7 @@ namespace Microsoft.DSX.ProjectTemplate.Data
         {
             CreateMap<Group, GroupDto>();
             CreateMap<User, UserDto>();
+            CreateMap<Playlist, PlaylistDto>();
         }
     }
 }

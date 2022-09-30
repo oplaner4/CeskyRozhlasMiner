@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.DSX.ProjectTemplate.Command;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.Abstractions;
 using Microsoft.DSX.ProjectTemplate.Data.Events;
@@ -10,7 +9,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CeskyRozhlasMiner.WebApp.Command.User
+namespace Microsoft.DSX.ProjectTemplate.Command.User
 {
     public class UserCreatedEventHandler : HandlerBase, INotificationHandler<UserCreatedDomainEvent>
     {

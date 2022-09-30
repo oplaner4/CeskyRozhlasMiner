@@ -1,7 +1,6 @@
-﻿using CeskyRozhlasMiner.WebApp.Command.State;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DSX.ProjectTemplate.Command.Group;
+using Microsoft.DSX.ProjectTemplate.Command.User;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using System.Threading.Tasks;
 
@@ -31,9 +30,8 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// Signs User in.
         /// </summary>
         /// <param name="dto">A UserAuthenticate dto</param>
-        /// <returns></returns>
-        [HttpPost(nameof(SignUserIn))]
-        public async Task<ActionResult<UserDto>> SignUserIn([FromBody] UserAuthenticateDto dto)
+        [HttpPost(nameof(SignInUser))]
+        public async Task<ActionResult<UserDto>> SignInUser([FromBody] UserAuthenticateDto dto)
         {
             return Ok(await Mediator.Send(new SignInUserCommand()
             {
@@ -44,23 +42,40 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// <summary>
         /// Signs User out.
         /// </summary>
-        /// <returns></returns>
-        [HttpPost(nameof(SignUserOut))]
-        public ActionResult<bool> SignUserOut()
+        [HttpPost(nameof(SignOutUser))]
+        public ActionResult<bool> SignOutUser()
         {
-            new SessionManipulator(HttpContext.Session).SetUserId(SessionManipulator.UserIdNotFound);
-            return Ok(true);
+            return Ok(Mediator.Send(new SignOutUserCommand()));
         }
-
 
         /// <summary>
         /// Create a new User.
         /// </summary>
-        /// <param name="dto">A UserCreate DTO.</param>
+        /// <param name="dto">A UserSet DTO.</param>
         [HttpPost(nameof(CreateUser))]
-        public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserCreateDto dto)
+        public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserSetDto dto)
         {
             return Ok(await Mediator.Send(new CreateUserCommand() { User = dto }));
+        }
+
+        /// <summary>
+        /// Update existing User.
+        /// </summary>
+        /// <param name="dto">A UserSet DTO.</param>
+        [HttpPut(nameof(UpdateUser))]
+        public async Task<ActionResult<UserDto>> UpdateUser([FromBody] UserSetDto dto)
+        {
+            return Ok(await Mediator.Send(new UpdateUserCommand() { User = dto }));
+        }
+
+        /// <summary>
+        /// Delete existing User.
+        /// </summary>
+        /// <param name="dto">A UserAuthenticate DTO.</param>
+        [HttpDelete(nameof(DeleteUser))]
+        public async Task<ActionResult<bool>> DeleteUser([FromBody] UserAuthenticateDto dto)
+        {
+            return Ok(await Mediator.Send(new DeleteUserCommand() { User = dto }));
         }
     }
 }

@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Microsoft.DSX.ProjectTemplate.Command.User
 {
-    public class SignInUserCommand : IRequest<UserDto>
+    public class UpdateUserCommand : IRequest<UserDto>
     {
-        public UserAuthenticateDto User { get; set; }
+        public UserSetDto User { get; set; }
     }
 
-    public class SignInUserCommandHandler : CommandHandlerBase, IRequestHandler<SignInUserCommand, UserDto>
+    public class UpdateUserCommandHandler : CommandHandlerBase, IRequestHandler<UpdateUserCommand, UserDto>
     {
-        public SignInUserCommandHandler(
+        public UpdateUserCommandHandler(
             IMediator mediator,
             ProjectTemplateDbContext database,
             IMapper mapper,
@@ -28,7 +28,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
         {
         }
 
-        public async Task<UserDto> Handle(SignInUserCommand request, CancellationToken cancellationToken)
+        public async Task<UserDto> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             var dto = request.User;
 
@@ -45,6 +45,10 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
             {
                 throw new UnauthorizedAccessException($"Invalid credentials were provided.");
             }
+
+            user.DisplayName = dto.DisplayName;
+            user.PasswordHash = new PasswordHasher<Data.Models.User>().HashPassword(user, dto.NewPassword);
+            await Database.SaveChangesAsync(cancellationToken);
 
             Manipulator.SetUserId(user.Id);
 

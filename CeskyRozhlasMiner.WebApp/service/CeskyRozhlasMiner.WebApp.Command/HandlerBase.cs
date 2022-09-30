@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using CeskyRozhlasMiner.WebApp.Command.State;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
+using Microsoft.DSX.ProjectTemplate.Data.State;
 
 namespace Microsoft.DSX.ProjectTemplate.Command
 {

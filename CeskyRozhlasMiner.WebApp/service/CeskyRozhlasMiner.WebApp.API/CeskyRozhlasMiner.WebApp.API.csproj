@@ -29,11 +29,6 @@
     <ProjectReference Include="..\CeskyRozhlasMiner.WebApp.Data\CeskyRozhlasMiner.WebApp.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Authorization\Policies\Handlers\" />
-    <Folder Include="Authorization\Policies\Requirements\" />
-  </ItemGroup>
-
   <!-- https://github.com/RicoSuter/NSwag/wiki/Assembly-loading#net-core -->
   <!-- build TypeScript client and DTOs for this backend -->
   <Target Name="NSwag" AfterTargets="Build">

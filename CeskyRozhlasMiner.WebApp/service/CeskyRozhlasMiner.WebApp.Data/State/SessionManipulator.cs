@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace CeskyRozhlasMiner.WebApp.Command.State
+namespace Microsoft.DSX.ProjectTemplate.Data.State
 {
     /// <summary>
     /// Utility for manipulating with session.
@@ -11,9 +11,9 @@ namespace CeskyRozhlasMiner.WebApp.Command.State
         private readonly ISession _session;
 
         /// <summary>
-        /// Represents that user was not found.
+        /// Represents that user have not been set yet.
         /// </summary>
-        public const int UserIdNotFound = -1;
+        public const int UserIdUnset = -1;
 
         /// <summary>
         /// Initializes class for usage in controller handlers.
@@ -40,7 +40,7 @@ namespace CeskyRozhlasMiner.WebApp.Command.State
         /// if not previously set.</returns>
         public int GetUserId()
         {
-            return _session.GetInt32(_sessionUserId) ?? UserIdNotFound;
+            return _session.GetInt32(_sessionUserId) ?? UserIdUnset;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace CeskyRozhlasMiner.WebApp.Command.State
         /// <returns>User is signed</returns>
         public bool IsSignedIn()
         {
-            return GetUserId() != UserIdNotFound;
+            return GetUserId() != UserIdUnset;
         }
     }
 }

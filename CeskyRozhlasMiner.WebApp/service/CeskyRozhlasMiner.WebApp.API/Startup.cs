@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -47,16 +46,13 @@ namespace Microsoft.DSX.ProjectTemplate.API
                 .AddDistributedMemoryCache()
                 .AddSession(options =>
                 {
-                    options.IdleTimeout = TimeSpan.FromSeconds(10);
+                    options.IdleTimeout = TimeSpan.FromMinutes(20);
                     options.Cookie.HttpOnly = true;
                     options.Cookie.IsEssential = true;
                     options.Cookie.Name = ".CeskyRozhlasMiner.Session";
                 })
                 .AddHttpContextAccessor()
                 .AddControllers();
-
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-               .AddCookie();
         }
 
         /// <summary>
@@ -83,7 +79,6 @@ namespace Microsoft.DSX.ProjectTemplate.API
                 .UseCors("CorsPolicy")
                 .UseSession()
                 .UseAuthorization()
-                .UseAuthentication()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }

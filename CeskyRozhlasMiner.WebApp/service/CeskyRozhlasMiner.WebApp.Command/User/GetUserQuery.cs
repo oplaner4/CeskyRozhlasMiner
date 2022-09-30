@@ -7,7 +7,7 @@ using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.DSX.ProjectTemplate.Command.Group
+namespace Microsoft.DSX.ProjectTemplate.Command.User
 {
     public class GetUserQuery : IRequest<UserDto> { }
 
@@ -26,7 +26,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Group
         {
             var innerResult = await Database.Users.FindAsync(new object[] { Manipulator.GetUserId() }, cancellationToken);
 
-            if (innerResult == null)
+            if (innerResult == null || innerResult.Deleted)
             {
                 throw new EntityNotFoundException($"{nameof(Data.Models.User)} cannot be found.");
             }

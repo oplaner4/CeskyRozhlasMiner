@@ -1,6 +1,6 @@
-﻿using CeskyRozhlasMiner.WebApp.Command.State;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DSX.ProjectTemplate.Data.State;
 
 namespace Microsoft.DSX.ProjectTemplate.API.Controllers
 {

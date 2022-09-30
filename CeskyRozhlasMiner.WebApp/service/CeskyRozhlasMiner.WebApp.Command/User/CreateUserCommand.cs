@@ -10,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.DSX.ProjectTemplate.Command.Group
+namespace Microsoft.DSX.ProjectTemplate.Command.User
 {
     public class CreateUserCommand : IRequest<UserDto>
     {
-        public UserCreateDto User { get; set; }
+        public UserSetDto User { get; set; }
     }
 
     public class CreateUserCommandHandler : CommandHandlerBase, IRequestHandler<CreateUserCommand, UserDto>
@@ -32,7 +32,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Group
         {
             var dto = request.User;
 
-            bool emailAlreadyUsed = await Database.Users.AnyAsync(e => e.Email == dto.Email, cancellationToken);
+            bool emailAlreadyUsed = await Database.Users.AnyAsync(e => !e.Deleted && e.Email == dto.Email, cancellationToken);
 
             if (emailAlreadyUsed)
             {
@@ -45,14 +45,12 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Group
                 Email = dto.Email,
             };
 
-            model.PasswordHash = new PasswordHasher<Data.Models.User>().HashPassword(model, dto.Password);
+            model.PasswordHash = new PasswordHasher<Data.Models.User>().HashPassword(model, dto.NewPassword);
 
             Database.Users.Add(model);
             await Database.SaveChangesAsync(cancellationToken);
 
             await Mediator.Publish(new UserCreatedDomainEvent(model), cancellationToken);
-
-
 
             return Mapper.Map<UserDto>(model);
         }

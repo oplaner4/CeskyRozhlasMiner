@@ -26,4 +26,8 @@
 	<FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\CeskyRozhlasMiner.Lib\CeskyRozhlasMiner.Lib.csproj" />
+  </ItemGroup>
+
 </Project>

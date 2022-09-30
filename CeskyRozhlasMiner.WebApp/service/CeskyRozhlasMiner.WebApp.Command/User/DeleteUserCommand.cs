@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
+using Microsoft.DSX.ProjectTemplate.Data.State;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
@@ -12,14 +13,14 @@ using System.Threading.Tasks;
 
 namespace Microsoft.DSX.ProjectTemplate.Command.User
 {
-    public class SignInUserCommand : IRequest<UserDto>
+    public class DeleteUserCommand : IRequest<bool>
     {
         public UserAuthenticateDto User { get; set; }
     }
 
-    public class SignInUserCommandHandler : CommandHandlerBase, IRequestHandler<SignInUserCommand, UserDto>
+    public class DeleteUserCommandHandler : CommandHandlerBase, IRequestHandler<DeleteUserCommand, bool>
     {
-        public SignInUserCommandHandler(
+        public DeleteUserCommandHandler(
             IMediator mediator,
             ProjectTemplateDbContext database,
             IMapper mapper,
@@ -28,7 +29,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
         {
         }
 
-        public async Task<UserDto> Handle(SignInUserCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
             var dto = request.User;
 
@@ -46,9 +47,14 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
                 throw new UnauthorizedAccessException($"Invalid credentials were provided.");
             }
 
-            Manipulator.SetUserId(user.Id);
+            if (Manipulator.GetUserId() == user.Id)
+            {
+                Manipulator.SetUserId(SessionManipulator.UserIdUnset);
+            }
 
-            return Mapper.Map<UserDto>(user);
+            user.Deleted = true;
+            await Database.SaveChangesAsync(cancellationToken);
+            return user.Deleted;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace CeskyRozhlasMiner.WebApp.Data.Utilities
@@ -27,17 +28,28 @@ namespace CeskyRozhlasMiner.WebApp.Data.Utilities
             }
         }
 
+        public IEnumerable<ValidationResult> CheckValidPassword(string prop)
+        {
+            string value = (string)_objType.GetProperty(prop).GetValue(_obj);
+
+            if (!value.Any(char.IsDigit) || value.All(char.IsLetterOrDigit))
+            {
+                yield return new ValidationResult($"must be minimum {Constants.MimimumLengths.Password} characters, contain at least " +
+                    $"one digit and one special character", new[] { prop });
+            }
+        }
+
         public IEnumerable<ValidationResult> CheckStringNotEmptyAndCorrectLength(string prop)
         {
             string value = (string)_objType.GetProperty(prop).GetValue(_obj);
 
             if (string.IsNullOrWhiteSpace(value))
             {
-                yield return new ValidationResult($"cannot be null or empty", new[] { nameof(prop) });
+                yield return new ValidationResult($"cannot be null or empty", new[] { prop });
             }
             else if (value.Length > Constants.MaximumLengths.StringColumn)
             {
-                yield return new ValidationResult($"must be maximum {Constants.MaximumLengths.StringColumn} characters", new[] { nameof(prop) });
+                yield return new ValidationResult($"must be maximum {Constants.MaximumLengths.StringColumn} characters", new[] { prop });
             }
         }
 
