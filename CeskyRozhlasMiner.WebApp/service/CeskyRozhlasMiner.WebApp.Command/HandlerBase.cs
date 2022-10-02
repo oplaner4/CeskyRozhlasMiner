@@ -3,7 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
-using Microsoft.DSX.ProjectTemplate.Data.State;
+using System.Linq;
+using System.Security.Claims;
 
 namespace Microsoft.DSX.ProjectTemplate.Command
 {
@@ -20,7 +21,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command
 
         protected IHttpContextAccessor HttpContextAccessor { get; }
 
-        protected SessionManipulator Manipulator { get; }
+        protected int UserId { get; }
 
         protected HandlerBase(
             IMediator mediator,
@@ -32,12 +33,20 @@ namespace Microsoft.DSX.ProjectTemplate.Command
             Database = database;
             Mapper = mapper;
             HttpContextAccessor = httpContextAccessor;
-            Manipulator = new SessionManipulator(HttpContextAccessor.HttpContext.Session);
+            UserId = -1;
+
+            var claim = HttpContextAccessor.HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
+
+            if (claim != null)
+            {
+                UserId = int.Parse(claim.Value);
+            }
+                
         }
 
         protected void EnsureSignedIn()
         {
-            if (!Manipulator.IsSignedIn())
+            if (!HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
                 throw new UnauthorizedException("Not signed in");
             }

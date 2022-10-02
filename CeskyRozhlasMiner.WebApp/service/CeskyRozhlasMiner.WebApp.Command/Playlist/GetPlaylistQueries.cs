@@ -36,10 +36,9 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
         public async Task<IEnumerable<PlaylistDto>> Handle(GetAllUserPlaylistsQuery request, CancellationToken cancellationToken)
         {
             EnsureSignedIn();
-            int userId = Manipulator.GetUserId();
 
             return await Database.Playlists
-                .Where(x => !x.Deleted && x.OwnerId == userId)
+                .Where(x => !x.Deleted && x.OwnerId == UserId)
                 .Select(x => Mapper.Map<PlaylistDto>(x))
                 .ToListAsync(cancellationToken);
         }
@@ -60,7 +59,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
                 throw new EntityNotFoundException($"{nameof(Data.Models.Playlist)} with Id {request.PlaylistId} cannot be found.");
             }
 
-            if (innerResult.OwnerId != Manipulator.GetUserId())
+            if (innerResult.OwnerId != UserId)
             {
                 throw new UnauthorizedException("Unauthorized access");
             }

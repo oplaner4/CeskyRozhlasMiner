@@ -116,7 +116,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist
         /// Fetches songs using given settings with ability to monitor progress.
         /// </summary>
         /// <param name="onProgress">Action to handle progress. Its first argument 
-        /// means count of percent done.</param>
+        /// <typeparam name="int"/> means count of percent done.</param>
         /// <returns>Asynchronous enumerable collection of songs</returns>
         public async IAsyncEnumerable<PlaylistSong> GetSongs(Action<int> onProgress)
         {
@@ -186,15 +186,13 @@ namespace CeskyRozhlasMiner.Lib.Playlist
 
             if (success && now.Data.InterpretStatus() == PlaylistNowDataStatus.OnAir)
             {
-                return new PlaylistSong(now.Data.Interpret, now.Data.Track,
-                    now.Data.Since, station);
+                return new PlaylistSong(now.Data.Interpret, now.Data.Track, now.Data.Since, station);
             }
 
             return null;
         }
 
-        private static async IAsyncEnumerable<PlaylistSong> GetSongsInDayForStation(DateOnly date,
-            RozhlasStation station)
+        public static async IAsyncEnumerable<PlaylistSong> GetSongsInDayForStation(DateOnly date, RozhlasStation station)
         {
             string uri = new PlaylistUriConstructor(station).Day(date);
             string briefLogInfo = $"{nameof(GetSongsInDayForStation)} Date: {date} Station: {station}";

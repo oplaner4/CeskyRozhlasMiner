@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.DSX.ProjectTemplate.Data;
@@ -7,6 +9,8 @@ using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,8 +50,22 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
                 throw new UnauthorizedAccessException($"Invalid credentials were provided.");
             }
 
-            Manipulator.SetUserId(user.Id);
+            List<Claim> claims = new()
+            {
+                new Claim(ClaimTypes.Name, user.Email),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString())
+            };
 
+            ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsPrincipal principal = new(identity);
+
+            var authProperties = new AuthenticationProperties
+            {
+                AllowRefresh = true,
+                IsPersistent = true,
+            };
+
+            await HttpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
             return Mapper.Map<UserDto>(user);
         }
     }

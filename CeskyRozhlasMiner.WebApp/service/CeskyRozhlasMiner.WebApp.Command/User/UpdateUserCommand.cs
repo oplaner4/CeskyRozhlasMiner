@@ -50,8 +50,6 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
             user.PasswordHash = new PasswordHasher<Data.Models.User>().HashPassword(user, dto.NewPassword);
             await Database.SaveChangesAsync(cancellationToken);
 
-            Manipulator.SetUserId(user.Id);
-
             return Mapper.Map<UserDto>(user);
         }
     }

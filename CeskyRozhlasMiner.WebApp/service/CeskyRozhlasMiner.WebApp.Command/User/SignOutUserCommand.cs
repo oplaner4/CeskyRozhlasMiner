@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
-using Microsoft.DSX.ProjectTemplate.Data.State;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,10 +22,10 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
         {
         }
 
-        public Task<bool> Handle(SignOutUserCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(SignOutUserCommand request, CancellationToken cancellationToken)
         {
-            Manipulator.SetUserId(SessionManipulator.UserIdUnset);
-            return Task.FromResult(true);
+            await HttpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return true;
         }
     }
 }

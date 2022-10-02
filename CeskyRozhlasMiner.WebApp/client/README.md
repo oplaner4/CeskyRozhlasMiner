@@ -44,3 +44,14 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Generate SSL certificate
+
+Run these commands in root project directory
+```
+openssl req -x509 -newkey rsa:2048 -keyout keytmp.pem -out cert.pem -days 365 -config "C:\Program Files\Git\usr\ssl\openssl.cnf"
+openssl rsa -in keytmp.pem -out key.pem
+mkdir .cert
+mv key.pem .cert/key.pem
+mv cert.pem .cert/cert.pem
+```

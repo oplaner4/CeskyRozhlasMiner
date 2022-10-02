@@ -21,6 +21,9 @@ namespace Microsoft.DSX.ProjectTemplate.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
         public DbSet<PlaylistSourceStation> PlaylistSourceStations { get; set; }
+        public DbSet<FetchRangeSourceStation> FetchRangeSourceStations { get; set; }
+        public DbSet<FetchRange> FetchRanges { get; set; }
+        public DbSet<Song> Songs { get; set; }
 
         public override int SaveChanges()
         {
@@ -90,6 +93,9 @@ namespace Microsoft.DSX.ProjectTemplate.Data
 
             modelBuilder.Entity<Playlist>()
                 .OwnsMany(playlist => playlist.SourceStations);
+
+            modelBuilder.Entity<FetchRange>()
+                .OwnsMany(range => range.SourceStations);
         }
 
         private static void ConfigureSeedData(ModelBuilder modelBuilder)
@@ -133,6 +139,14 @@ namespace Microsoft.DSX.ProjectTemplate.Data
 
             modelBuilder.Entity<Playlist>()
                 .HasIndex(x => new { x.OwnerId, x.Name })
+                .IsUnique();
+
+            modelBuilder.Entity<FetchRange>()
+                .HasIndex(x => x.From)
+                .IsUnique();
+
+            modelBuilder.Entity<FetchRange>()
+                .HasIndex(x => x.To)
                 .IsUnique();
         }
     }

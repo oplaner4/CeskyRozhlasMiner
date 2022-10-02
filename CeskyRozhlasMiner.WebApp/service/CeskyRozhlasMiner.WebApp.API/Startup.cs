@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DSX.ProjectTemplate.Command;
 using Microsoft.Extensions.Configuration;
@@ -43,16 +45,32 @@ namespace Microsoft.DSX.ProjectTemplate.API
                 .AddMediatR(typeof(HandlerBase))
                 .AddCors()
                 .AddSwaggerDocument()
-                .AddDistributedMemoryCache()
-                .AddSession(options =>
+                .AddCookiePolicy(options =>
                 {
-                    options.IdleTimeout = TimeSpan.FromMinutes(20);
-                    options.Cookie.HttpOnly = true;
-                    options.Cookie.IsEssential = true;
-                    options.Cookie.Name = ".CeskyRozhlasMiner.Session";
-                })
-                .AddHttpContextAccessor()
+                    options.CheckConsentNeeded = context => true;
+                    options.MinimumSameSitePolicy = SameSiteMode.None;
+                    
+                    options.Secure = CookieSecurePolicy.None;
+                    //options.HttpOnly = AspNetCore.CookiePolicy.HttpOnlyPolicy.Always;
+                });
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, (options) =>
+                    {
+                        options.Cookie.Name = ".CeskyRozhlasMiner.Cookie";
+                        options.Cookie.HttpOnly = true;
+                        options.Cookie.IsEssential = true;
+                        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+                        
+                    });
+
+            services.AddHttpContextAccessor()
                 .AddControllers();
+
         }
 
         /// <summary>
@@ -75,9 +93,10 @@ namespace Microsoft.DSX.ProjectTemplate.API
                 .UseExceptionHandling()
                 .UseOpenApi()
                 .UseSwaggerUi3()
+                //.UseCookiePolicy()
                 .UseRouting()
                 .UseCors("CorsPolicy")
-                .UseSession()
+                .UseAuthentication()
                 .UseAuthorization()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
         }

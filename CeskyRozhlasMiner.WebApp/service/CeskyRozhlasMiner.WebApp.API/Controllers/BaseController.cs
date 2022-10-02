@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DSX.ProjectTemplate.Data.State;
 
 namespace Microsoft.DSX.ProjectTemplate.API.Controllers
 {
@@ -18,18 +17,12 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         protected IMediator Mediator { get; }
 
         /// <summary>
-        /// Gets SessionManipulator instance.
-        /// </summary>
-        protected SessionManipulator Session { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BaseController"/> class.
         /// </summary>
         /// <param name="mediator">Mediator instance from dependency injection.</param>
         protected BaseController(IMediator mediator) : base()
         {
             Mediator = mediator;
-            //Session = new(HttpContext.Session);
         }
     }
 }

@@ -40,7 +40,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
                 throw new EntityNotFoundException($"{nameof(Data.Models.Playlist)} not found.");
             }
 
-            if (playlist.OwnerId != Manipulator.GetUserId())
+            if (playlist.OwnerId != UserId)
             {
                 throw new UnauthorizedException("Unauthorized access");
             }

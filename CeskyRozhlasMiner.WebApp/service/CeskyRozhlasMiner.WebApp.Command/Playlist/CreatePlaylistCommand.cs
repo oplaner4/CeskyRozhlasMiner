@@ -36,8 +36,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
 
             var dto = request.Playlist;
 
-            int userId = Manipulator.GetUserId();
-            bool nameAlreadyUsed = await Database.Playlists.AnyAsync(e => !e.Deleted && e.OwnerId == userId && e.Name.Trim() == dto.Name.Trim(), cancellationToken);
+            bool nameAlreadyUsed = await Database.Playlists.AnyAsync(e => !e.Deleted && e.OwnerId == UserId && e.Name.Trim() == dto.Name.Trim(), cancellationToken);
 
             if (nameAlreadyUsed)
             {
@@ -54,7 +53,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
                     Description = st.Description,
                     Station = st.Station,
                 }).ToList(),
-                OwnerId = userId,
+                OwnerId = UserId,
             };
 
             Database.Playlists.Add(model);

@@ -62,7 +62,7 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// Update existing User.
         /// </summary>
         /// <param name="dto">A UserSet DTO.</param>
-        [HttpPut(nameof(UpdateUser))]
+        [HttpPut]
         public async Task<ActionResult<UserDto>> UpdateUser([FromBody] UserSetDto dto)
         {
             return Ok(await Mediator.Send(new UpdateUserCommand() { User = dto }));
@@ -72,7 +72,7 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// Delete existing User.
         /// </summary>
         /// <param name="dto">A UserAuthenticate DTO.</param>
-        [HttpDelete(nameof(DeleteUser))]
+        [HttpDelete]
         public async Task<ActionResult<bool>> DeleteUser([FromBody] UserAuthenticateDto dto)
         {
             return Ok(await Mediator.Send(new DeleteUserCommand() { User = dto }));

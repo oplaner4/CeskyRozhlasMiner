@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using CeskyRozhlasMiner.Lib.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
 using Microsoft.DSX.ProjectTemplate.Data.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +40,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
                 throw new EntityNotFoundException($"{nameof(Data.Models.Playlist)} not found.");
             }
 
-            if (playlist.OwnerId != Manipulator.GetUserId())
+            if (playlist.OwnerId != UserId)
             {
                 throw new UnauthorizedException("Unauthorized access");
             }
@@ -48,10 +50,23 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
             playlist.Name = dto.Name;
             playlist.From = dto.From;
             playlist.To = dto.To;
-            playlist.SourceStations = dto.SourceStations.Select(st => new PlaylistSourceStation()
+
+            Dictionary<int, PlaylistSourceStation> idAndStation = playlist.SourceStations.ToDictionary(x => x.Id, x => x);
+
+            playlist.SourceStations = dto.SourceStations.DistinctBy(x => x.Id).DistinctBy(x => x.Station).ToDictionary(x => x.Id, x => x).Select(pair =>
             {
-                Description = st.Description,
-                Station = st.Station,
+                if (idAndStation.TryGetValue(pair.Key, out var value))
+                {
+                    value.Station = pair.Value.Station;
+                    value.Description = pair.Value.Description;
+                    return value;
+                }
+
+                return new PlaylistSourceStation()
+                {
+                    Description = pair.Value.Description,
+                    Station = pair.Value.Station,
+                };
             }).ToList();
 
             await Database.SaveChangesAsync(cancellationToken);

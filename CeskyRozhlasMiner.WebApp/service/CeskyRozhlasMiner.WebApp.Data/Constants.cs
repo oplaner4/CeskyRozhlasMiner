@@ -13,6 +13,8 @@
         public static class MaximumLengths
         {
             public const int StringColumn = 512;
+
+            public const int MaxDaysPlaylistRange = 10;
         }
 
         public static class MimimumLengths

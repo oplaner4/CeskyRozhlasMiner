@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
-using Microsoft.DSX.ProjectTemplate.Data.State;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
@@ -47,9 +46,9 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
                 throw new UnauthorizedAccessException($"Invalid credentials were provided.");
             }
 
-            if (Manipulator.GetUserId() == user.Id)
+            if (user.Id == UserId)
             {
-                Manipulator.SetUserId(SessionManipulator.UserIdUnset);
+                await Mediator.Send(new SignOutUserCommand(), cancellationToken);
             }
 
             user.Deleted = true;

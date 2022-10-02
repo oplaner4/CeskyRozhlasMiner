@@ -24,7 +24,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
 
         public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            var innerResult = await Database.Users.FindAsync(new object[] { Manipulator.GetUserId() }, cancellationToken);
+            var innerResult = await Database.Users.FindAsync(new object[] { UserId }, cancellationToken);
 
             if (innerResult == null || innerResult.Deleted)
             {
