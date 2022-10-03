@@ -1,5 +1,4 @@
 ﻿using CeskyRozhlasMiner.Lib.Common;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Microsoft.DSX.ProjectTemplate.Data.Models

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CeskyRozhlasMiner.Lib.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;

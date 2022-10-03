@@ -50,7 +50,7 @@ const UserSignIn: React.FC = () => {
     };
 
     return <Grid container>
-        <Grid item md={8} lg={6}>
+        <Grid item md={7} lg={5} xl={4}>
             <Box mb={2} sx={{ display: 'flex' }} justifyContent="center">
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                   <LockOutlined />

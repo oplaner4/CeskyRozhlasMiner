@@ -41,7 +41,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command
             {
                 UserId = int.Parse(claim.Value);
             }
-                
+
         }
 
         protected void EnsureSignedIn()

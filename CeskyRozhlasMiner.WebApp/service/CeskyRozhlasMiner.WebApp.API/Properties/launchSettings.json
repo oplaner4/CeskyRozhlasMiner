@@ -8,6 +8,14 @@
     }
   },
   "profiles": {
+    "CeskyRozhlasMiner.Development.Web": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "home",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "CeskyRozhlasMiner.API.Development": {
       "commandName": "IISExpress",
       "launchBrowser": true,

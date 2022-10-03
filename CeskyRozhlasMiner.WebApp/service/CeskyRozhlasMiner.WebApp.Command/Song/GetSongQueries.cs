@@ -3,11 +3,9 @@ using CeskyRozhlasMiner.Lib.Common;
 using CeskyRozhlasMiner.Lib.Playlist;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.DSX.ProjectTemplate.Command.Playlist;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
-using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
 using Microsoft.DSX.ProjectTemplate.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,7 +17,8 @@ using System.Threading.Tasks;
 
 namespace Microsoft.DSX.ProjectTemplate.Command.Song
 {
-    public class GetAllSongsForPlaylist : IRequest<IEnumerable<SongDto>> {
+    public class GetAllSongsForPlaylist : IRequest<IEnumerable<SongDto>>
+    {
         public int PlaylistId { get; set; }
     }
 
@@ -105,7 +104,8 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
                         result.Add(Mapper.Map<SongDto>(song));
                     }
 
-                    Database.FetchRanges.Add(new FetchRange() {
+                    Database.FetchRanges.Add(new FetchRange()
+                    {
                         From = inspected,
                         To = maxBound,
                         SourceStations = requestedStations.Select(x => new FetchRangeSourceStation() { Station = x }).ToList()

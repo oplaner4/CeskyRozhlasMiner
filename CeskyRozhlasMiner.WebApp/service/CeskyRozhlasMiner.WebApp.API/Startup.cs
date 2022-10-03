@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.DSX.ProjectTemplate.Command;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,7 +62,7 @@ namespace Microsoft.DSX.ProjectTemplate.API
                         options.Cookie.HttpOnly = true;
                         options.Cookie.IsEssential = true;
                         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-                        
+                        options.AccessDeniedPath = "/user/sign-in";
                     });
 
             services.AddHttpContextAccessor()

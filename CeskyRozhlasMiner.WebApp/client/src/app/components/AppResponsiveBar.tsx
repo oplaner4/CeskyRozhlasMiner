@@ -99,8 +99,8 @@ const AppResponsiveBar = () => {
                       && UseRoutes[r].inMenu
                       && (user !== null || !UseRoutes[r].beAuthorized)
                   ).map(route =>
-                      <MenuItem key={route} onClick={handleCloseNavMenu}>
-                        <Typography textAlign="center" onClick={()=>navigate(UseRoutes[route].path)}>
+                      <MenuItem key={route} onClick={() => { handleCloseNavMenu(); navigate(UseRoutes[route].path); }}>
+                        <Typography textAlign="center">
                           {UseRoutes[route].menuTitle}
                         </Typography>
                       </MenuItem>
@@ -133,12 +133,10 @@ const AppResponsiveBar = () => {
                   ).map(route =>
                     <Button
                       key={route}
-                      onClick={handleCloseNavMenu}
+                      onClick={()=> { handleCloseNavMenu(); navigate(UseRoutes[route].path); }}
                       sx={{ my: 2, color: 'white', display: 'block' }}
                     >
-                      <Box component="span" onClick={()=>navigate(UseRoutes[route].path)}>
                         {UseRoutes[route].menuTitle}
-                      </Box>
                     </Button>
                 )}
               </Box>
@@ -175,8 +173,8 @@ const AppResponsiveBar = () => {
                         && UseRoutes[r].inMenu
                         && ((user === null && !UseRoutes[r].beAuthorized) || (user !== null && UseRoutes[r].beAuthorized))
                     ).map(route =>
-                      <MenuItem key={route} onClick={handleCloseUserMenu}>
-                          <Typography textAlign="center" onClick={()=>navigate(UseRoutes[route].path)}>
+                      <MenuItem key={route} onClick={()=> { handleCloseUserMenu(); navigate(UseRoutes[route].path); }}>
+                          <Typography textAlign="center">
                             {UseRoutes[route].menuTitle}
                           </Typography>
                       </MenuItem>
