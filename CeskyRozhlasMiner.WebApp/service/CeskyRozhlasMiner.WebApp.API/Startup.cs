@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.DSX.ProjectTemplate.Command;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,10 +49,7 @@ namespace Microsoft.DSX.ProjectTemplate.API
                 .AddCookiePolicy(options =>
                 {
                     options.CheckConsentNeeded = context => true;
-                    options.MinimumSameSitePolicy = SameSiteMode.None;
-                    
-                    options.Secure = CookieSecurePolicy.None;
-                    //options.HttpOnly = AspNetCore.CookiePolicy.HttpOnlyPolicy.Always;
+                    options.Secure = CookieSecurePolicy.Always;
                 });
 
             services.AddAuthentication(options =>
@@ -93,12 +91,24 @@ namespace Microsoft.DSX.ProjectTemplate.API
                 .UseExceptionHandling()
                 .UseOpenApi()
                 .UseSwaggerUi3()
-                //.UseCookiePolicy()
+                .UseCookiePolicy()
                 .UseRouting()
                 .UseCors("CorsPolicy")
                 .UseAuthentication()
                 .UseAuthorization()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "../../client";
+                spa.Options.DevServerPort = 3000;
+
+                if (_environment.IsDevelopment())
+                {
+                    spa.UseProxyToSpaDevelopmentServer($"https://localhost:{spa.Options.DevServerPort}");
+                    // spa.UseReactDevelopmentServer(npmScript: "start");
+                }
+            });
         }
     }
 }

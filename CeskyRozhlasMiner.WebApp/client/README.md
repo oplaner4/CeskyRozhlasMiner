@@ -55,3 +55,8 @@ mkdir .cert
 mv key.pem .cert/key.pem
 mv cert.pem .cert/cert.pem
 ```
+
+## Release port
+``` 
+kill $(Get-NetTCPConnection -LocalPort 3000 -ErrorAction Ignore).OwningProcess
+```
