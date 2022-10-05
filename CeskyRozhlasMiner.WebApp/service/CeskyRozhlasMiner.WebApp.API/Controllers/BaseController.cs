@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DSX.ProjectTemplate.Data.DTOs;
+using System.Net;
 
 namespace Microsoft.DSX.ProjectTemplate.API.Controllers
 {
@@ -9,6 +11,9 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+    [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+    [ProducesErrorResponseType(typeof(ErrorResponseDto))]
+    [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
     public abstract class BaseController : Controller
     {
         /// <summary>

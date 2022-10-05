@@ -2,13 +2,13 @@
 
 namespace Microsoft.DSX.ProjectTemplate.Data.Exceptions
 {
-    public class UnauthorizedException : ExceptionBase
+    public class NotAuthenticatedException : ExceptionBase
     {
-        private static string DefaultMessageHeader => "Unauthorized";
+        private static string DefaultMessageHeader => "Not authenticated";
 
         public override HttpStatusCode StatusCode => HttpStatusCode.Unauthorized;
 
-        public UnauthorizedException(string message, string messageHeader = null)
+        public NotAuthenticatedException(string message, string messageHeader = null)
             : base(message, messageHeader ?? DefaultMessageHeader) { }
     }
 }

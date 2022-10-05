@@ -12,9 +12,12 @@ import AppRoutes, { AppRoute, UseRoutes } from './components/AppRoutes';
 import { Alert, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { useRecoilState } from 'recoil';
-import { appAlertsAtom } from './state/atom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { appAlertsAtom, userAtom } from './state/atom';
 import AppWrapper from './components/AppWrapper';
+import { ApiClient } from './generated/backend';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 export interface AppProps {
     brand: string;
@@ -24,6 +27,17 @@ export interface AppProps {
 const App: React.FC<AppProps> = ({brand, authors}: AppProps) => {
     const [appAlerts, setAppAlerts] = useRecoilState(appAlertsAtom);
     const [activeRoute, setActiveRoute] = useState<AppRoute>(AppRoute.Default);
+    const setUser = useSetRecoilState(userAtom);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+          try {
+              setUser(await new ApiClient(process.env.REACT_APP_API_BASE).users_GetUser());
+          } catch (_) { }
+        };
+  
+        fetchUser();  
+    }, [setUser]);
 
     useEffect(() => {
         document.title = `${UseRoutes[activeRoute].title} - ${brand}`;
@@ -40,8 +54,9 @@ const App: React.FC<AppProps> = ({brand, authors}: AppProps) => {
     return (
         <BrowserRouter>
             <ThemeProvider theme={theme}>
+              <LocalizationProvider dateAdapter={AdapterMoment}>
                 <AppResponsiveBar />
-                <AppWrapper pt={3} pb={5} my={2}>
+                <AppWrapper pt={3} pb={5} my={2} textAlign={{xs: "center", md: "left" }}>
                     <Box component="div" mb={appAlerts.length === 0 ? 0 : 3}>
                         {appAlerts.map((alert, i) => 
                             <Box
@@ -63,7 +78,9 @@ const App: React.FC<AppProps> = ({brand, authors}: AppProps) => {
                             </Box>
                         )}
                       </Box>
-                      <Typography component={Box} mb={2} variant="h4">{UseRoutes[activeRoute].title}</Typography>
+                      <Box mb={2}>
+                        <Typography component="h1" variant="h4">{UseRoutes[activeRoute].title}</Typography>
+                      </Box>
                       <AppRoutes onChange={setActiveRoute} />
                 </AppWrapper>
                 <Box component="div" position="fixed" bottom={0} width="100%" py={2} px={3} boxSizing="border-box">
@@ -71,6 +88,7 @@ const App: React.FC<AppProps> = ({brand, authors}: AppProps) => {
                         {authors.join(', ')}, {new Date().getFullYear()}, @ All rights reserved
                     </Typography>
                 </Box>
+              </LocalizationProvider>
             </ThemeProvider>
         </BrowserRouter>
     );

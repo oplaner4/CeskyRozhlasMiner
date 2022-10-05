@@ -1,4 +1,5 @@
 ﻿using CeskyRozhlasMiner.WebApp.Data.Utilities;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,6 +14,7 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
 
         public DateTime To { get; set; }
 
+        [Required]
         public HashSet<PlaylistSourceStationDto> SourceStations { get; set; }
 
         public int OwnerId { get; set; }
@@ -42,6 +44,12 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
             foreach (var result in new ValidationHelper<PlaylistDto>(this).CheckStringsNotEmptyAndCorrectLength(nameof(Name)))
             {
                 yield return result;
+            }
+
+            if (SourceStations.Count == 0)
+            {
+                yield return new ValidationResult($"At least one source station must be added.",
+                    new string[] { nameof(SourceStations) });
             }
         }
     }

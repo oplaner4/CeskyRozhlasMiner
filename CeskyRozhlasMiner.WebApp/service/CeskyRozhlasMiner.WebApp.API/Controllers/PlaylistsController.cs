@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DSX.ProjectTemplate.Command.Playlist;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
@@ -10,6 +11,7 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
     /// <summary>
     /// Controller for Playlist APIs.
     /// </summary>
+    [Authorize]
     public class PlaylistsController : BaseController
     {
         /// <summary>
@@ -44,7 +46,8 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         [HttpPost]
         public async Task<ActionResult<PlaylistDto>> CreatePlaylist([FromBody] PlaylistDto dto)
         {
-            return Ok(await Mediator.Send(new CreatePlaylistCommand() { Playlist = dto }));
+            PlaylistDto createdDto = await Mediator.Send(new CreatePlaylistCommand() { Playlist = dto });
+            return Ok(createdDto);
         }
 
         /// <summary>

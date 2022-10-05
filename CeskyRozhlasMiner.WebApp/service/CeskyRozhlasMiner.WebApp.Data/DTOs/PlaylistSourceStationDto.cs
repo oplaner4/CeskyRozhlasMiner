@@ -1,6 +1,8 @@
 ﻿using CeskyRozhlasMiner.Lib.Common;
+using CeskyRozhlasMiner.WebApp.Data.Utilities;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
 {
@@ -12,7 +14,7 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            yield break;
+            return new ValidationHelper<PlaylistSourceStationDto>(this).CheckStringCorrectLength(nameof(Description)).ToList();
         }
     }
 }

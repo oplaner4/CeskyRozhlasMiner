@@ -24,6 +24,11 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
 
         public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
+            if (!HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            {
+                throw new NotAuthenticatedException("Not signed in.");
+            }
+
             var innerResult = await Database.Users.FindAsync(new object[] { UserId }, cancellationToken);
 
             if (innerResult == null || innerResult.Deleted)

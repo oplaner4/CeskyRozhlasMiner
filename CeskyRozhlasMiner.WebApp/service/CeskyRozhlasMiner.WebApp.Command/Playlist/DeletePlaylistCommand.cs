@@ -27,8 +27,6 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
 
         public async Task<bool> Handle(DeletePlaylistCommand request, CancellationToken cancellationToken)
         {
-            EnsureSignedIn();
-
             if (request.PlaylistId <= 0)
             {
                 throw new BadRequestException($"A valid {nameof(Data.Models.Playlist)} Id must be provided.");
@@ -42,7 +40,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
 
             if (playlist.OwnerId != UserId)
             {
-                throw new UnauthorizedException("Unauthorized access");
+                throw new ForbiddenException("Unauthorized access");
             }
 
             playlist.Deleted = true;

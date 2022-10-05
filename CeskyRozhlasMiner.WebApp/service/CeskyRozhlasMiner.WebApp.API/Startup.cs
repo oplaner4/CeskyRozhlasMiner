@@ -62,7 +62,7 @@ namespace Microsoft.DSX.ProjectTemplate.API
                         options.Cookie.HttpOnly = true;
                         options.Cookie.IsEssential = true;
                         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-                        options.AccessDeniedPath = "/user/sign-in";
+                        options.LoginPath = "/api/Users/";
                     });
 
             services.AddHttpContextAccessor()
@@ -105,7 +105,6 @@ namespace Microsoft.DSX.ProjectTemplate.API
                 if (_environment.IsDevelopment())
                 {
                     spa.UseProxyToSpaDevelopmentServer($"https://localhost:{spa.Options.DevServerPort}");
-                    // spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
         }

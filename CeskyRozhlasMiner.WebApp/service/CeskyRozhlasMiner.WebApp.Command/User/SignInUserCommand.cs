@@ -34,6 +34,8 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
 
         public async Task<UserDto> Handle(SignInUserCommand request, CancellationToken cancellationToken)
         {
+            Thread.Sleep(500);
+            
             var dto = request.User;
 
             var user = await Database.Users.FirstOrDefaultAsync(u => !u.Deleted && u.Email == dto.Email, cancellationToken);

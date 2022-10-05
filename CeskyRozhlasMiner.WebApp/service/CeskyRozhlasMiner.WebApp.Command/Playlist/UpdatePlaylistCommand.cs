@@ -31,8 +31,6 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
 
         public async Task<PlaylistDto> Handle(UpdatePlaylistCommand request, CancellationToken cancellationToken)
         {
-            EnsureSignedIn();
-
             var playlist = await Database.Playlists.FindAsync(new object[] { request.Playlist.Id }, cancellationToken);
             if (playlist == null)
             {
@@ -41,7 +39,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
 
             if (playlist.OwnerId != UserId)
             {
-                throw new UnauthorizedException("Unauthorized access");
+                throw new ForbiddenException("Unauthorized access");
             }
 
             var dto = request.Playlist;

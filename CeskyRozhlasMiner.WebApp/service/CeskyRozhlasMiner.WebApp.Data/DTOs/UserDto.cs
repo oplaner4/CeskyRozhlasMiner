@@ -12,9 +12,7 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             ValidationHelper<UserDto> helper = new ValidationHelper<UserDto>(this);
-
-            return helper.CheckStringNotEmptyAndCorrectLength(nameof(Password))
-                .Concat(helper.CheckStringValidEmailAdress(nameof(Email))).ToList();
+            return helper.CheckStringNotEmptyAndCorrectLength(nameof(DisplayName), "Name").ToList();
         }
     }
 }

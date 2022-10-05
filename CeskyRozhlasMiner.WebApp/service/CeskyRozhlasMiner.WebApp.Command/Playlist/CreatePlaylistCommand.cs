@@ -32,15 +32,13 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
 
         public async Task<PlaylistDto> Handle(CreatePlaylistCommand request, CancellationToken cancellationToken)
         {
-            EnsureSignedIn();
-
             var dto = request.Playlist;
 
             bool nameAlreadyUsed = await Database.Playlists.AnyAsync(e => !e.Deleted && e.OwnerId == UserId && e.Name.Trim() == dto.Name.Trim(), cancellationToken);
 
             if (nameAlreadyUsed)
             {
-                throw new BadRequestException($"{nameof(dto.Name)} '{dto.Name}' already used.");
+                throw new NotAcceptableException($"{nameof(dto.Name)} '{dto.Name}' already used.");
             }
 
             var model = new Data.Models.Playlist()

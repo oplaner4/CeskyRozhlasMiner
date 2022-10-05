@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DSX.ProjectTemplate.Command.Song;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
@@ -10,6 +11,7 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
     /// <summary>
     /// Controller for Song APIs.
     /// </summary>
+    [Authorize]
     public class SongsController : BaseController
     {
         /// <summary>

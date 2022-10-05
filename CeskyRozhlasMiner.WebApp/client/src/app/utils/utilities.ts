@@ -1,15 +1,6 @@
-import { ApiException } from "app/generated/backend";
+import { ApiException, ValidationProblemDetails } from "app/generated/backend";
 
-/**
- * Returns the first value associated to the given search parameter.
- */
-export function getUrlParamValue(param: string): string {
-    const url = document.location.search || document.location.href;
-    let urlParams = new URLSearchParams(url.substring(1));
-    return urlParams.get(param) || '';
-}
-
-export function str2Hsl (source: string, saturation: number = 100, lightness: number = 75) {
+export function str2Hsl (source: string, saturation: number = 100, lightness: number = 60) {
     /**
      * Adapted from https://stackoverflow.com/a/21682946
      */
@@ -28,13 +19,21 @@ export function getInitials(source: string, limit: number): string[] {
     return source.split(/\s+/g).map(w => w[0]).filter((_, i) => i < limit);
 }
 
-export function getErrorMessage(ex: ApiException): string {
-    let result = ex.message;
-    const response = JSON.parse(ex.response);
-
-    if (response !== null) {
-        result = response["Message"];
+export function getErrorMessage(e: ApiException | ValidationProblemDetails): string {
+    if (e instanceof ValidationProblemDetails) {
+        return Object.keys(e.errors).map(er => e.errors[er]).join(" ");
     }
 
-    return result;
+    if (!ApiException.isApiException(e)) {
+        return (e as ApiException).message;
+    }
+
+    const response = JSON.parse(e.response);
+
+    if (response !== null) {
+        
+        return response["Message"];
+    }
+
+    return (e as ApiException).message;
 }

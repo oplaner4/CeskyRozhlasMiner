@@ -35,7 +35,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Group
             bool nameAlreadyUsed = await Database.Groups.AnyAsync(e => e.Name.Trim() == dto.Name.Trim(), cancellationToken);
             if (nameAlreadyUsed)
             {
-                throw new BadRequestException($"{nameof(dto.Name)} '{dto.Name}' already used.");
+                throw new NotAcceptableException($"{nameof(dto.Name)} '{dto.Name}' already used.");
             }
 
             var model = new Data.Models.Group()

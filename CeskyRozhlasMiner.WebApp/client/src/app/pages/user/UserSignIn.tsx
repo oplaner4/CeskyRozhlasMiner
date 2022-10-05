@@ -13,7 +13,8 @@ const UserSignIn: React.FC = () => {
     const setAppAlerts = useSetRecoilState(appAlertsAtom);
     const setUser = useSetRecoilState(userAtom);
     const navigate = useNavigate();
-
+    
+    const [signingIn, setSigningIn] = useState<boolean>(false);
     const [userAuthenticate, setUserAuthenticate] = useState<IUserAuthenticateDto>({
         email: '',
         password: '',
@@ -28,14 +29,15 @@ const UserSignIn: React.FC = () => {
         const fetchData = async () => {
             try {
                 const data = new UserAuthenticateDto();
-                data.email = userAuthenticate.email;
-                data.password = userAuthenticate.password;
+                data.init(userAuthenticate);
+
+                setSigningIn(true);
                 setUser(await new ApiClient(process.env.REACT_APP_API_BASE).users_SignInUser(data));
+                setSigningIn(false);
+
                 navigate(UseRoutes[AppRoute.UserSettings].path);
-                setAppAlerts([]);
             } catch (e) {
                 console.log(e);
-
                 setAppAlerts((appAlerts) => [
                   ...appAlerts,
                   {
@@ -43,6 +45,11 @@ const UserSignIn: React.FC = () => {
                     severity: 'error',
                   }
                 ]);
+                setSigningIn(false);
+                setUserAuthenticate({
+                  ...userAuthenticate,
+                  password: '',
+                })
             }
         };
 
@@ -66,6 +73,7 @@ const UserSignIn: React.FC = () => {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={userAuthenticate.email}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserAuthenticate({
                     ...userAuthenticate,
                     email: e.currentTarget.value,
@@ -80,6 +88,7 @@ const UserSignIn: React.FC = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={userAuthenticate.password}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserAuthenticate({
                     ...userAuthenticate,
                     password: e.currentTarget.value,
@@ -94,6 +103,7 @@ const UserSignIn: React.FC = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={signingIn}
               >
                 Sign In
               </Button>

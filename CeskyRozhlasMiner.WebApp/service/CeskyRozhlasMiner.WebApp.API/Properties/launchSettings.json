@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "CeskyRozhlasMiner.Development.Web": {
+    "CeskyRozhlasMiner.Web.Development": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "launchUrl": "home",

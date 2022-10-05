@@ -10,10 +10,8 @@ namespace Microsoft.DSX.ProjectTemplate.Data.Models
         [MaxLength(Constants.MaximumLengths.StringColumn)]
         public string Name { get; set; }
 
-        [Required]
         public DateTime From { get; set; }
 
-        [Required]
         public DateTime To { get; set; }
 
         public virtual User Owner { get; set; }

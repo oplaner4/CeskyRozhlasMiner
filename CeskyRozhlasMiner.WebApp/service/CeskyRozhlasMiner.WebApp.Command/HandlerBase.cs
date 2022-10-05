@@ -41,15 +41,6 @@ namespace Microsoft.DSX.ProjectTemplate.Command
             {
                 UserId = int.Parse(claim.Value);
             }
-
-        }
-
-        protected void EnsureSignedIn()
-        {
-            if (!HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
-            {
-                throw new UnauthorizedException("Not signed in");
-            }
         }
     }
 }

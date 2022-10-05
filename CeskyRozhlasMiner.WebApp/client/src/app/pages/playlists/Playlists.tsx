@@ -1,51 +1,58 @@
-import { ApiClient, ApiException, IPlaylistDto } from 'app/generated/backend';
+import { ApiClient, ApiException, PlaylistDto, PlaylistSourceStationDto } from 'app/generated/backend';
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import CircularProgress from '@mui/material/CircularProgress';
-import { Box } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
+import { Box, Button, Typography } from '@mui/material';
 import { useSetRecoilState } from 'recoil';
 import { appAlertsAtom } from 'app/state/atom';
 import { getErrorMessage } from 'app/utils/utilities';
+import AppDataGrid from 'app/components/AppDataGrid';
+import { dateTimeValueFormatter } from 'app/utils/grid';
+import { Add } from '@mui/icons-material';
+import AppModal from 'app/components/AppModal';
+import PlaylistManage from './PlaylistManage';
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
+  {
+    field: 'id',
+    headerName: 'ID',
+    type: 'number',
+    width: 110
+  },
   {
     field: 'name',
     headerName: 'Name',
-    width: 150,
+    width: 300,
     editable: true,
   },
   {
     field: 'createdDate',
-    headerName: 'Created date',
+    headerName: 'Created',
     type: 'number',
-    width: 110,
-    editable: false,
-    valueGetter: (params: GridValueGetterParams) => `${params.value.toLocaleString()}`,
+    width: 200,
+    valueFormatter: dateTimeValueFormatter,
   },
   {
     field: 'updatedDate',
-    headerName: 'Updated Date',
-    sortable: false,
-    width: 160,
-    valueGetter: (params: GridValueGetterParams) => `${params.value.toLocaleString()}`,
+    headerName: 'Updated',
+    type: 'number',
+    width: 200,
+    valueFormatter: dateTimeValueFormatter,
   },
 ];
 
 const Playlists: React.FC = () => {
   const setAppAlerts = useSetRecoilState(appAlertsAtom);
-
-    const [data, setData] = useState({
-        playlists: [] as IPlaylistDto[],
-        isFetching: false
-    });
-    
+    const [data, setData] = useState<PlaylistDto[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [creating, setCreating] = useState<boolean>(false);
+  
     useEffect(() => {
         const fetchData = async () => {
             try {
-                setData({ playlists: data.playlists, isFetching: true });
+                setLoading(true);
                 const result = await new ApiClient(process.env.REACT_APP_API_BASE).playlists_GetAllUserPlaylists();
-                setData({ playlists: result, isFetching: false });
+                setData(result);
+                setLoading(false);
             } catch (e) {
                 console.log(e);
             
@@ -56,29 +63,70 @@ const Playlists: React.FC = () => {
                       severity: 'error',
                     }
                 ]);
-                setData({ playlists: data.playlists, isFetching: false });
+
+                setLoading(false);
             }
         };
 
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [setAppAlerts]);
 
     return (
-        <>
-            <Box component="div" style={{ height: 400, width: '100%' }}>
-              <DataGrid
-                rows={data.playlists}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                checkboxSelection
-                disableSelectionOnClick
-              />
-            </Box>
+      <Box>
+          <Box component={Typography} variant="body1" textAlign={{ md: "right" }} mb={3}>
+            <Button variant="contained" color="success" onClick={() => setCreating(true)}>
+                <Add /> Add
+            </Button>
+            <AppModal
+              title="Add playlist"
+              ariaPrefix="playlist-create"
+              content={
+                <PlaylistManage
+                  source={{
+                    name: "",
+                    sourceStations: [] as PlaylistSourceStationDto[],
+                    from: new Date(),
+                    to: new Date(),
+                    ownerId: 0,
+                    id: 0,
+                    createdDate: new Date(),
+                    updatedDate: new Date(),
+                  }}
+                  setSource={(created: PlaylistDto|null) => {
+                    if (created !== null) {
+                      setData([
+                        ...data,
+                        created,
+                      ]);
+                    }
 
-            {data.isFetching && <CircularProgress />}
-        </>
+                    setCreating(false);
+                  }}
+                />
+              }
+              opened={creating}
+              onClose={setCreating}
+            />
+          </Box>
+          <Box mb={5}>
+              <AppDataGrid
+                rows={data}
+                columns={columns}
+                loading={loading}
+                initialState={{
+                  sorting: {
+                      sortModel: [
+                          {
+                              field: 'createdDate',
+                              sort: 'desc',
+                          },
+                      ],
+                  },
+                }}
+              />
+          </Box>
+      </Box>
+
     );
 };
 
