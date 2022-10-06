@@ -11,6 +11,11 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
 {
     public class GetUserQuery : IRequest<UserDto> { }
 
+    public class GetUserByEmailQuery : IRequest<UserDto>
+    {
+        public string Email { get; set; }
+    }
+
     public class GetUserQueryHandler : QueryHandlerBase, IRequestHandler<GetUserQuery, UserDto>
     {
         public GetUserQueryHandler(

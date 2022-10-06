@@ -57,43 +57,42 @@ const PlaylistManage: React.FC<PlaylistManageProps> = ({source, setSource}: Play
         saveData();
     };
 
-
     return <Box>
-      {message.length > 0 ? <Box component={Alert} mb={3} severity="error">
-        {message}
-      </Box> : null}
-      <Box component="form" onSubmit={handleSubmit} noValidate mt={1}>
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          label="Name"
-          name="name"
-          autoFocus
-          value={data.name}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({
-              ...data,
-              name: e.currentTarget.value,
-          })}
-        />
+          {message.length > 0 ? <Box component={Alert} mb={3} severity="error">
+              {message}
+          </Box> : null}
+            <Box component="form" onSubmit={handleSubmit} noValidate mt={1}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Name"
+                name="name"
+                autoFocus
+                value={data.name}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({
+                    ...data,
+                    name: e.currentTarget.value,
+                })}
+              />
 
-        <DesktopDatePicker
-          label="From"
-          inputFormat="YYYY/MM/DD"
-          value={data.from}
-          onChange={(newValue: Date | null) => setData({
-            ...data,
-            from: newValue ?? new Date(),
-          })}
-          renderInput={(params) =>
-            <TextField {...params}
-            margin="normal"
-            required
-            fullWidth
-            name="from"
-            />
-          }
-        />
+              <DesktopDatePicker
+                label="From"
+                inputFormat="YYYY/MM/DD"
+                value={data.from}
+                onChange={(newValue: Date | null) => setData({
+                  ...data,
+                  from: newValue ?? new Date(),
+                })}
+                renderInput={(params) =>
+                  <TextField {...params}
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="from"
+                  />
+                }
+              />
 
         <DesktopDatePicker
           label="To"
@@ -156,8 +155,8 @@ const PlaylistManage: React.FC<PlaylistManageProps> = ({source, setSource}: Play
         >
           Save
         </Button>
+        </Box>
     </Box>
-  </Box>;
 }
 
 export default PlaylistManage;

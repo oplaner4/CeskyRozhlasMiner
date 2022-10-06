@@ -37,6 +37,7 @@ npm start
 ```
 5. The webpack dev server hosts the front-end and your browser will open to: `http://localhost:3000`
 
+
 # Adding an Entity Framework Core migration
 
 1. Open a command prompt in the **Microsoft.DSX.ProjectTemplate.Data** folder.

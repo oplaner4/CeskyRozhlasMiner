@@ -35,7 +35,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
         public async Task<UserDto> Handle(SignInUserCommand request, CancellationToken cancellationToken)
         {
             Thread.Sleep(500);
-            
+
             var dto = request.User;
 
             var user = await Database.Users.FirstOrDefaultAsync(u => !u.Deleted && u.Email == dto.Email, cancellationToken);
@@ -52,22 +52,10 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
                 throw new UnauthorizedAccessException($"Invalid credentials were provided.");
             }
 
-            List<Claim> claims = new()
+            await Mediator.Send(new SignInAndGiveClaimsCommand()
             {
-                new Claim(ClaimTypes.Name, user.Email),
-                new(ClaimTypes.NameIdentifier, user.Id.ToString())
-            };
-
-            ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal principal = new(identity);
-
-            var authProperties = new AuthenticationProperties
-            {
-                AllowRefresh = true,
-                IsPersistent = true,
-            };
-
-            await HttpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                User = dto,
+            }, cancellationToken);
             return Mapper.Map<UserDto>(user);
         }
     }

@@ -1,5 +1,8 @@
-﻿using MediatR;
+﻿using CeskyRozhlasMiner.WebApp.API.Immutable;
+using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+//using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Security.Claims;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace Microsoft.DSX.ProjectTemplate.API
@@ -38,6 +42,10 @@ namespace Microsoft.DSX.ProjectTemplate.API
         /// <param name="services">Collection of services to be provided by DI.</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            SettingsAccessor settings = new();
+            _configuration.Bind(settings);
+            services.AddSingleton(settings);
+
             services
                 .AddDbConnections(_configuration, _environment)
                 .AddAutoMapperProfiles()
@@ -56,14 +64,21 @@ namespace Microsoft.DSX.ProjectTemplate.API
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     options.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, (options) =>
+                })
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, (options) =>
                     {
                         options.Cookie.Name = ".CeskyRozhlasMiner.Cookie";
                         options.Cookie.HttpOnly = true;
                         options.Cookie.IsEssential = true;
                         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
                         options.LoginPath = "/api/Users/";
-                    });
+                    })
+                /*.AddGoogle(config => {
+                        config.CallbackPath = "/api/Google/";
+                        config.ClientId = settings.Own.Google.ClientId;
+                        config.ClientSecret = settings.Own.Google.ClientSecret;
+                        config.UserInformationEndpoint = "https://googleapis.com/oauth2/v2/userinfo";
+                    })*/;
 
             services.AddHttpContextAccessor()
                 .AddControllers();

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Button, { ButtonProps } from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { ButtonGroup } from '@mui/material';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -20,22 +21,25 @@ const style = {
 
 export interface AppModalProps {
     title: string;
-    content: React.ReactElement;
-    opened: boolean;
-    onClose: (opened: boolean) => void;
+    content: React.ReactElement | null;
+    onClose: (content: React.ReactElement | null) => void;
     ariaPrefix: string;
+    onActionBtnClick?: () => void;
+    actionBtnValue?: React.ReactNode | string;
+    actionBtnProps?: ButtonProps;
 }
 
-const AppModal: React.FC<AppModalProps> = ({title, content, opened, onClose, ariaPrefix}: AppModalProps) => {
+const AppModal: React.FC<AppModalProps> = ({title, content, onClose, ariaPrefix,
+      onActionBtnClick, actionBtnProps, actionBtnValue}: AppModalProps) => {
     const ariaTitle = `${ariaPrefix}-title`;
     const ariaDescription = `${ariaPrefix}-description`;
 
     return (
         <Modal
-          open={opened}
-          onClose={() => onClose(false)}
+          onClose={() => onClose(null)}
           aria-labelledby={ariaTitle}
           aria-describedby={ariaDescription}
+          open={content !== null}
         >
           <Box sx={style}>
             <Typography id={ariaTitle} variant="h5" component="h2">
@@ -45,7 +49,16 @@ const AppModal: React.FC<AppModalProps> = ({title, content, opened, onClose, ari
               {content}
             </Typography>
             <Box display="flex" justifyContent={{ xs: "center", md: "flex-end" }}>
-              <Button onClick={() => onClose(false)} variant="contained" color="error">Close</Button>
+              <ButtonGroup size="small">
+                {actionBtnValue ?
+                  <Box mr={2}>
+                    <Button onClick={onActionBtnClick} variant="contained" color="primary" {...actionBtnProps}>
+                      {actionBtnValue}
+                    </Button>
+                  </Box>
+                : null}
+                <Button onClick={() => onClose(null)} variant="contained" color="error">Close</Button>
+              </ButtonGroup>
             </Box>
           </Box>
         </Modal>

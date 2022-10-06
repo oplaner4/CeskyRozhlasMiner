@@ -4,10 +4,11 @@ import { LockOutlined } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { appAlertsAtom, userAtom } from 'app/state/atom';
 import { useSetRecoilState } from 'recoil';
-import { ApiClient, ApiException, IUserAuthenticateDto, UserAuthenticateDto } from 'app/generated/backend';
+import { ApiClient, ApiException, GoogleSignInDataDto, IUserAuthenticateDto, UserAuthenticateDto, UserDto } from 'app/generated/backend';
 import { getErrorMessage } from 'app/utils/utilities';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute, UseRoutes } from 'app/components/AppRoutes';
+import { GoogleLogin } from '@react-oauth/google';
 
 const UserSignIn: React.FC = () => {
     const setAppAlerts = useSetRecoilState(appAlertsAtom);
@@ -22,6 +23,25 @@ const UserSignIn: React.FC = () => {
         updatedDate: new Date(),
         id: 0,
     });
+
+    const handleGoogleSignIn = async (dto: GoogleSignInDataDto) => {
+      try {
+        setSigningIn(true);
+        setUser(await new ApiClient(process.env.REACT_APP_API_BASE).google_SignInUser(dto));
+        setSigningIn(false);
+        navigate(UseRoutes[AppRoute.UserSettings].path);
+      } catch (e) {
+          console.log(e);
+          setAppAlerts((appAlerts) => [
+            ...appAlerts,
+            {
+              text: getErrorMessage(e as ApiException),
+              severity: 'error',
+            }
+          ]);
+          setSigningIn(false);
+      }
+    };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -49,7 +69,7 @@ const UserSignIn: React.FC = () => {
                 setUserAuthenticate({
                   ...userAuthenticate,
                   password: '',
-                })
+                });
             }
         };
 
@@ -63,7 +83,7 @@ const UserSignIn: React.FC = () => {
                   <LockOutlined />
                 </Avatar>
             </Box>
-            <Box component="form" onSubmit={handleSubmit} noValidate mt={1}>
+            <Box component="form" onSubmit={handleSubmit} noValidate mt={1} mb={4}>
               <TextField
                 margin="normal"
                 required
@@ -119,6 +139,26 @@ const UserSignIn: React.FC = () => {
                   </Link>
                 </Grid>
               </Grid>
+            </Box>
+            
+            <Box display="flex" justifyContent={{ xs: "center", md: "flex-end" }}>
+              <GoogleLogin
+                onSuccess={credentialResponse => {
+                  const data = new GoogleSignInDataDto();
+                  data.init(credentialResponse);
+                  handleGoogleSignIn(data);
+                }}
+                onError={() => {
+                  setAppAlerts((appAlerts) => [
+                    ...appAlerts,
+                    {
+                      text: 'Login via Google failed',
+                      severity: 'error',
+                    }
+                  ]);
+                }}
+                useOneTap
+              />
             </Box>
         </Grid>
     </Grid>;
