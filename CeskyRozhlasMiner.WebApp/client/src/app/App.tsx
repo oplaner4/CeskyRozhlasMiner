@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import * as serviceWorker from '../serviceWorker';
-import AppResponsiveBar from './components/AppResponsiveBar';
+import AppResponsiveBar from './components/layout/AppResponsiveBar';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './App.module.scss';
@@ -14,7 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { appAlertsAtom, userAtom } from './state/atom';
-import AppWrapper from './components/AppWrapper';
+import AppWrapper from './components/layout/AppWrapper';
 import { ApiClient, ApiException } from './generated/backend';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';

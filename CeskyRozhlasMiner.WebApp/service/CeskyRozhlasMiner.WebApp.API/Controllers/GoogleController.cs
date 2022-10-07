@@ -19,7 +19,8 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// </summary>
         /// <param name="mediator">Mediator instance from dependency injection.</param>
         /// <param name="settings">App settings accessor from dependency injection.</param>
-        public GoogleController(IMediator mediator, SettingsAccessor settings) : base(mediator) {
+        public GoogleController(IMediator mediator, SettingsAccessor settings) : base(mediator)
+        {
             _settings = settings;
         }
 
@@ -33,16 +34,16 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         }
 
         /// <summary>
-        /// Sign user in by google
+        /// Sign user in by Google auth provider.
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
+        /// <param name="dto">A GoogleSignInData DtO.</param>
         [HttpPost]
         public async Task<ActionResult<UserDto>> SignInUser([FromBody] GoogleSignInDataDto dto)
         {
             return Ok(await Mediator.Send(new SignInViaGoogleCommand()
             {
                 GoogleData = dto,
+                GoogleClientId = _settings.Own.Google.ClientId,
             }));
         }
 

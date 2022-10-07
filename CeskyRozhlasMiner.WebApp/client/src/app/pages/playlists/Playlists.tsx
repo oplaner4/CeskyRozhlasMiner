@@ -9,7 +9,7 @@ import AppDataGrid from 'app/components/AppDataGrid';
 import { dateFormatter, dateTimeValueFormatter } from 'app/utils/grid';
 import { Add, Delete, Edit } from '@mui/icons-material';
 import AppModal from 'app/components/AppModal';
-import PlaylistManage from './PlaylistManage';
+import PlaylistManage from '../../components/playlist/PlaylistManage';
 
 const Playlists: React.FC = () => {
     const setAppAlerts = useSetRecoilState(appAlertsAtom);
@@ -46,12 +46,6 @@ const Playlists: React.FC = () => {
 
     const columns: GridColDef[] = [
         {
-            field: 'id',
-            headerName: 'ID',
-            type: 'number',
-            width: 110
-        },
-        {
             field: 'name',
             headerName: 'Name',
             width: 260,
@@ -71,7 +65,7 @@ const Playlists: React.FC = () => {
             }
         },
         {
-            field: 'action',
+            field: 'id',
             headerName: 'Action',
             sortable: false,
             width: 120,

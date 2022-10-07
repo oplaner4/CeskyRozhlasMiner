@@ -23,7 +23,7 @@ const AppDataGrid: React.FC<DataGridProps> = (props: DataGridProps) => {
         disableColumnSelector
         disableDensitySelector
 
-        checkboxSelection
+        //checkboxSelection
         disableSelectionOnClick
         {...props}
     />;

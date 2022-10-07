@@ -112,7 +112,7 @@ namespace CeskyRozhlasMiner.WebApp.Data.Utilities
             string value = (string)_objType.GetProperty(prop).GetValue(_obj);
             readableName ??= prop;
 
-             if (value != null && value.Length > Constants.MaximumLengths.StringColumn)
+            if (value != null && value.Length > Constants.MaximumLengths.StringColumn)
             {
                 yield return new ValidationResult($"{readableName} must be maximum {Constants.MaximumLengths.StringColumn} characters.", new[] { prop });
             }

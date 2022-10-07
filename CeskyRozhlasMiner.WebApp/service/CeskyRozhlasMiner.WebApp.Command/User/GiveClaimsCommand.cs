@@ -3,12 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
-using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
@@ -16,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Microsoft.DSX.ProjectTemplate.Command.User
 {
-    public class SignInAndGiveClaimsCommand : IRequest<bool>
+    public class GiveClaimsCommand : IRequest<bool>
     {
         public UserAuthenticateDto User { get; set; }
     }
 
-    public class SignInAndGiveClaimsCommandHandler : CommandHandlerBase, IRequestHandler<SignInAndGiveClaimsCommand, bool>
+    public class GiveClaimsCommandHandler : CommandHandlerBase, IRequestHandler<GiveClaimsCommand, bool>
     {
-        public SignInAndGiveClaimsCommandHandler(
+        public GiveClaimsCommandHandler(
             IMediator mediator,
             ProjectTemplateDbContext database,
             IMapper mapper,
@@ -32,7 +28,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
         {
         }
 
-        public async Task<bool> Handle(SignInAndGiveClaimsCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(GiveClaimsCommand request, CancellationToken cancellationToken)
         {
             var dto = request.User;
 

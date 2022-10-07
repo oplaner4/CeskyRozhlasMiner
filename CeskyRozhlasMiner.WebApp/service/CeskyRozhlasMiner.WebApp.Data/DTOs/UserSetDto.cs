@@ -16,9 +16,9 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
             ValidationHelper<UserSetDto> helper = new ValidationHelper<UserSetDto>(this);
 
             foreach (var result in helper.CheckStringNotEmptyAndCorrectLength(nameof(DisplayName), "Name")
-                .Concat(helper.CheckStringNotEmptyAndCorrectLength(nameof(NewPasswordConfirm), "Confirmation password"))
                 .Concat(helper.CheckStringValidEmailAdress(nameof(Email)))
-                .Concat(helper.CheckValidPassword(nameof(NewPassword), "Password")))
+                .Concat(helper.CheckValidPassword(nameof(NewPassword), "Password"))
+                .Concat(helper.CheckStringNotEmptyAndCorrectLength(nameof(NewPasswordConfirm), "Confirmation password")))
             {
                 yield return result;
             }

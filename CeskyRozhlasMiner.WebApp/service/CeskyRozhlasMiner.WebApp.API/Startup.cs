@@ -1,6 +1,5 @@
 ﻿using CeskyRozhlasMiner.WebApp.API.Immutable;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 //using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
@@ -12,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Security.Claims;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace Microsoft.DSX.ProjectTemplate.API
@@ -73,12 +71,12 @@ namespace Microsoft.DSX.ProjectTemplate.API
                         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
                         options.LoginPath = "/api/Users/";
                     })
-                /*.AddGoogle(config => {
-                        config.CallbackPath = "/api/Google/";
-                        config.ClientId = settings.Own.Google.ClientId;
-                        config.ClientSecret = settings.Own.Google.ClientSecret;
-                        config.UserInformationEndpoint = "https://googleapis.com/oauth2/v2/userinfo";
-                    })*/;
+                                                /*.AddGoogle(config => {
+                                                        config.CallbackPath = "/api/Google/";
+                                                        config.ClientId = settings.Own.Google.ClientId;
+                                                        config.ClientSecret = settings.Own.Google.ClientSecret;
+                                                        config.UserInformationEndpoint = "https://googleapis.com/oauth2/v2/userinfo";
+                                                    })*/;
 
             services.AddHttpContextAccessor()
                 .AddControllers();

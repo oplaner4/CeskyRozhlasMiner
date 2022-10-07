@@ -21,7 +21,7 @@ export function getInitials(source: string, limit: number): string[] {
 
 export function getErrorMessage(e: ApiException | ValidationProblemDetails): string {
     if (e instanceof ValidationProblemDetails) {
-        return Object.keys(e.errors).map(er => e.errors[er]).join(" ");
+        return Object.keys(e.errors).map(er => e.errors[er]).join(' ');
     }
 
     if (!ApiException.isApiException(e)) {

@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
-using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
 using System.Linq;
 using System.Security.Claims;
 

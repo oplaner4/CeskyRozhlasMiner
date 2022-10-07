@@ -9,7 +9,7 @@
         /// Google client id
         /// </summary>
         public string ClientId { get; set; }
-        
+
         /// <summary>
         /// Google client secret
         /// </summary>

@@ -1,10 +1,10 @@
-import { Box, Avatar, TextField, FormControlLabel, Checkbox, Button, Grid, Link } from '@mui/material';
+import { Box, Avatar, TextField, Button, Grid, Link } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
 
 import React, { useState } from 'react';
 import { appAlertsAtom, userAtom } from 'app/state/atom';
 import { useSetRecoilState } from 'recoil';
-import { ApiClient, ApiException, GoogleSignInDataDto, IUserAuthenticateDto, UserAuthenticateDto, UserDto } from 'app/generated/backend';
+import { ApiClient, ApiException, GoogleSignInDataDto, IUserAuthenticateDto, UserAuthenticateDto } from 'app/generated/backend';
 import { getErrorMessage } from 'app/utils/utilities';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute, UseRoutes } from 'app/components/AppRoutes';
@@ -113,10 +113,6 @@ const UserSignIn: React.FC = () => {
                     ...userAuthenticate,
                     password: e.currentTarget.value,
                 })}
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
               />
               <Button
                 type="submit"

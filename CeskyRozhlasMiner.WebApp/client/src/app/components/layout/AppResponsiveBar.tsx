@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-import Logo from '../static/msftLogo.png';
+import Logo from '../../static/msftLogo.png';
 import { AppRoute, UseRoutes, iterateThroughRoutes, AppRouteGroup } from 'app/components/AppRoutes';
 import { useNavigate } from 'react-router-dom';
 import AppWrapper from './AppWrapper';

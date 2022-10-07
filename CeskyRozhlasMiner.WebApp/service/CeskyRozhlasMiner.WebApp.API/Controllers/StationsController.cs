@@ -1,7 +1,6 @@
 ﻿using CeskyRozhlasMiner.Lib.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DSX.ProjectTemplate.Command.Group;
 using System;
 using System.Collections.Generic;
 

@@ -1,8 +1,4 @@
-﻿using CeskyRozhlasMiner.WebApp.Data.Utilities;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-using System.Xml.Linq;
+﻿using System.Text.Json.Serialization;
 
 namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
 {

@@ -52,10 +52,10 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// Create a new User.
         /// </summary>
         /// <param name="dto">A UserSet DTO.</param>
-        [HttpPost(nameof(CreatUser))]
-        public async Task<ActionResult<UserDto>> CreatUser([FromBody] UserSetDto dto)
+        [HttpPost(nameof(CreateUser))]
+        public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserSetDto dto)
         {
-            return Ok(await Mediator.Send(new CreateUserCommand() { User = dto }));
+            return Ok(await Mediator.Send(new CreateUserCommand() { User = dto, GeneratePasswordHash = true, }));
         }
 
         /// <summary>

@@ -15,6 +15,11 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
     public class CreateUserCommand : IRequest<UserDto>
     {
         public UserSetDto User { get; set; }
+
+        /// <summary>
+        /// This should be set to 'false' when creating user authenticated by external provider.
+        /// </summary>
+        public bool GeneratePasswordHash { get; set; }
     }
 
     public class CreateUserCommandHandler : CommandHandlerBase, IRequestHandler<CreateUserCommand, UserDto>
@@ -45,7 +50,10 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
                 Email = dto.Email,
             };
 
-            model.PasswordHash = new PasswordHasher<Data.Models.User>().HashPassword(model, dto.NewPassword);
+            model.PasswordHash = request.GeneratePasswordHash
+                ? new PasswordHasher<Data.Models.User>().HashPassword(model, dto.NewPassword)
+                :
+                string.Empty;
 
             Database.Users.Add(model);
             await Database.SaveChangesAsync(cancellationToken);

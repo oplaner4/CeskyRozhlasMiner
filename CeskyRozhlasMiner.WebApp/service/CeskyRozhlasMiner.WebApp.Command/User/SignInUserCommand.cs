@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.DSX.ProjectTemplate.Data;
@@ -9,8 +7,6 @@ using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,7 +48,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
                 throw new UnauthorizedAccessException($"Invalid credentials were provided.");
             }
 
-            await Mediator.Send(new SignInAndGiveClaimsCommand()
+            await Mediator.Send(new GiveClaimsCommand()
             {
                 User = dto,
             }, cancellationToken);
