@@ -1,9 +1,9 @@
 ﻿using Microsoft.Win32;
-using RadiozurnalMiner.Dialogs;
-using RadiozurnalMiner.Lib.Common;
-using RadiozurnalMiner.Lib.Playlist;
-using RadiozurnalMiner.Lib.Playlist.DataProcessing;
-using RadiozurnalMiner.Models;
+using CeskyRozhlasMiner.Dialogs;
+using CeskyRozhlasMiner.Lib.Common;
+using CeskyRozhlasMiner.Lib.Playlist;
+using CeskyRozhlasMiner.Lib.Playlist.DataProcessing;
+using CeskyRozhlasMiner.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -285,8 +285,7 @@ namespace RadiozurnalMiner
             {
                 _settingsModel = dialog.Model;
                 UpdateShouldRefetch();
-                _miner = new PlaylistMiner(DateOnly.FromDateTime(_settingsModel.From), DateOnly.FromDateTime(_settingsModel.To))
-                    .SetSourceStations(_settingsModel.SourceStations);
+                _miner = new PlaylistMiner(_settingsModel.From.ToUniversalTime(), _settingsModel.To.ToUniversalTime(), _settingsModel.SourceStations);
                 UpdateUi();
             }
         }

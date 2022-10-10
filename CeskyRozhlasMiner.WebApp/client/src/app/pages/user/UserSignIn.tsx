@@ -9,6 +9,7 @@ import { getErrorMessage } from 'app/utils/utilities';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute, UseRoutes } from 'app/components/AppRoutes';
 import { GoogleLogin } from '@react-oauth/google';
+import dayjs from 'app/utils/dayjsAsUtc';
 
 const UserSignIn: React.FC = () => {
     const setAppAlerts = useSetRecoilState(appAlertsAtom);
@@ -16,11 +17,12 @@ const UserSignIn: React.FC = () => {
     const navigate = useNavigate();
     
     const [signingIn, setSigningIn] = useState<boolean>(false);
+    const now = dayjs();
     const [userAuthenticate, setUserAuthenticate] = useState<IUserAuthenticateDto>({
         email: '',
         password: '',
-        createdDate: new Date(),
-        updatedDate: new Date(),
+        createdDate: now as unknown as Date,
+        updatedDate: now as unknown as Date,
         id: 0,
     });
 

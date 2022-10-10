@@ -4,16 +4,16 @@ using System.IO;
 
 namespace CeskyRozhlasMiner.Lib.Playlist
 {
-    public class PlaylistUriConstructor
+    internal class PlaylistUriConstructor
     {
         private readonly RozhlasStation _station;
 
-        public PlaylistUriConstructor(RozhlasStation station)
+        internal PlaylistUriConstructor(RozhlasStation station)
         {
             _station = station;
         }
 
-        public string Day(DateOnly date)
+        internal string Day(DateOnly date)
         {
             return new UriBuilder(Settings.RozhlasApi)
             {
@@ -28,7 +28,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist
             }.ToString();
         }
 
-        public string Now()
+        internal string Now()
         {
             return new UriBuilder(Settings.RozhlasApi)
             {

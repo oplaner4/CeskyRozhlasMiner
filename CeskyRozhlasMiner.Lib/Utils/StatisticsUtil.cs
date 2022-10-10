@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CeskyRozhlasMiner.Lib.Utils
 {
-    public class StatisticsUtil
+    internal class StatisticsUtil
     {
-        public static Dictionary<Key, int> GetPropAndCount<Key, T>(
+        internal static Dictionary<Key, int> GetPropAndCount<Key, T>(
             IEnumerable<T> collection, Func<T, Key> keyCreator)
         {
             Dictionary<Key, int> result = new();

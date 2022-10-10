@@ -1,7 +1,6 @@
 ﻿using CeskyRozhlasMiner.WebApp.API.Immutable;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
-//using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -70,13 +69,7 @@ namespace Microsoft.DSX.ProjectTemplate.API
                         options.Cookie.IsEssential = true;
                         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
                         options.LoginPath = "/api/Users/";
-                    })
-                                                /*.AddGoogle(config => {
-                                                        config.CallbackPath = "/api/Google/";
-                                                        config.ClientId = settings.Own.Google.ClientId;
-                                                        config.ClientSecret = settings.Own.Google.ClientSecret;
-                                                        config.UserInformationEndpoint = "https://googleapis.com/oauth2/v2/userinfo";
-                                                    })*/;
+                    });
 
             services.AddHttpContextAccessor()
                 .AddControllers();

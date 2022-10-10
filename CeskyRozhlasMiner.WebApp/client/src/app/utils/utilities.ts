@@ -1,4 +1,5 @@
 import { ApiException, ValidationProblemDetails } from "app/generated/backend";
+import { Dayjs } from "dayjs";
 
 export function str2Hsl (source: string, saturation: number = 100, lightness: number = 60) {
     /**

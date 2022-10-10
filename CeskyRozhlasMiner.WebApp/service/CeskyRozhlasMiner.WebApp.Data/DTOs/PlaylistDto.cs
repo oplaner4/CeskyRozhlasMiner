@@ -10,7 +10,6 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
         public string Name { get; set; }
 
         public DateTime From { get; set; }
-
         public DateTime To { get; set; }
 
         [Required]
@@ -25,23 +24,23 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
                 yield return result;
             }
 
-            DateTime now = DateTime.Now;
+            DateTime maxBound = DateTime.UtcNow.Date.AddDays(1);
 
-            if (From > now)
+            if (From > maxBound)
             {
-                yield return new ValidationResult("From must be somewhere in the past.",
+                yield return new ValidationResult("'From' must be somewhere in the past.",
                     new string[] { nameof(From) });
             }
 
-            if (To > now)
+            if (To > maxBound)
             {
-                yield return new ValidationResult("To must be somewhere in the past.",
+                yield return new ValidationResult("'To' must be somewhere in the past.",
                     new string[] { nameof(To) });
             }
 
             if (To < From)
             {
-                yield return new ValidationResult("Invalid date range. Beginning must precede the end.",
+                yield return new ValidationResult("Invalid date range. 'From' must precede the 'To'.",
                     new string[] { nameof(From) });
             }
 

@@ -2,7 +2,7 @@
 
 namespace CeskyRozhlasMiner.Lib.Playlist.Json
 {
-    public class PlaylistContainer
+    internal class PlaylistContainer
     {
         public DateTime Timestamp { get; set; }
     }

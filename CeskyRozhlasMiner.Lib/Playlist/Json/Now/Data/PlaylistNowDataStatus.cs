@@ -1,6 +1,6 @@
 ﻿namespace CeskyRozhlasMiner.Lib.Playlist.Json.Now.Data
 {
-    public enum PlaylistNowDataStatus
+    internal enum PlaylistNowDataStatus
     {
         /// <summary>
         /// Specific station is not currently

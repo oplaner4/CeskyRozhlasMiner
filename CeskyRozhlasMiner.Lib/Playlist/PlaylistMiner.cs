@@ -14,7 +14,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist
     /// </summary>
     public class PlaylistMiner
     {
-        private static DateOnly _today = DateOnly.FromDateTime(DateTime.Now);
+        private static DateOnly _today = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, Settings.RozhlasTimeZoneInfo));
         private DateOnly _from = _today;
         private DateOnly _to = _today;
 
@@ -64,19 +64,23 @@ namespace CeskyRozhlasMiner.Lib.Playlist
         /// <summary>
         /// Initilizes miner only in the current day.
         /// </summary>
-        public PlaylistMiner()
+        /// <param name="stations">Enumerable stations to be set. If null 
+        /// then all stations are considered.</param>
+        public PlaylistMiner(IEnumerable<RozhlasStation> stations = null)
         {
-            SetSourceAllStations();
+            SetSourceStations(stations);
         }
 
         /// <summary>
         /// Initializes miner from any date in the past until now.
         /// </summary>
         /// <param name="from">Mine from the specific date</param>
-        public PlaylistMiner(DateOnly from)
+        /// <param name="stations">Enumerable stations to be set. If null 
+        /// then all stations are considered.</param>
+        public PlaylistMiner(DateOnly from, IEnumerable<RozhlasStation> stations = null)
         {
             From = from;
-            SetSourceAllStations();
+            SetSourceStations(stations);
         }
 
         /// <summary>
@@ -84,32 +88,29 @@ namespace CeskyRozhlasMiner.Lib.Playlist
         /// </summary>
         /// <param name="from">Mine from the specific date</param>
         /// <param name="to">Mine to the specific date</param>
-        public PlaylistMiner(DateOnly from, DateOnly to)
+        /// <param name="stations">Enumerable stations to be set. If null 
+        /// then all stations are considered.</param>
+        public PlaylistMiner(DateOnly from, DateOnly to, IEnumerable<RozhlasStation> stations = null)
         {
             From = from;
             To = to;
-            SetSourceAllStations();
+            SetSourceStations(stations);
         }
 
 
         /// <summary>
-        /// Sets Rozhlas stations to mine from.
+        /// Initializes miner within the specific range by deriving from UTC datetimes.
         /// </summary>
-        /// <param name="stations">Enumerable stations to be set. If null
+        /// <param name="from">Mine from the specific date which is derived by ignoring time 
+        /// part.</param>
+        /// <param name="to">Mine to the specific date which is derived by ignoring time part.</param>
+        /// <param name="stations">Enumerable stations to be set. If null 
         /// then all stations are considered.</param>
-        /// <returns>Current instance to allow chaining</returns>
-        public PlaylistMiner SetSourceStations(IEnumerable<RozhlasStation> stations)
+        public PlaylistMiner(DateTime fromUtc, DateTime toUtc, IEnumerable<RozhlasStation> stations = null)
         {
-            if (stations == null)
-            {
-                SetSourceAllStations();
-            }
-            else
-            {
-                SourceStations = stations.ToHashSet();
-            }
-
-            return this;
+            From = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(fromUtc, Settings.RozhlasTimeZoneInfo));
+            To = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(toUtc, Settings.RozhlasTimeZoneInfo));
+            SetSourceStations(stations);
         }
 
         /// <summary>
@@ -176,23 +177,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist
             }
         }
 
-        private static async Task<PlaylistSong> GetSongNowForStation(RozhlasStation station)
-        {
-            string briefLogInfo = $"{nameof(GetSongsInDayForStation)} Station: {station}";
-            string uri = new PlaylistUriConstructor(station).Now();
-
-            JsonMiner<PlaylistNow> miner = new(uri, briefLogInfo);
-            (bool success, PlaylistNow now) = await miner.Fetch();
-
-            if (success && now.Data.InterpretStatus() == PlaylistNowDataStatus.OnAir)
-            {
-                return new PlaylistSong(now.Data.Interpret, now.Data.Track, now.Data.Since, station);
-            }
-
-            return null;
-        }
-
-        public static async IAsyncEnumerable<PlaylistSong> GetSongsInDayForStation(DateOnly date, RozhlasStation station)
+        private static async IAsyncEnumerable<PlaylistSong> GetSongsInDayForStation(DateOnly date, RozhlasStation station)
         {
             string uri = new PlaylistUriConstructor(station).Day(date);
             string briefLogInfo = $"{nameof(GetSongsInDayForStation)} Date: {date} Station: {station}";
@@ -209,6 +194,22 @@ namespace CeskyRozhlasMiner.Lib.Playlist
             }
         }
 
+        private static async Task<PlaylistSong> GetSongNowForStation(RozhlasStation station)
+        {
+            string briefLogInfo = $"{nameof(GetSongsInDayForStation)} Station: {station}";
+            string uri = new PlaylistUriConstructor(station).Now();
+
+            JsonMiner<PlaylistNow> miner = new(uri, briefLogInfo);
+            (bool success, PlaylistNow now) = await miner.Fetch();
+
+            if (success && now.Data.InterpretStatus() == PlaylistNowDataStatus.OnAir)
+            {
+                return new PlaylistSong(now.Data, station);
+            }
+
+            return null;
+        }
+
         private int CountPercentDone(DateOnly date, int stationOrder)
         {
             int daysTotal = To.DayNumber - From.DayNumber + 1;
@@ -219,6 +220,18 @@ namespace CeskyRozhlasMiner.Lib.Playlist
             double done = daysDone;
             double total = SourceStations.Count * daysTotal;
             return (int)Math.Round(100 * done / total);
+        }
+
+        private void SetSourceStations(IEnumerable<RozhlasStation> stations)
+        {
+            if (stations == null)
+            {
+                SetSourceAllStations();
+            }
+            else
+            {
+                SourceStations = stations.ToHashSet();
+            }
         }
     }
 }

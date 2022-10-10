@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace CeskyRozhlasMiner.Lib.Common
 {
-    public class Settings
+    internal class Settings
     {
-        public const string RozhlasApi = "https://api.rozhlas.cz";
-        public const string RozhlasApiPlaylistDayPath = "data/v2/playlist/day";
-        public const string RozhlasApiPlaylistNowPath = "data/v2/playlist/now";
+        internal const string RozhlasApi = "https://api.rozhlas.cz";
+        internal const string RozhlasApiPlaylistDayPath = "data/v2/playlist/day";
+        internal const string RozhlasApiPlaylistNowPath = "data/v2/playlist/now";
 
-        public static readonly Dictionary<RozhlasStation, string>
+        internal static readonly Dictionary<RozhlasStation, string>
             RozhlasApiStation = new()
         {
             { RozhlasStation.Zurnal,          "radiozurnal"       },
@@ -38,12 +39,13 @@ namespace CeskyRozhlasMiner.Lib.Common
             { RozhlasStation.Zlin,            "zlin"              },
         };
 
-        public const string RozhlasApiPlaylistJsonExtension = ".json";
+        internal const string RozhlasApiPlaylistJsonExtension = ".json";
 
-        public static readonly JsonSerializerOptions SerializeSettings =
-            new() { PropertyNameCaseInsensitive = true };
+        internal static readonly JsonSerializerOptions DeserializeSettings = new() { PropertyNameCaseInsensitive = true, };
 
-        public const string LoggingCsvFile = "../../../Diagnostics/Log.csv";
-        public const char CsvSeparator = ';';
+        internal const string LoggingCsvFile = "../../../Diagnostics/Log.csv";
+        internal const char CsvSeparator = ';';
+
+        internal static readonly TimeZoneInfo RozhlasTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Central Europe Standard Time");
     }
 }

@@ -5,7 +5,7 @@
   "dependencies": {
     "@azure/msal-browser": "2.24.0",
     "@azure/msal-react": "1.4.0",
-    "@date-io/moment": "^2.16.0",
+    "@date-io/dayjs": "^2.16.0",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.6",
@@ -20,7 +20,7 @@
     "@types/node": "^16.11.48",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.2",
-    "moment": "^2.29.4",
+    "dayjs": "^1.11.5",
     "office-ui-fabric-core": "^11.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

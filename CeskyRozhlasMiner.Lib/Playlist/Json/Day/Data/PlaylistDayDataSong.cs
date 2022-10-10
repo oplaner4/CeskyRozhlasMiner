@@ -2,9 +2,26 @@
 
 namespace CeskyRozhlasMiner.Lib.Playlist.Json.Day.Data
 {
-    public class PlaylistDayDataSong
+    internal class PlaylistDayDataSong
     {
-        public DateTime Since { get; set; }
+        private DateTime _since;
+
+        /// <summary>
+        /// Date and time in the time zone specified in the Settings. The 'Kind' 
+        /// property is set to 'Unspecified' when setting value.
+        /// </summary>
+        public DateTime Since
+        {
+            get
+            {
+                return _since;
+            }
+            set
+            {
+                _since = DateTime.SpecifyKind(value, DateTimeKind.Unspecified);
+            }
+        }
+
         public int Id { get; set; }
         public string Interpret { get; set; }
         public int Interpret_id { get; set; }

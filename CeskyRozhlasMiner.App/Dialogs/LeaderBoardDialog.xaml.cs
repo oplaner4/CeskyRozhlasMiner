@@ -1,9 +1,9 @@
-﻿using RadiozurnalMiner.Lib.Playlist;
-using RadiozurnalMiner.Lib.Playlist.DataProcessing;
+﻿using CeskyRozhlasMiner.Lib.Playlist;
+using CeskyRozhlasMiner.Lib.Playlist.DataProcessing;
 using System.Collections.Generic;
 using System.Windows;
 
-namespace RadiozurnalMiner.Dialogs
+namespace CeskyRozhlasMiner.Dialogs
 {
     /// <summary>
     /// Interaction logic for LeaderBoardDialog.xaml

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace RadiozurnalMiner.Dialogs
+namespace CeskyRozhlasMiner.Dialogs
 {
     /// <summary>
     /// Interaction logic for MessageDialog.xaml

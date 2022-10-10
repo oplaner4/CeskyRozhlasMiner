@@ -11,13 +11,13 @@ namespace CeskyRozhlasMiner.Lib
     /// Utility used to fetch and deserialize json from api.
     /// </summary>
     /// <typeparam name="T">The type used when deserializing fetched json stream.</typeparam>
-    public class JsonMiner<T>
+    internal class JsonMiner<T>
     {
         private readonly HttpClient _client;
         private readonly string _uri;
         private readonly string _briefLogInfo;
 
-        public JsonMiner(string uri, string briefLogInfo)
+        internal JsonMiner(string uri, string briefLogInfo)
         {
             _uri = uri;
             _briefLogInfo = briefLogInfo;
@@ -29,7 +29,7 @@ namespace CeskyRozhlasMiner.Lib
         /// <typeparamref name="T"/>.
         /// </summary>
         /// <returns>Pair (successfully fetched, deserialized object)</returns>
-        public async Task<(bool, T)> Fetch()
+        internal async Task<(bool, T)> Fetch()
         {
             HttpResponseMessage response;
 
@@ -55,7 +55,7 @@ namespace CeskyRozhlasMiner.Lib
             {
                 try
                 {
-                    T result = await JsonSerializer.DeserializeAsync<T>(jsonStream, Settings.SerializeSettings);
+                    T result = await JsonSerializer.DeserializeAsync<T>(jsonStream, Settings.DeserializeSettings);
                     return (true, result);
                 }
                 catch (JsonException ex)

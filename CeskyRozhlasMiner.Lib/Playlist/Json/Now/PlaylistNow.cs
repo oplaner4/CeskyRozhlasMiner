@@ -2,7 +2,7 @@
 
 namespace CeskyRozhlasMiner.Lib.Playlist.Json.Now
 {
-    public class PlaylistNow : PlaylistContainer
+    internal class PlaylistNow : PlaylistContainer
     {
         public PlaylistNowData Data { get; set; }
     }

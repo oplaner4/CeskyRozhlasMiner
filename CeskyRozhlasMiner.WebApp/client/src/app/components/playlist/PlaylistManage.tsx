@@ -9,9 +9,14 @@ import {
     RozhlasStation
 } from 'app/generated/backend';
 import { appAlertsAtom } from 'app/state/atom';
+import dayjsAsUtc from 'app/utils/dayjsAsUtc';
+import { useDateFormat } from 'app/utils/localization';
+import { Dayjs } from 'dayjs';
+
 import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import FormattedErrorMessage from '../FormattedErrorMessage';
+
 
 export interface PlaylistManageProps {
     source: IPlaylistDto;
@@ -37,6 +42,9 @@ const PlaylistManage: React.FC<PlaylistManageProps> = ({ source, setSource }: Pl
                 setSaving(true);
                 let saveData = new PlaylistDto();
                 saveData.init(data);
+
+                saveData.from = dayjsAsUtc(data.from).local().hour(0).minute(0).second(0).millisecond(0).utc() as unknown as Date;
+                saveData.to = dayjsAsUtc(data.to).local().hour(23).minute(59).second(59).millisecond(999).utc() as unknown as Date;
 
                 if (source.id === 0) {
                     saveData = await new ApiClient(process.env.REACT_APP_API_BASE).playlists_CreatePlaylist(saveData);
@@ -89,27 +97,37 @@ const PlaylistManage: React.FC<PlaylistManageProps> = ({ source, setSource }: Pl
 
                 <DesktopDatePicker
                     label="From"
-                    inputFormat="YYYY/MM/DD"
-                    value={data.from}
-                    onChange={(newValue: Date | null) =>
+                    inputFormat={useDateFormat}
+                    value={dayjsAsUtc(data.from).local()}
+                    onChange={(newValue: Dayjs | null) => {
+                        if (newValue === null) {
+                            return;
+                        }
+
                         setData({
                             ...data,
-                            from: newValue ?? new Date()
-                        })
+                            from: newValue.utc() as unknown as Date,
+                        });
+                    }
+                        
                     }
                     renderInput={(params) => <TextField {...params} margin="normal" required fullWidth name="from" />}
                 />
 
                 <DesktopDatePicker
                     label="To"
-                    inputFormat="YYYY/MM/DD"
-                    value={data.to}
-                    onChange={(newValue: Date | null) =>
+                    inputFormat={useDateFormat}
+                    value={dayjsAsUtc(data.to).local()}
+                    onChange={(newValue: Dayjs | null) => {
+                        if (newValue === null) {
+                            return;
+                        }
+
                         setData({
                             ...data,
-                            to: newValue ?? new Date()
-                        })
-                    }
+                            to: newValue.utc() as unknown as Date,
+                        });
+                    }}
                     renderInput={(params) => <TextField {...params} margin="normal" required fullWidth name="to" />}
                 />
 

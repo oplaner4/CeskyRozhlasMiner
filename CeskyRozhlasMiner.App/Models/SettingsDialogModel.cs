@@ -1,10 +1,10 @@
-﻿using RadiozurnalMiner.Lib.Common;
-using RadiozurnalMiner.Lib.Playlist;
+﻿using CeskyRozhlasMiner.Lib.Common;
+using CeskyRozhlasMiner.Lib.Playlist;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RadiozurnalMiner.Models
+namespace CeskyRozhlasMiner.Models
 {
     [Serializable]
     public class SettingsDialogModel

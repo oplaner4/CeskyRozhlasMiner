@@ -1,6 +1,7 @@
 import About from "app/pages/about/About";
 import Home from "app/pages/home/Home";
 import Playlists from "app/pages/playlists/Playlists";
+import Songs from "app/pages/songs/Songs";
 import UserSettings from "app/pages/user/UserSettings";
 import UserSignIn from "app/pages/user/UserSignIn";
 import UserSignOut from "app/pages/user/UserSignOut";
@@ -22,6 +23,7 @@ export enum AppRoute {
     UserSignOut = 4,
     UserSignIn = 5,
     UserSettings = 6,
+    Songs = 7,
 };
 
 export interface AppRouteDefinition {
@@ -103,6 +105,17 @@ UseRoutes[AppRoute.UserSettings] = {
     beAuthorized: true,
     group: AppRouteGroup.User,
 };
+
+UseRoutes[AppRoute.Songs] = {
+    path: '/songs',
+    element: <Songs />,
+    inMenu: false,
+    title: 'Songs',
+    menuTitle: 'Songs',
+    beAuthorized: true,
+    group: AppRouteGroup.Default,
+};
+
 
 export const iterateThroughRoutes = (): AppRoute[] => {
     return Object.keys(UseRoutes)

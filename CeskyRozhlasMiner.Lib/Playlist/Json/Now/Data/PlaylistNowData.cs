@@ -2,7 +2,7 @@
 
 namespace CeskyRozhlasMiner.Lib.Playlist.Json.Now.Data
 {
-    public class PlaylistNowData : PlaylistDayDataSong
+    internal class PlaylistNowData : PlaylistDayDataSong
     {
         public string Status { get; set; }
 
@@ -11,7 +11,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist.Json.Now.Data
         /// as a readable enum value.
         /// </summary>
         /// <returns>Status</returns>
-        public PlaylistNowDataStatus InterpretStatus()
+        internal PlaylistNowDataStatus InterpretStatus()
         {
             return Status switch
             {

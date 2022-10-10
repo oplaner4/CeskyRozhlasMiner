@@ -1,5 +1,7 @@
-﻿using Microsoft.DSX.ProjectTemplate.Data.Models;
+﻿using CeskyRozhlasMiner.WebApp.Data.Utilities;
+using Microsoft.DSX.ProjectTemplate.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Linq;
 using System.Threading;
@@ -63,7 +65,7 @@ namespace Microsoft.DSX.ProjectTemplate.Data
         private void SetupAuditTrail()
         {
             // automatically stamp date fields on every context save
-            var dtNow = DateTime.Now;
+            var dtNow = DateTime.UtcNow;
             foreach (var entry in ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified))
             {
                 if (entry.Entity is AuditModel<int>)
@@ -148,6 +150,13 @@ namespace Microsoft.DSX.ProjectTemplate.Data
             modelBuilder.Entity<FetchRange>()
                 .HasIndex(x => x.To)
                 .IsUnique();
+        }
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            configurationBuilder
+                .Properties<DateTime>()
+                .HaveConversion(typeof(UtcValueConverter));
         }
     }
 }

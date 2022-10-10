@@ -36,8 +36,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
 
         private async IAsyncEnumerable<SongDto> FetchSongs(DateTime from, DateTime to, IEnumerable<RozhlasStation> stations)
         {
-            await foreach (var song in new PlaylistMiner(DateOnly.FromDateTime(from), DateOnly.FromDateTime(to))
-                .SetSourceStations(stations).GetSongs(_ => { }))
+            await foreach (var song in new PlaylistMiner(from, to, stations).GetSongs(_ => { }))
             {
                 var dbSong = Mapper.Map<Data.Models.Song>(song);
                 Database.Songs.Add(dbSong);

@@ -7,28 +7,40 @@ namespace CeskyRozhlasMiner.Lib.Playlist
 {
     public class PlaylistSong : IEquatable<PlaylistSong>
     {
-        public PlaylistSong(PlaylistDayDataSong song,
+        internal PlaylistSong(PlaylistDayDataSong song,
             RozhlasStation sourceStation)
         {
             Artist = song.Interpret;
             Title = song.Track;
-            PlayedAt = song.Since;
+            PlayedAt = TimeZoneInfo.ConvertTimeToUtc(song.Since, Settings.RozhlasTimeZoneInfo);
             SourceStation = sourceStation;
         }
 
-        public PlaylistSong(string artist, string title,
+        /// <summary>
+        /// Initializes class.
+        /// </summary>
+        /// <param name="artist">Artist of the song.</param>
+        /// <param name="title">Title of the song.</param>
+        /// <param name="playedAt">Date and time the song was played at in the time zone specified
+        /// in the Settings (the 'Kind' property must be set to 'Unspecified').</param>
+        /// <param name="sourceStation"></param>
+        private PlaylistSong(string artist, string title,
             DateTime playedAt, RozhlasStation sourceStation)
         {
             Artist = artist;
             Title = title;
-            PlayedAt = playedAt;
+            PlayedAt = TimeZoneInfo.ConvertTimeToUtc(playedAt, Settings.RozhlasTimeZoneInfo);
             SourceStation = sourceStation;
         }
 
-        public string Artist { get; set; }
-        public string Title { get; set; }
-        public DateTime PlayedAt { get; set; }
-        public RozhlasStation SourceStation { get; set; }
+        public string Artist { get; private set; }
+        public string Title { get; private set; }
+
+        /// <summary>
+        /// UTC date and time the song was played at.
+        /// </summary>
+        public DateTime PlayedAt { get; private set; }
+        public RozhlasStation SourceStation { get; private set; }
 
         public override bool Equals(object other)
         {

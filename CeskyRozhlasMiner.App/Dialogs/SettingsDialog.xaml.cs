@@ -1,13 +1,13 @@
 ﻿using CeskyRozhlasMiner.App.Models.Controls;
-using RadiozurnalMiner.Lib.Common;
-using RadiozurnalMiner.Models;
+using CeskyRozhlasMiner.Lib.Common;
+using CeskyRozhlasMiner.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace RadiozurnalMiner.Dialogs
+namespace CeskyRozhlasMiner.Dialogs
 {
     /// <summary>
     /// Interaction logic for SettingsDialog.xaml

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CeskyRozhlasMiner.Lib.Playlist.Json.Day
 {
-    public class PlaylistDay : PlaylistContainer
+    internal class PlaylistDay : PlaylistContainer
     {
         public IEnumerable<PlaylistNowData> Data { get; set; }
     }

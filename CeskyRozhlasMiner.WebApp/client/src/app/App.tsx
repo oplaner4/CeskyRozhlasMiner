@@ -17,15 +17,49 @@ import { appAlertsAtom, userAtom } from './state/atom';
 import AppWrapper from './components/layout/AppWrapper';
 import { ApiClient, ApiException } from './generated/backend';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { getErrorMessage } from './utils/utilities';
+
 
 export interface AppProps {
     brand: string;
     authors: string[];
 }
+
+declare module '@mui/material/styles' {
+    interface Palette {
+        dark: Palette['primary'];
+    }
+
+    interface PaletteOptions {
+        dark: PaletteOptions['primary'];
+    }
+}
+
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: '#0157aa'
+        },
+        dark: {
+            main: '#343a40',
+            contrastText: '#fff'
+        }
+    },
+    components: {
+        MuiTooltip: {
+            styleOverrides: {
+                tooltip: {
+                    /*backgroundColor: '#fff',
+                    color: 'red',
+                    border: '1px solid #dadde9'*/
+                }
+            }
+        }
+    }
+});
 
 const App: React.FC<AppProps> = ({ brand, authors }: AppProps) => {
     const [appAlerts, setAppAlerts] = useRecoilState(appAlertsAtom);
@@ -51,32 +85,24 @@ const App: React.FC<AppProps> = ({ brand, authors }: AppProps) => {
                     ...appAlerts,
                     {
                         text: getErrorMessage(e as ApiException),
-                        severity: 'error',
+                        severity: 'error'
                     }
                 ]);
             }
         };
 
         fetchGoogleClientId();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         document.title = `${UseRoutes[activeRoute].title} - ${brand}`;
     }, [activeRoute, brand]);
 
-    const theme = createTheme({
-        palette: {
-            primary: {
-                main: '#0157aa'
-            }
-        }
-    });
-
     return (
         <BrowserRouter>
             <ThemeProvider theme={theme}>
-                <LocalizationProvider dateAdapter={AdapterMoment}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <GoogleOAuthProvider clientId={googleClientId}>
                         <AppResponsiveBar />
                         <Box component="main">

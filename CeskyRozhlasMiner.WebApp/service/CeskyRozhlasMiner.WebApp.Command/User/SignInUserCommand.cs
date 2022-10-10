@@ -48,11 +48,14 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
                 throw new UnauthorizedAccessException($"Invalid credentials were provided.");
             }
 
+            var result = Mapper.Map<UserDto>(user);
+
             await Mediator.Send(new GiveClaimsCommand()
             {
-                User = dto,
+                User = result,
             }, cancellationToken);
-            return Mapper.Map<UserDto>(user);
+
+            return result;
         }
     }
 }
