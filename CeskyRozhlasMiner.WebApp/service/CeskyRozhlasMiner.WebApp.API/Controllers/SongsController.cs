@@ -25,7 +25,7 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// </summary>
         /// <param name="id">ID of the Playlist to use.</param>
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetSongsForPlaylistDto>> GetAllSongsForPlaylist(int id)
+        public async Task<ActionResult<GetDataForPlaylistDto>> GetAllSongsForPlaylist(int id)
         {
             return Ok(await Mediator.Send(new GetAllSongsForPlaylist()
             {

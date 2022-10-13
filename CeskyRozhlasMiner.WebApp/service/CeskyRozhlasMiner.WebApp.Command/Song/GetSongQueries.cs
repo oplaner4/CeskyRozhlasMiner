@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.DSX.ProjectTemplate.Command.Song
 {
-    public class GetAllSongsForPlaylist : IRequest<GetSongsForPlaylistDto>
+    public class GetAllSongsForPlaylist : IRequest<GetDataForPlaylistDto>
     {
         public int PlaylistId { get; set; }
 
@@ -26,7 +26,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
     }
 
     public class SongQueryHandler : QueryHandlerBase,
-        IRequestHandler<GetAllSongsForPlaylist, GetSongsForPlaylistDto>
+        IRequestHandler<GetAllSongsForPlaylist, GetDataForPlaylistDto>
     {
         private PlaylistDto _playlist;
         private Dictionary<DateTime, FetchRange> _relevantStartsAndRanges;
@@ -85,7 +85,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
         }
 
         // GET ALL FOR PLAYLIST
-        public async Task<GetSongsForPlaylistDto> Handle(GetAllSongsForPlaylist request, CancellationToken cancellationToken)
+        public async Task<GetDataForPlaylistDto> Handle(GetAllSongsForPlaylist request, CancellationToken cancellationToken)
         {
             await Init(request.PlaylistId, cancellationToken);
 
