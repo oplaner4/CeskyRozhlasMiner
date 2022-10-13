@@ -117,9 +117,9 @@ namespace CeskyRozhlasMiner.Lib.Playlist
         /// Fetches songs using given settings with ability to monitor progress.
         /// </summary>
         /// <param name="onProgress">Action to handle progress. Its first argument 
-        /// <typeparam name="int"/> means count of percent done.</param>
+        /// <typeparam name="int"/> means count of percent done. No action set by default.</param>
         /// <returns>Asynchronous enumerable collection of songs</returns>
-        public async IAsyncEnumerable<PlaylistSong> GetSongs(Action<int> onProgress)
+        public async IAsyncEnumerable<PlaylistSong> GetSongs(Action<int> onProgress = null)
         {
             int stationOrder = 1;
 
@@ -134,7 +134,11 @@ namespace CeskyRozhlasMiner.Lib.Playlist
                         yield return song;
                     }
 
-                    onProgress(CountPercentDone(inspected, stationOrder));
+                    if (onProgress != null)
+                    {
+                        onProgress(CountPercentDone(inspected, stationOrder));
+                    }
+                    
                     inspected = inspected.AddDays(1);
                 }
 

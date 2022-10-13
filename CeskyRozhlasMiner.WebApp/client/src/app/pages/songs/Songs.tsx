@@ -1,7 +1,7 @@
 import { ApiClient, ApiException, RozhlasStation, SongDto } from 'app/generated/backend';
 import React, { useEffect, useState } from 'react';
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useSetRecoilState } from 'recoil';
 import { appAlertsAtom } from 'app/state/atom';
 import { getErrorMessage } from 'app/utils/utilities';
@@ -51,7 +51,20 @@ const Songs: React.FC = () => {
             try {
                 setLoading(true);
                 const result = await new ApiClient(process.env.REACT_APP_API_BASE).songs_GetAllSongsForPlaylist(playlistId);
-                setData(result);
+                setData(result.songs);
+
+                if (result.maxLimitExceeded) {
+                    setAppAlerts((appAlerts) => [
+                        ...appAlerts,
+                        {
+                            text: <>Showing first{' '}
+                            <Typography component="span" fontWeight="bold">{result.maxLimit}</Typography>{' '}
+                            songs as the limit which has been exceeded.</>,
+                            severity: 'info',
+                        }
+                    ]);
+                }
+
                 setLoading(false);
             } catch (e) {
                 console.log(e);
@@ -60,7 +73,7 @@ const Songs: React.FC = () => {
                     ...appAlerts,
                     {
                         text: getErrorMessage(e as ApiException),
-                        severity: 'error'
+                        severity: 'error',
                     }
                 ]);
 

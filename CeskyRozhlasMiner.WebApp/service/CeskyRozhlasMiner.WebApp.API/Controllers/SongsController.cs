@@ -24,13 +24,13 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// Get Songs for playlist.
         /// </summary>
         /// <param name="id">ID of the Playlist to use.</param>
-        /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<SongDto>>> GetAllSongsForPlaylist(int id)
+        public async Task<ActionResult<GetSongsForPlaylistDto>> GetAllSongsForPlaylist(int id)
         {
             return Ok(await Mediator.Send(new GetAllSongsForPlaylist()
             {
                 PlaylistId = id,
+                SongsLimit = 500,
             }));
         }
     }

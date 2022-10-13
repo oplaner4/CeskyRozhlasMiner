@@ -27,8 +27,8 @@ const Playlists: React.FC = () => {
             source={{
                 name: '',
                 sourceStations: [],
-                from: now.hour(0).minute(0).second(0).millisecond(0) as unknown as Date,
-                to: now.hour(23).minute(59).second(59).millisecond(59) as unknown as Date,
+                from: now.local().hour(0).minute(0).second(0).millisecond(0).utc() as unknown as Date,
+                to: now.local().hour(23).minute(59).second(59).millisecond(999).utc() as unknown as Date,
                 ownerId: 0,
                 id: 0,
                 createdDate: now as unknown as Date,

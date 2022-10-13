@@ -1,6 +1,6 @@
 import { GridComparatorFn, GridValueFormatterParams } from "@mui/x-data-grid";
 import dayjsAsUtc from "./dayjsAsUtc";
-import { useDateFormat } from "./localization";
+import { useDateFormat, useDateTimeFormat } from "./localization";
 
 export const gridPageSizes: number[] = [10, 20, 50, 100];
 
@@ -17,7 +17,7 @@ export const dateFormatter = (d: Date): string => {
 };
 
 export const dateTimeFormatter = (d: Date): string => {
-    return dayjsAsUtc(d).local().format();
+    return dayjsAsUtc(d).local().format(useDateTimeFormat);
 };
 
 export const dateTimeSortComparator: GridComparatorFn = (v1: Date, v2: Date): number => {

@@ -11,7 +11,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist.DataProcessing
         private readonly IEnumerable<PlaylistSong> _songs;
 
         /// <summary>
-        /// Initializes class
+        /// Initializes class.
         /// </summary>
         /// <param name="songs">Source data for the statistics. At
         /// least one song is expected.</param>
