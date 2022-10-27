@@ -22,14 +22,23 @@ namespace CeskyRozhlasMiner.Lib.Playlist
         /// <param name="artist">Artist of the song.</param>
         /// <param name="title">Title of the song.</param>
         /// <param name="playedAt">Date and time the song was played at in the time zone specified
-        /// in the Settings (the 'Kind' property must be set to 'Unspecified').</param>
-        /// <param name="sourceStation"></param>
-        private PlaylistSong(string artist, string title,
+        /// in the Settings (the 'Kind' property must be set to 'Unspecified' or 'Utc').</param>
+        /// <param name="sourceStation">Source station</param>
+        public PlaylistSong(string artist, string title,
             DateTime playedAt, RozhlasStation sourceStation)
         {
             Artist = artist;
             Title = title;
-            PlayedAt = TimeZoneInfo.ConvertTimeToUtc(playedAt, Settings.RozhlasTimeZoneInfo);
+
+            if (playedAt.Kind == DateTimeKind.Utc)
+            {
+                PlayedAt = playedAt;
+            }
+            else
+            {
+                PlayedAt = TimeZoneInfo.ConvertTimeToUtc(playedAt, Settings.RozhlasTimeZoneInfo);
+            }
+            
             SourceStation = sourceStation;
         }
 

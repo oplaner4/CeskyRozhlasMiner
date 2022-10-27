@@ -35,8 +35,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist.DataProcessing
         /// value represents how many times it was played.</returns>
         public StatisticsPair GetMostPlayedSong()
         {
-            return StatisticsUtil.GetPropAndCount(_songs, song => song.ToString())
-                .MaxBy(pair => pair.Value);
+            return StatisticsUtil.GetPropAndCount(_songs, song => song.ToString()).MaxBy(pair => pair.Value);
         }
 
         /// <summary>
@@ -48,8 +47,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist.DataProcessing
         /// and value represents how many times that artist was played.</returns>
         public StatisticsPair GetMostFrequentArtist()
         {
-            return StatisticsUtil.GetPropAndCount(_songs, song => song.Artist)
-                .MaxBy(pair => pair.Value);
+            return StatisticsUtil.GetPropAndCount(_songs, song => song.Artist).MaxBy(pair => pair.Value);
         }
 
         /// <summary>

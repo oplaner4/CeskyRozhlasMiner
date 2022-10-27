@@ -7,7 +7,7 @@ import { appAlertsAtom } from 'app/state/atom';
 import { getErrorMessage } from 'app/utils/utilities';
 import AppDataGrid from 'app/components/AppDataGrid';
 import { dateFormatter, dateTimeValueFormatter } from 'app/utils/grid';
-import { Add, Delete, Edit, MusicNote } from '@mui/icons-material';
+import { Add, Delete, Edit, Info, MusicNote } from '@mui/icons-material';
 import AppModal from 'app/components/AppModal';
 import PlaylistManage from '../../components/playlist/PlaylistManage';
 import { useNavigate } from 'react-router-dom';
@@ -73,7 +73,7 @@ const Playlists: React.FC = () => {
             field: 'id',
             headerName: 'Action',
             sortable: false,
-            width: 160,
+            width: 190,
             renderCell: (params: GridRenderCellParams<number, PlaylistDto>) => {
                 return (
                     <ButtonGroup size="small" variant="contained">
@@ -122,6 +122,15 @@ const Playlists: React.FC = () => {
                                     navigate(`${UseRoutes[AppRoute.Songs].path}?id=${params.id}`);
                                 }}>
                                 <MusicNote />
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title="See information">
+                            <Button
+                                color={'secondary'}
+                                onClick={() => {
+                                    navigate(`${UseRoutes[AppRoute.PlaylistInfo].path}?id=${params.id}`);
+                                }}>
+                                <Info />
                             </Button>
                         </Tooltip>
                     </ButtonGroup>

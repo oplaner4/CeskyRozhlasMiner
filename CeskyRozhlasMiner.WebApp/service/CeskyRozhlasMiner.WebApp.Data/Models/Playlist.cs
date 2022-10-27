@@ -18,7 +18,6 @@ namespace Microsoft.DSX.ProjectTemplate.Data.Models
 
         public int OwnerId { get; set; }
 
-        //[NotMapped]
         public virtual ICollection<PlaylistSourceStation> SourceStations { get; set; } = new HashSet<PlaylistSourceStation>();
     }
 }

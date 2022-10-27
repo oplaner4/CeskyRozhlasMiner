@@ -12,21 +12,25 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.DSX.ProjectTemplate.Command.Song
 {
-    public class GetAllSongsForPlaylist : IRequest<GetDataForPlaylistDto>
+    public class GetAllSongsForPlaylist : IRequest<IEnumerable<Data.Models.Song>>
     {
         public int PlaylistId { get; set; }
+    }
 
+    public class GetSongsWithLimitForPlaylist : IRequest<GetSongsForPlaylistDto>
+    {
         public int SongsLimit { get; set; }
+        public int PlaylistId { get; set; }
     }
 
     public class SongQueryHandler : QueryHandlerBase,
-        IRequestHandler<GetAllSongsForPlaylist, GetDataForPlaylistDto>
+        IRequestHandler<GetAllSongsForPlaylist, IEnumerable<Data.Models.Song>>,
+        IRequestHandler<GetSongsWithLimitForPlaylist, GetSongsForPlaylistDto>
     {
         private PlaylistDto _playlist;
         private Dictionary<DateTime, FetchRange> _relevantStartsAndRanges;
@@ -85,7 +89,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
         }
 
         // GET ALL FOR PLAYLIST
-        public async Task<GetDataForPlaylistDto> Handle(GetAllSongsForPlaylist request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Data.Models.Song>> Handle(GetAllSongsForPlaylist request, CancellationToken cancellationToken)
         {
             await Init(request.PlaylistId, cancellationToken);
 
@@ -133,8 +137,14 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
             var result = _alreadyFetchedSongs.Concat(_rightNowFetchedSongs.Where(s => s.PlayedAt >= _playlist.From && s.PlayedAt <= _playlist.To
                 && _requestedStations.Contains(s.SourceStation)));
 
-            return new(result.OrderByDescending(s => s.PlayedAt).Select(s => Mapper.Map<SongDto>(s)).Take(request.SongsLimit + 1).ToList(),
-                request.SongsLimit);
+            return result.OrderByDescending(s => s.PlayedAt).ToList();
+        }
+
+        // GET SONGS FOR PLAYLIST WITH LIMIT
+        public async Task<GetSongsForPlaylistDto> Handle(GetSongsWithLimitForPlaylist request, CancellationToken cancellationToken)
+        {
+            var songs = await Mediator.Send(new GetAllSongsForPlaylist() { PlaylistId = request.PlaylistId }, cancellationToken);
+            return new(songs.Select(s => Mapper.Map<SongDto>(s)).Take(request.SongsLimit + 1).ToList(), request.SongsLimit);
         }
     }
 }

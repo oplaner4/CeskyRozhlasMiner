@@ -1,5 +1,6 @@
 import About from "app/pages/about/About";
 import Home from "app/pages/home/Home";
+import PlaylistInfo from "app/pages/playlists/PlaylistInfo";
 import Playlists from "app/pages/playlists/Playlists";
 import Songs from "app/pages/songs/Songs";
 import UserSettings from "app/pages/user/UserSettings";
@@ -24,6 +25,7 @@ export enum AppRoute {
     UserSignIn = 5,
     UserSettings = 6,
     Songs = 7,
+    PlaylistInfo = 8,
 };
 
 export interface AppRouteDefinition {
@@ -112,6 +114,16 @@ UseRoutes[AppRoute.Songs] = {
     inMenu: false,
     title: 'Songs',
     menuTitle: 'Songs',
+    beAuthorized: true,
+    group: AppRouteGroup.Default,
+};
+
+UseRoutes[AppRoute.PlaylistInfo] = {
+    path: '/playlist-info',
+    element: <PlaylistInfo />,
+    inMenu: false,
+    title: 'Playlist information',
+    menuTitle: 'Playlist information',
     beAuthorized: true,
     group: AppRouteGroup.Default,
 };

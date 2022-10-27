@@ -138,7 +138,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist
                     {
                         onProgress(CountPercentDone(inspected, stationOrder));
                     }
-                    
+
                     inspected = inspected.AddDays(1);
                 }
 

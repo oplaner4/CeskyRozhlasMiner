@@ -1,13 +1,12 @@
-﻿using CeskyRozhlasMiner.Lib.Playlist.DataProcessing;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
 {
-    public class GetDataForPlaylistDto
+    public class GetSongsForPlaylistDto
     {
-        public GetDataForPlaylistDto(List<SongDto> relevantSongs, int maxLimit)
+        public GetSongsForPlaylistDto(List<SongDto> relevantSongs, int maxLimit)
         {
             MaxLimit = maxLimit;
             MaxLimitExceeded = relevantSongs.Count > maxLimit;
