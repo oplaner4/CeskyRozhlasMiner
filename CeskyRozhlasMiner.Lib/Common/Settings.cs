@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace CeskyRozhlasMiner.Lib.Common
 {
-    internal class Settings
+    public class Settings
     {
         internal const string RozhlasApi = "https://api.rozhlas.cz";
         internal const string RozhlasApiPlaylistDayPath = "data/v2/playlist/day";
@@ -46,6 +46,6 @@ namespace CeskyRozhlasMiner.Lib.Common
         internal const string LoggingCsvFile = "../../../Diagnostics/Log.csv";
         internal const char CsvSeparator = ';';
 
-        internal static readonly TimeZoneInfo RozhlasTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Central Europe Standard Time");
+        public static readonly TimeZoneInfo RozhlasTimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Central Europe Standard Time");
     }
 }

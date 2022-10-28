@@ -66,6 +66,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Playlist
                 };
             }).ToList();
 
+            Database.Playlists.Update(playlist);
             await Database.SaveChangesAsync(cancellationToken);
 
             return Mapper.Map<PlaylistDto>(playlist);

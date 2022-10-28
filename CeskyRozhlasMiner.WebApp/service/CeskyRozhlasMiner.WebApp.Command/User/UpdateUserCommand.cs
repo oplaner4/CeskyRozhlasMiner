@@ -48,6 +48,8 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
 
             user.DisplayName = dto.DisplayName;
             user.PasswordHash = new PasswordHasher<Data.Models.User>().HashPassword(user, dto.NewPassword);
+
+            Database.Users.Update(user);
             await Database.SaveChangesAsync(cancellationToken);
 
             return Mapper.Map<UserDto>(user);

@@ -1,32 +1,40 @@
-import { ApiClient, ApiException, RozhlasStation, SongDto } from 'app/generated/backend';
+import { ApiClient, ApiException, PlaylistDto, RozhlasStation, SongDto } from 'app/generated/backend';
 import React, { useEffect, useState } from 'react';
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Chip, Grid, Tooltip, Typography } from '@mui/material';
 import { useSetRecoilState } from 'recoil';
 import { appAlertsAtom } from 'app/state/atom';
 import { getErrorMessage } from 'app/utils/utilities';
 import AppDataGrid from 'app/components/AppDataGrid';
-import { dateTimeValueFormatter } from 'app/utils/grid';
-import { useSearchParams } from 'react-router-dom';
+import { dateTimeFormatter, dateTimeValueFormatter } from 'app/utils/grid';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { AppRoute, UseRoutes } from 'app/components/AppRoutes';
+import { ArrowBack, Refresh } from '@mui/icons-material';
+import dayjsAsUtc from 'app/utils/dayjsAsUtc';
 
 const Songs: React.FC = () => {
     const setAppAlerts = useSetRecoilState(appAlertsAtom);
     const [data, setData] = useState<SongDto[]>([]);
+    const [playlist, setPlaylist] = useState<PlaylistDto | null>(null);
+
     const [loading, setLoading] = useState<boolean>(true);
+    const [fetchAgain, setFetchAgain] = useState<boolean>(false);
 
     const [params] = useSearchParams();
     const playlistId = Number(params.get('id'));
+
+    const navigate = useNavigate();
 
     const columns: GridColDef[] = [
         {
             field: 'artist',
             headerName: 'Artist',
-            width: 260,
+            width: 260
         },
         {
             field: 'title',
             headerName: 'Title',
-            width: 400,
+            width: 400
         },
         {
             field: 'playedAt',
@@ -41,10 +49,9 @@ const Songs: React.FC = () => {
             valueFormatter: (params: GridValueFormatterParams<number>): string => {
                 return RozhlasStation[params.value];
             },
-            width: 200,
-        },
+            width: 200
+        }
     ];
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -57,13 +64,21 @@ const Songs: React.FC = () => {
                     setAppAlerts((appAlerts) => [
                         ...appAlerts,
                         {
-                            text: <>Showing first{' '}
-                            <Typography component="span" fontWeight="bold">{result.maxLimit}</Typography>{' '}
-                            songs as the limit which has been exceeded.</>,
-                            severity: 'info',
+                            text: (
+                                <>
+                                    Showing first{' '}
+                                    <Typography component="span" fontWeight="bold">
+                                        {result.maxLimit}
+                                    </Typography>{' '}
+                                    songs as the limit which has been exceeded.
+                                </>
+                            ),
+                            severity: 'info'
                         }
                     ]);
                 }
+
+                setPlaylist(await new ApiClient(process.env.REACT_APP_API_BASE).playlists_GetPlaylist(playlistId));
 
                 setLoading(false);
             } catch (e) {
@@ -73,7 +88,7 @@ const Songs: React.FC = () => {
                     ...appAlerts,
                     {
                         text: getErrorMessage(e as ApiException),
-                        severity: 'error',
+                        severity: 'error'
                     }
                 ]);
 
@@ -82,10 +97,63 @@ const Songs: React.FC = () => {
         };
 
         fetchData();
-    }, [setAppAlerts, playlistId]);
+    }, [setAppAlerts, playlistId, fetchAgain]);
 
     return (
         <Box>
+            {playlist === null ? null : (
+                <Grid component={Box} mb={3} container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <Box mb={2}>
+                            <Box mb={1}>
+                                <Typography variant="h6" component="h5">
+                                    On playlist{' '}
+                                    <Typography component="span" variant="inherit" color="secondary.main">
+                                        {playlist.name}
+                                    </Typography>
+                                </Typography>
+                            </Box>
+
+                            <Typography variant="body1" component="p" color="primary.main">
+                                {dateTimeFormatter(playlist.from)} - {dateTimeFormatter(playlist.to)}
+                            </Typography>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} md={5} sx={{ display: 'flex' }} alignItems="center">
+                        {playlist.sourceStations.map((s) => (
+                            <Chip
+                                color={'dark' as 'default'}
+                                component={Box}
+                                mr={1}
+                                key={s.station}
+                                label={RozhlasStation[s.station]}
+                                variant="filled"
+                            />
+                        ))}
+                    </Grid>
+                    <Grid
+                        item
+                        xs={12}
+                        md={1}
+                        sx={{ display: 'flex' }}
+                        alignItems="center"
+                        justifyContent={{ xs: 'center', md: 'flex-end' }}>
+                        {dayjsAsUtc(playlist.to) >= dayjsAsUtc().startOf('date') ? (
+                            <Tooltip title="Refresh">
+                                <Button
+                                    variant="contained"
+                                    color={'success'}
+                                    onClick={() => {
+                                        setFetchAgain(!fetchAgain);
+                                    }}>
+                                    <Refresh />
+                                </Button>
+                            </Tooltip>
+                        ) : null}
+                    </Grid>
+                </Grid>
+            )}
+
             <Box mb={5}>
                 <AppDataGrid
                     rows={data}
@@ -102,7 +170,18 @@ const Songs: React.FC = () => {
                         }
                     }}
                 />
-            </Box>           
+            </Box>
+            <Tooltip title="Back to playlists">
+                <Button
+                    variant="contained"
+                    color={'dark' as 'inherit'}
+                    onClick={() => {
+                        navigate(UseRoutes[AppRoute.Playlists].path);
+                    }}>
+                    <ArrowBack />
+                    Back
+                </Button>
+            </Tooltip>
         </Box>
     );
 };

@@ -34,10 +34,11 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
     {
         private PlaylistDto _playlist;
         private Dictionary<DateTime, FetchRange> _relevantStartsAndRanges;
-        private IEnumerator<DateTime> _relevantStartsEnumerator;
         private HashSet<RozhlasStation> _requestedStations;
-        private readonly List<Data.Models.Song> _alreadyFetchedSongs;
-        private readonly List<Data.Models.Song> _rightNowFetchedSongs;
+        private readonly List<Data.Models.Song> _fetchedSongs;
+        private readonly object _extendFetchRangeLock = new();
+        private readonly object _addRangeLock = new();
+        private readonly object _fetchNewStationsLock = new();
 
         public SongQueryHandler(
             IMediator mediator,
@@ -46,25 +47,91 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
             IHttpContextAccessor httpContextAccessor)
             : base(mediator, database, mapper, httpContextAccessor)
         {
-            _alreadyFetchedSongs = new();
-            _rightNowFetchedSongs = new();
+            _fetchedSongs = new();
         }
 
+        /// <summary>
+        /// Must be used in critical section. It does not save changes to database.
+        /// </summary>
         private async Task FetchSongs(DateTime from, DateTime to, IEnumerable<RozhlasStation> stations, CancellationToken cancellationToken)
         {
+            List<Data.Models.Song> songsToSave = new();
+
             await foreach (var song in new PlaylistMiner(from, to, stations).GetSongs().WithCancellation(cancellationToken))
             {
-                _rightNowFetchedSongs.Add(Mapper.Map<Data.Models.Song>(song));
+                if (song.PlayedAt >= from && song.PlayedAt <= to) {
+                    var dbSong = Mapper.Map<Data.Models.Song>(song);
+                    _fetchedSongs.Add(dbSong);
+                    songsToSave.Add(dbSong);
+                }
             }
+
+            await Database.Songs.AddRangeAsync(songsToSave, cancellationToken);
         }
 
-        private void LoadAvailableSongs(DateTime from, DateTime to, IEnumerable<RozhlasStation> stations)
+        private void LoadAvailableSongs(DateTime from, DateTime to, HashSet<RozhlasStation> stations)
         {
             foreach (var song in Database.Songs.Where(s => s.PlayedAt >= from && s.PlayedAt <= to && stations.Contains(s.SourceStation)))
             {
-                _alreadyFetchedSongs.Add(Mapper.Map<Data.Models.Song>(song));
+                _fetchedSongs.Add(song);
             }
         }
+
+        /// <summary>
+        /// Must be used in critical section.
+        /// </summary>
+        private async Task ExtendFetchRange(FetchRange range, CancellationToken cancellationToken)
+        {
+            DateTime wantedTo = range.From.AddDays(1).AddMilliseconds(-1);
+
+            if (range.To == wantedTo)
+            {
+                return;
+            }
+
+            if (range.To < wantedTo)
+            {
+                await FetchSongs(range.To.AddMilliseconds(1), wantedTo, range.SourceStations.Select(x => x.Station), cancellationToken);
+            }
+
+            DateTime utcNow = DateTime.UtcNow;
+
+            if (wantedTo > utcNow && range.To < utcNow)
+            {
+                range.To = utcNow;
+            }
+            else
+            {
+                range.To = wantedTo;
+            }
+
+            Database.FetchRanges.Update(range);
+            await Database.SaveChangesAsync(cancellationToken);
+        }
+
+
+        /// <summary>
+        /// Must be used in critical section.
+        /// </summary>
+        private async Task FetchNewStations(FetchRange range, CancellationToken cancellationToken)
+        {
+            var newStations = _requestedStations.Except(range.SourceStations.Select(x => x.Station));
+
+            if (!newStations.Any())
+            {
+                return;
+            }
+
+            await FetchSongs(range.From, range.To, newStations, cancellationToken);
+
+            foreach (var station in newStations)
+            {
+                range.SourceStations.Add(new() { Station = station });
+            }
+
+            await Database.SaveChangesAsync(cancellationToken);
+        }
+
 
         private async Task Init(int playlistId, CancellationToken cancellationToken)
         {
@@ -83,8 +150,6 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
                 rangesStarts = _relevantStartsAndRanges.Keys;
             }
 
-            _relevantStartsEnumerator = rangesStarts.GetEnumerator();
-            _relevantStartsEnumerator.MoveNext();
             _requestedStations = _playlist.SourceStations.Select(x => x.Station).ToHashSet();
         }
 
@@ -100,44 +165,52 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
 
                 if (_relevantStartsAndRanges.TryGetValue(actual, out var range))
                 {
-                    nextStart = range.To.AddMilliseconds(1);
-
-                    var availableStations = range.SourceStations.Select(x => x.Station).ToHashSet();
-                    LoadAvailableSongs(actual, range.To < _playlist.To ? range.To : _playlist.To, availableStations);
-
-                    var newStations = _requestedStations.Except(availableStations);
-                    await FetchSongs(range.From, range.To, newStations, cancellationToken);
-
-                    foreach (var station in newStations)
+                    lock(_fetchNewStationsLock)
                     {
-                        range.SourceStations.Add(new() { Station = station });
+                        Task.WaitAll(new Task[] { FetchNewStations(range, cancellationToken) }, cancellationToken);
                     }
+
+                    lock (_extendFetchRangeLock)
+                    {
+                        Task.WaitAll(new Task[] { ExtendFetchRange(range, cancellationToken) }, cancellationToken);
+                    }
+
+                    LoadAvailableSongs(actual, range.To < _playlist.To ? range.To : _playlist.To,
+                        range.SourceStations.Select(x => x.Station).ToHashSet());
+                    nextStart = range.From.AddDays(1);
                 }
                 else
                 {
                     nextStart = actual.AddDays(1);
                     DateTime to = nextStart.AddMilliseconds(-1);
 
-                    await FetchSongs(actual, to, _requestedStations, cancellationToken);
-
-                    Database.FetchRanges.Add(new FetchRange()
+                    DateTime utcNow = DateTime.UtcNow;
+                    FetchRange newRange = new()
                     {
                         From = actual,
-                        To = to,
+                        To = to < utcNow ? to : utcNow,
                         SourceStations = _requestedStations.Select(x => new FetchRangeSourceStation() { Station = x }).ToList(),
-                    });
+                    };
+
+                    lock (_addRangeLock)
+                    {
+                        var existingRange = Database.FetchRanges.FirstOrDefault(r => r.From == actual);
+                        if (existingRange != null)
+                        {
+                            _relevantStartsAndRanges.Add(existingRange.From, existingRange);
+                            continue;
+                        }
+
+                        Task.WaitAll(new Task[] { FetchSongs(actual, to, _requestedStations, cancellationToken) }, cancellationToken);
+                        Database.FetchRanges.Add(newRange);
+                        Database.SaveChanges();
+                    }
                 }
 
                 actual = nextStart;
             }
 
-            await Database.Songs.AddRangeAsync(_rightNowFetchedSongs, cancellationToken);
-            await Database.SaveChangesAsync(cancellationToken);
-
-            var result = _alreadyFetchedSongs.Concat(_rightNowFetchedSongs.Where(s => s.PlayedAt >= _playlist.From && s.PlayedAt <= _playlist.To
-                && _requestedStations.Contains(s.SourceStation)));
-
-            return result.OrderByDescending(s => s.PlayedAt).ToList();
+            return _fetchedSongs.OrderByDescending(s => s.PlayedAt).ToList();
         }
 
         // GET SONGS FOR PLAYLIST WITH LIMIT

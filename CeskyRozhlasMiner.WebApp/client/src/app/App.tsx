@@ -106,7 +106,7 @@ const App: React.FC<AppProps> = ({ brand, authors }: AppProps) => {
                     <GoogleOAuthProvider clientId={googleClientId}>
                         <AppResponsiveBar />
                         <Box component="main">
-                            <AppWrapper pt={3} pb={5} my={2} textAlign={{ xs: 'center', md: 'left' }}>
+                            <AppWrapper pt={3} pb={5} mt={2} mb={3} textAlign={{ xs: 'center', md: 'left' }}>
                                 <Box component="div" mb={appAlerts.length === 0 ? 0 : 3}>
                                     {appAlerts.map((alert, i) => (
                                         <Box

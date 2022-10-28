@@ -81,6 +81,18 @@ const PlaylistManage: React.FC<PlaylistManageProps> = ({ source, setSource }: Pl
             <Box component="form" onSubmit={handleSubmit} noValidate mt={1}>
                 <TextField
                     margin="normal"
+                    fullWidth
+                    label="Id"
+                    name="id"
+                    value={data.id}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    variant="filled"
+                />
+
+                <TextField
+                    margin="normal"
                     required
                     fullWidth
                     label="Name"

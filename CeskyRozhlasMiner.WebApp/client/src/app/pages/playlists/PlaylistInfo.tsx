@@ -1,11 +1,13 @@
 import { ApiClient, ApiException, GetStatisticsForPlaylistDto, PlaylistDto, RozhlasStation } from 'app/generated/backend';
 import React, { useEffect, useState } from 'react';
-import { Box, Chip, CircularProgress, Grid, List, ListItem, Typography } from '@mui/material';
+import { Box, Button, Chip, CircularProgress, Grid, List, ListItem, Tooltip, Typography } from '@mui/material';
 import { useSetRecoilState } from 'recoil';
 import { appAlertsAtom } from 'app/state/atom';
 import { getErrorMessage } from 'app/utils/utilities';
-import { useSearchParams } from 'react-router-dom';
-import { dateFormatter } from 'app/utils/grid';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { dateFormatter, dateTimeFormatter } from 'app/utils/grid';
+import { ArrowBack } from '@mui/icons-material';
+import { AppRoute, UseRoutes } from 'app/components/AppRoutes';
 
 const PlaylistInfo: React.FC = () => {
     const setAppAlerts = useSetRecoilState(appAlertsAtom);
@@ -15,6 +17,8 @@ const PlaylistInfo: React.FC = () => {
 
     const [params] = useSearchParams();
     const playlistId = Number(params.get('id'));
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -58,7 +62,7 @@ const PlaylistInfo: React.FC = () => {
 
     return (
         <Box component="div" mb={3}>
-            {loading ? <CircularProgress /> : null}
+            {loading ? <Box mb={4}><CircularProgress /></Box> : null}
 
             {playlist === null ? null : (
                 <Box mb={4}>
@@ -68,25 +72,27 @@ const PlaylistInfo: React.FC = () => {
                             <Typography component="span" variant="inherit" color="secondary.main">
                                 {playlist.name}{' '}
                             </Typography>
-                            ({dateFormatter(playlist.from)} - {dateFormatter(playlist.to)})
+                        </Typography>
+                        <Typography variant="body1" component="p" color="primary.main">
+                            {dateTimeFormatter(playlist.from)} - {dateTimeFormatter(playlist.to)}
                         </Typography>
                     </Box>
 
                     {playlist.sourceStations.map((s) => (
                         <Chip
-                            color={"dark" as "default"}
+                            color={'dark' as 'default'}
                             component={Box}
                             mr={1}
                             key={s.station}
                             label={RozhlasStation[s.station]}
-                            variant="outlined"
+                            variant="filled"
                         />
                     ))}
                 </Box>
             )}
 
             {data !== null && !data.noSourceData ? (
-                <Grid container spacing={3} justifyContent={{ xs: 'center', md: 'flex-start' }}>
+                <Grid component={Box} mb={4} container spacing={3} justifyContent={{ xs: 'center', md: 'flex-start' }}>
                     <Grid item xs={12} textAlign={{ xs: 'center', md: 'left' }}>
                         <Typography variant="h4" component="h3" color="primary.main">
                             Records
@@ -146,6 +152,18 @@ const PlaylistInfo: React.FC = () => {
                     </Grid>
                 </Grid>
             ) : null}
+
+            <Tooltip title="Back to playlists">
+                <Button
+                    variant="contained"
+                    color={'dark' as 'inherit'}
+                    onClick={() => {
+                        navigate(UseRoutes[AppRoute.Playlists].path);
+                    }}>
+                    <ArrowBack />
+                    Back
+                </Button>
+            </Tooltip>
         </Box>
     );
 };

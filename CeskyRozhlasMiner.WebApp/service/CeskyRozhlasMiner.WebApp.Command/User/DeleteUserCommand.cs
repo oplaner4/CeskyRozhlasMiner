@@ -52,6 +52,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
             }
 
             user.Deleted = true;
+            Database.Users.Update(user);
             await Database.SaveChangesAsync(cancellationToken);
             return user.Deleted;
         }
