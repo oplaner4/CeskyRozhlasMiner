@@ -10,7 +10,6 @@ using Microsoft.DSX.ProjectTemplate.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,9 +27,12 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
         public int PlaylistId { get; set; }
     }
 
+    public class GetCurrentlyPlayingSongs : IRequest<IEnumerable<SongDto>> { }
+
     public class SongQueryHandler : QueryHandlerBase,
         IRequestHandler<GetAllSongsForPlaylist, IEnumerable<Data.Models.Song>>,
-        IRequestHandler<GetSongsWithLimitForPlaylist, GetSongsForPlaylistDto>
+        IRequestHandler<GetSongsWithLimitForPlaylist, GetSongsForPlaylistDto>,
+        IRequestHandler<GetCurrentlyPlayingSongs, IEnumerable<SongDto>>
     {
         private PlaylistDto _playlist;
         private Dictionary<DateTime, FetchRange> _relevantStartsAndRanges;
@@ -217,7 +219,20 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
         public async Task<GetSongsForPlaylistDto> Handle(GetSongsWithLimitForPlaylist request, CancellationToken cancellationToken)
         {
             var songs = await Mediator.Send(new GetAllSongsForPlaylist() { PlaylistId = request.PlaylistId }, cancellationToken);
-            return new(songs.Select(s => Mapper.Map<SongDto>(s)).Take(request.SongsLimit + 1).ToList(), request.SongsLimit);
+            return new GetSongsForPlaylistDto(songs.Select(s => Mapper.Map<SongDto>(s)).ToList(), request.SongsLimit);
+        }
+
+        // GET CURRENLTY PLAYING SONGS
+        public async Task<IEnumerable<SongDto>> Handle(GetCurrentlyPlayingSongs request, CancellationToken cancellationToken)
+        {
+            List<SongDto> result = new();
+
+            await foreach (var song in new PlaylistMiner().GetSongsNow().WithCancellation(cancellationToken))
+            {
+                result.Add(Mapper.Map<SongDto>(song));
+            }
+
+            return result.OrderByDescending(s => s.PlayedAt);
         }
     }
 }

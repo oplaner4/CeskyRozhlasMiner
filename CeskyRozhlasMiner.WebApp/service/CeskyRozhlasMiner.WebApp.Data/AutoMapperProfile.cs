@@ -15,6 +15,7 @@ namespace Microsoft.DSX.ProjectTemplate.Data
             CreateMap<Playlist, PlaylistDto>();
             CreateMap<Song, SongDto>();
             CreateMap<PlaylistSong, Song>();
+            CreateMap<PlaylistSong, SongDto>();
         }
     }
 }

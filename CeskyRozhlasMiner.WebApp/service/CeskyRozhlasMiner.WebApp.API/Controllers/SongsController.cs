@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DSX.ProjectTemplate.Command.Song;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Microsoft.DSX.ProjectTemplate.API.Controllers
@@ -18,6 +20,15 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// </summary>
         /// <param name="mediator">Mediator instance from dependency injection.</param>
         public SongsController(IMediator mediator) : base(mediator) { }
+
+        /// <summary>
+        /// Get currently playing Songs.
+        /// </summary>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<SongDto>>> GetCurrentlyPlayingSongs()
+        {
+            return Ok(await Mediator.Send(new GetCurrentlyPlayingSongs()));
+        }
 
         /// <summary>
         /// Get Songs for playlist.

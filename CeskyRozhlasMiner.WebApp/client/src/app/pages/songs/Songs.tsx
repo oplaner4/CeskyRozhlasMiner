@@ -1,4 +1,4 @@
-import { ApiClient, ApiException, PlaylistDto, RozhlasStation, SongDto } from 'app/generated/backend';
+import { ApiClient, ApiException, GetSongsForPlaylistDto, PlaylistDto, RozhlasStation } from 'app/generated/backend';
 import React, { useEffect, useState } from 'react';
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
 import { Box, Button, Chip, Grid, Tooltip, Typography } from '@mui/material';
@@ -14,7 +14,7 @@ import dayjsAsUtc from 'app/utils/dayjsAsUtc';
 
 const Songs: React.FC = () => {
     const setAppAlerts = useSetRecoilState(appAlertsAtom);
-    const [data, setData] = useState<SongDto[]>([]);
+    const [data, setData] = useState<GetSongsForPlaylistDto|null>(null);
     const [playlist, setPlaylist] = useState<PlaylistDto | null>(null);
 
     const [loading, setLoading] = useState<boolean>(true);
@@ -58,7 +58,7 @@ const Songs: React.FC = () => {
             try {
                 setLoading(true);
                 const result = await new ApiClient(process.env.REACT_APP_API_BASE).songs_GetAllSongsForPlaylist(playlistId);
-                setData(result.songs);
+                setData(result);
 
                 if (result.maxLimitExceeded) {
                     setAppAlerts((appAlerts) => [
@@ -69,6 +69,9 @@ const Songs: React.FC = () => {
                                     Showing first{' '}
                                     <Typography component="span" fontWeight="bold">
                                         {result.maxLimit}
+                                    </Typography>{' '} of{' '}
+                                    <Typography component="span" fontWeight="bold">
+                                        {result.totalCount}
                                     </Typography>{' '}
                                     songs as the limit which has been exceeded.
                                 </>
@@ -107,8 +110,9 @@ const Songs: React.FC = () => {
                         <Box mb={2}>
                             <Box mb={1}>
                                 <Typography variant="h6" component="h5">
-                                    On playlist{' '}
-                                    <Typography component="span" variant="inherit" color="secondary.main">
+                                    Found <Typography component="span" variant="inherit" color="secondary.main">
+                                        {data === null ? null : data.totalCount}
+                                    </Typography> on playlist <Typography component="span" variant="inherit" color="secondary.main">
                                         {playlist.name}
                                     </Typography>
                                 </Typography>
@@ -156,7 +160,7 @@ const Songs: React.FC = () => {
 
             <Box mb={5}>
                 <AppDataGrid
-                    rows={data}
+                    rows={data === null ? [] : data.songs}
                     columns={columns}
                     loading={loading}
                     initialState={{
