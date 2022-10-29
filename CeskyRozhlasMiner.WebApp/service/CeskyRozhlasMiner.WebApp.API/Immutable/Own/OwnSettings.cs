@@ -12,5 +12,10 @@ namespace CeskyRozhlasMiner.WebApp.API.Immutable.Own
         /// </summary>
         public OwnSettingsGoogle Google { get; set; }
 
+        /// <summary>
+        /// Songs fetch limit
+        /// </summary>
+        public int SongsFetchLimit { get; set; }
+
     }
 }

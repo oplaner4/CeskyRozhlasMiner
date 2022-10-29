@@ -57,7 +57,7 @@ const CurrentlyPlaying = ({ updateIntervalSeconds }: CurrentlyPlayingProps) => {
             {loading || lastUpdated === null ? null : (
                 <Box ml={2} mt={1}>
                     <Typography variant="body1" component="span" color="dark.main">
-                        Last updated: {timeFormatter(lastUpdated)}
+                        Last updated: <AccessTime fontSize="inherit" /> {timeFormatter(lastUpdated)}
                     </Typography>
                 </Box>
             )}
