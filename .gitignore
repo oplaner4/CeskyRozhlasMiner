@@ -24,3 +24,4 @@ obj
 /DataCompressor/DataCompressor.csproj.user
 /CeskyRozhlasMiner.WebApp/service/CeskyRozhlasMiner.WebApp.Data/Migrations/*
 /CeskyRozhlasMiner.WebApp/client/.cert/*
+/Diagnostics/Log.csv

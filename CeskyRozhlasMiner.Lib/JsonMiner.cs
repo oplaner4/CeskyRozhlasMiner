@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CeskyRozhlasMiner.Lib
 {
     /// <summary>
-    /// Utility used to fetch and deserialize json from api.
+    /// Utility which can be used to fetch and deserialize json from api.
     /// </summary>
     /// <typeparam name="T">The type used when deserializing fetched json stream.</typeparam>
     internal class JsonMiner<T>
@@ -28,7 +28,9 @@ namespace CeskyRozhlasMiner.Lib
         /// Makes http request, logs unusual behaviour and deserializes using given type 
         /// <typeparamref name="T"/>.
         /// </summary>
-        /// <returns>Pair (successfully fetched, deserialized object)</returns>
+        /// <returns>Pair (successfully fetched, <typeparamref name="T"/> deserialized object). The second 
+        /// (<typeparamref name="T"/> deserialized object) is set to <value>default</value> when any 
+        /// operation did not succeed.</returns>
         internal async Task<(bool, T)> Fetch()
         {
             HttpResponseMessage response;

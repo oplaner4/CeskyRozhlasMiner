@@ -18,12 +18,11 @@ namespace CeskyRozhlasMiner.Lib.Playlist
             return new UriBuilder(Settings.RozhlasApi)
             {
                 Path = Path.Combine(
-                Settings.RozhlasApiPlaylistDayPath,
+                    Settings.RozhlasApiPlaylistDayPath,
                     date.Year.ToString(),
                     date.Month.ToString("D2"),
-                date.Day.ToString("D2"),
-                    Settings.RozhlasApiStation[_station] +
-                        Settings.RozhlasApiPlaylistJsonExtension
+                    date.Day.ToString("D2"),
+                    Settings.RozhlasApiStation[_station] + Settings.RozhlasApiPlaylistJsonExtension
                 )
             }.ToString();
         }
@@ -32,11 +31,8 @@ namespace CeskyRozhlasMiner.Lib.Playlist
         {
             return new UriBuilder(Settings.RozhlasApi)
             {
-                Path = Path.Combine(
-                Settings.RozhlasApiPlaylistNowPath,
-                    Settings.RozhlasApiStation[_station] +
-                        Settings.RozhlasApiPlaylistJsonExtension
-                )
+                Path = Path.Combine(Settings.RozhlasApiPlaylistNowPath,
+                    Settings.RozhlasApiStation[_station] + Settings.RozhlasApiPlaylistJsonExtension)
             }.ToString();
         }
     }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace CeskyRozhlasMiner.Lib.Playlist
 {
     /// <summary>
-    /// Fetches songs from Rozhlas api
+    /// Fetches songs from Rozhlas api.
     /// </summary>
     public class PlaylistMiner
     {
@@ -99,11 +99,12 @@ namespace CeskyRozhlasMiner.Lib.Playlist
 
 
         /// <summary>
-        /// Initializes miner within the specific range by deriving from UTC datetimes.
+        /// Initializes miner within the specific range by deriving dates from UTC datetimes.
         /// </summary>
-        /// <param name="from">Mine from the specific date which is derived by ignoring time 
-        /// part.</param>
-        /// <param name="to">Mine to the specific date which is derived by ignoring time part.</param>
+        /// <param name="fromUtc">Mine from the specific date which is derived by ignoring time 
+        /// part ('Kind' property must be set to 'Utc').</param>
+        /// <param name="toUtc">Mine to the specific date which is derived by ignoring time part. 
+        ///  ('Kind' property must be set to 'Utc').</param>
         /// <param name="stations">Enumerable stations to be set. If null 
         /// then all stations are considered.</param>
         public PlaylistMiner(DateTime fromUtc, DateTime toUtc, IEnumerable<RozhlasStation> stations = null)
@@ -134,10 +135,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist
                         yield return song;
                     }
 
-                    if (onProgress != null)
-                    {
-                        onProgress(CountPercentDone(inspected, stationOrder));
-                    }
+                    onProgress?.Invoke(CountPercentDone(inspected, stationOrder));
 
                     inspected = inspected.AddDays(1);
                 }
