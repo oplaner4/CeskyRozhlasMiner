@@ -3,13 +3,16 @@ import Home from "app/pages/home/Home";
 import PlaylistInfo from "app/pages/playlists/PlaylistInfo";
 import Playlists from "app/pages/playlists/Playlists";
 import Songs from "app/pages/songs/Songs";
-import UserSettings from "app/pages/user/UserSettings";
+import UserManage from "app/pages/user/UserManage";
 import UserSignIn from "app/pages/user/UserSignIn";
 import UserSignOut from "app/pages/user/UserSignOut";
+
 import { appAlertsAtom } from "app/state/atom";
 import React, { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
+import TokenVerifyUser from "./token/TokenVerifyUser";
+
 
 export enum AppRouteGroup {
     Default = 0,
@@ -26,6 +29,8 @@ export enum AppRoute {
     UserSettings = 6,
     Songs = 7,
     PlaylistInfo = 8,
+    UserSignUp = 9,
+    TokenVerifyUser = 10,
 };
 
 export interface AppRouteDefinition {
@@ -39,21 +44,23 @@ export interface AppRouteDefinition {
 };
 
 export const UseRoutes : Record<number, AppRouteDefinition> = {};
+
 UseRoutes[AppRoute.Default] = {
     path: '/',
     element: <Home />,
     inMenu: false,
-    title: 'Welcome',
-    menuTitle: null,
+    title: 'Home',
+    menuTitle: 'Home',
     beAuthorized: false,
     group: AppRouteGroup.Default,
 };
+
 UseRoutes[AppRoute.Home] = {
     path: '/home',
     element: UseRoutes[AppRoute.Default].element,
     inMenu: true,
-    title: 'Home',
-    menuTitle: 'Home',
+    title: UseRoutes[AppRoute.Default].title,
+    menuTitle: UseRoutes[AppRoute.Default].menuTitle,
     beAuthorized: false,
     group: AppRouteGroup.Default,
 };
@@ -88,6 +95,16 @@ UseRoutes[AppRoute.UserSignIn] = {
     group: AppRouteGroup.User,
 };
 
+UseRoutes[AppRoute.UserSignUp] = {
+    path: '/user/sign-up',
+    element: <UserManage />,
+    inMenu: true,
+    title: 'Sign up',
+    menuTitle: 'Sign up',
+    beAuthorized: false,
+    group: AppRouteGroup.User,
+};
+
 UseRoutes[AppRoute.UserSignOut] = {
     path: '/user/sign-out',
     element: <UserSignOut />,
@@ -100,7 +117,7 @@ UseRoutes[AppRoute.UserSignOut] = {
 
 UseRoutes[AppRoute.UserSettings] = {
     path: '/user/settings',
-    element: <UserSettings />,
+    element: <UserManage />,
     inMenu: true,
     title: 'User settings',
     menuTitle: 'Settings',
@@ -125,6 +142,16 @@ UseRoutes[AppRoute.PlaylistInfo] = {
     title: 'Playlist information',
     menuTitle: 'Playlist information',
     beAuthorized: true,
+    group: AppRouteGroup.Default,
+};
+
+UseRoutes[AppRoute.TokenVerifyUser] = {
+    path: '/token/verify-user',
+    element: <TokenVerifyUser />,
+    inMenu: false,
+    title: 'Verify user',
+    menuTitle: 'Verify user',
+    beAuthorized: false,
     group: AppRouteGroup.Default,
 };
 

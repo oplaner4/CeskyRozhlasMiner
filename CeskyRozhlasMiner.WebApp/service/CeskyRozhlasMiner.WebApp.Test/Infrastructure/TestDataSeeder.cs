@@ -23,6 +23,12 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Infrastructure
 
             SeedProjects(10);
 
+            SeedUsers(10);
+
+            SeedGroups(10);
+
+            SeedTokens(20);
+
             _logger.LogInformation("Database seeding completed.");
         }
 
@@ -30,8 +36,8 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Infrastructure
         {
             for (int i = 0; i < entityCount; i++)
             {
-                var newProject = SeedHelper.CreateValidNewGroup(_dbContext);
-                _dbContext.Groups.Add(newProject);
+                var newGroup = SeedHelper.CreateValidNewGroup(_dbContext);
+                _dbContext.Groups.Add(newGroup);
             }
 
             _dbContext.SaveChanges();
@@ -43,6 +49,28 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Infrastructure
             {
                 var newProject = SeedHelper.CreateValidNewProject(_dbContext);
                 _dbContext.Projects.Add(newProject);
+            }
+
+            _dbContext.SaveChanges();
+        }
+
+        private void SeedUsers(int entityCount)
+        {
+            for (int i = 0; i < entityCount; i++)
+            {
+                var newUser = SeedHelper.CreateValidNewUser();
+                _dbContext.Users.Add(newUser);
+            }
+
+            _dbContext.SaveChanges();
+        }
+
+        private void SeedTokens(int entityCount)
+        {
+            for (int i = 0; i < entityCount; i++)
+            {
+                var newToken = SeedHelper.CreateValidNewToken(_dbContext);
+                _dbContext.Tokens.Add(newToken);
             }
 
             _dbContext.SaveChanges();

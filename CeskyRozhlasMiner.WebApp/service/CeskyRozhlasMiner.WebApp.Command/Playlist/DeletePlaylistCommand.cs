@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.Exceptions;
-using Microsoft.DSX.ProjectTemplate.Data.Models;
 using System.Threading;
 using System.Threading.Tasks;
 

@@ -47,7 +47,12 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
             }
 
             user.DisplayName = dto.DisplayName;
-            user.PasswordHash = new PasswordHasher<Data.Models.User>().HashPassword(user, dto.NewPassword);
+
+            if (!string.IsNullOrEmpty(dto.NewPassword))
+            {
+                // User wants to change password
+                user.PasswordHash = new PasswordHasher<Data.Models.User>().HashPassword(user, dto.NewPassword);
+            }
 
             Database.Users.Update(user);
             await Database.SaveChangesAsync(cancellationToken);

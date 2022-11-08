@@ -1,12 +1,12 @@
 import { ApiClient, ApiException, GetStatisticsForPlaylistDto, PlaylistDto, RozhlasStation } from 'app/generated/backend';
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Chip, CircularProgress, Grid, List, ListItem, Tooltip, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Chip, CircularProgress, Grid, List, ListItem, Tooltip, Typography } from '@mui/material';
 import { useSetRecoilState } from 'recoil';
 import { appAlertsAtom } from 'app/state/atom';
 import { getErrorMessage } from 'app/utils/utilities';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { dateFormatter, dateTimeFormatter } from 'app/utils/grid';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, MusicNote } from '@mui/icons-material';
 import { AppRoute, UseRoutes } from 'app/components/AppRoutes';
 
 const PlaylistInfo: React.FC = () => {
@@ -62,7 +62,11 @@ const PlaylistInfo: React.FC = () => {
 
     return (
         <Box component="div" mb={3}>
-            {loading ? <Box mb={4}><CircularProgress /></Box> : null}
+            {loading ? (
+                <Box mb={4}>
+                    <CircularProgress />
+                </Box>
+            ) : null}
 
             {playlist === null ? null : (
                 <Box mb={4}>
@@ -153,17 +157,29 @@ const PlaylistInfo: React.FC = () => {
                 </Grid>
             ) : null}
 
-            <Tooltip title="Back to playlists">
-                <Button
-                    variant="contained"
-                    color={'dark' as 'inherit'}
-                    onClick={() => {
-                        navigate(UseRoutes[AppRoute.Playlists].path);
-                    }}>
-                    <ArrowBack />
-                    Back
-                </Button>
-            </Tooltip>
+            <ButtonGroup>
+                <Tooltip title="Back to playlists">
+                    <Button
+                        variant="contained"
+                        color={'dark' as 'inherit'}
+                        onClick={() => {
+                            navigate(UseRoutes[AppRoute.Playlists].path);
+                        }}>
+                        <ArrowBack />
+                        Back
+                    </Button>
+                </Tooltip>
+                <Tooltip title="View songs">
+                    <Button
+                        variant="contained"
+                        color={'info'}
+                        onClick={() => {
+                            navigate(`${UseRoutes[AppRoute.Songs].path}?id=${playlistId}`);
+                        }}>
+                        <MusicNote /> Songs
+                    </Button>
+                </Tooltip>
+            </ButtonGroup>
         </Box>
     );
 };

@@ -1,5 +1,6 @@
 ﻿using CeskyRozhlasMiner.Lib.Common;
 using CeskyRozhlasMiner.Lib.Diagnostics;
+using CeskyRozhlasMiner.Time;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
@@ -16,12 +17,14 @@ namespace CeskyRozhlasMiner.Lib
         private readonly HttpClient _client;
         private readonly string _uri;
         private readonly string _briefLogInfo;
+        private readonly ITimeProvider _timeProvider;
 
-        internal JsonMiner(string uri, string briefLogInfo)
+        internal JsonMiner(ITimeProvider time, string uri, string briefLogInfo)
         {
             _uri = uri;
             _briefLogInfo = briefLogInfo;
             _client = new();
+            _timeProvider = time;
         }
 
         /// <summary>
@@ -41,14 +44,14 @@ namespace CeskyRozhlasMiner.Lib
             }
             catch (HttpRequestException ex)
             {
-                Logging.SaveRecord(Logging.Severity.Error, nameof(Fetch),
+                new Logging(_timeProvider).SaveRecord(Logging.Severity.Error, nameof(Fetch),
                     $"{_briefLogInfo}. Unable to make http request. {ex.Message}");
                 return (false, default);
             }
 
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                Logging.SaveRecord(Logging.Severity.Error, nameof(Fetch),
+                new Logging(_timeProvider).SaveRecord(Logging.Severity.Error, nameof(Fetch),
                     $"{_briefLogInfo}. Request to access Json stream failed with status {response.StatusCode}.");
                 return (false, default);
             }
@@ -62,7 +65,7 @@ namespace CeskyRozhlasMiner.Lib
                 }
                 catch (JsonException ex)
                 {
-                    Logging.SaveRecord(Logging.Severity.Error, nameof(Fetch),
+                    new Logging(_timeProvider).SaveRecord(Logging.Severity.Error, nameof(Fetch),
                         $"{_briefLogInfo}. Error while deserializing json. {ex.Message}");
                     return (false, default);
                 }

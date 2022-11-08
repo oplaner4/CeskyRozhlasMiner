@@ -1,5 +1,7 @@
-import { Box, Avatar, TextField, Button, Grid, Link } from '@mui/material';
+import { Box, Avatar, TextField, Button, Grid, Typography, Link } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
+
+import { Link as RouterLink } from 'react-router-dom';
 
 import React, { useState } from 'react';
 import { appAlertsAtom, userAtom } from 'app/state/atom';
@@ -26,12 +28,16 @@ const UserSignIn: React.FC = () => {
         id: 0,
     });
 
+    const onSignedIn = () => {
+      setSigningIn(false);
+      navigate(UseRoutes[AppRoute.Playlists].path);
+    }
+
     const handleGoogleSignIn = async (dto: GoogleSignInDataDto) => {
       try {
         setSigningIn(true);
         setUser(await new ApiClient(process.env.REACT_APP_API_BASE).google_SignInUser(dto));
-        setSigningIn(false);
-        navigate(UseRoutes[AppRoute.UserSettings].path);
+        onSignedIn();
       } catch (e) {
           console.log(e);
           setAppAlerts((appAlerts) => [
@@ -55,9 +61,8 @@ const UserSignIn: React.FC = () => {
 
                 setSigningIn(true);
                 setUser(await new ApiClient(process.env.REACT_APP_API_BASE).users_SignInUser(data));
-                setSigningIn(false);
 
-                navigate(UseRoutes[AppRoute.UserSettings].path);
+                onSignedIn();
             } catch (e) {
                 console.log(e);
                 setAppAlerts((appAlerts) => [
@@ -127,13 +132,17 @@ const UserSignIn: React.FC = () => {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
+                  <Link component={RouterLink} to={UseRoutes[AppRoute.UserSignUp].path}>
+                    <Typography component="span" color="primary" variant="body2">
+                      Forgot password?
+                    </Typography>
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                  <Link component={RouterLink} to={UseRoutes[AppRoute.UserSignUp].path}>
+                    <Typography component="span" color="primary" variant="body2">
+                      Don't have an account? Sign Up
+                    </Typography>
                   </Link>
                 </Grid>
               </Grid>
@@ -155,7 +164,6 @@ const UserSignIn: React.FC = () => {
                     }
                   ]);
                 }}
-                useOneTap
               />
             </Box>
         </Grid>

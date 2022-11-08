@@ -10,4 +10,8 @@
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CeskyRozhlasMiner.Time\CeskyRozhlasMiner.Time.csproj" />
+  </ItemGroup>
+
 </Project>

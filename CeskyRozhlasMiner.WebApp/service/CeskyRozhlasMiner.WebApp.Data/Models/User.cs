@@ -17,6 +17,9 @@ namespace Microsoft.DSX.ProjectTemplate.Data.Models
         [MaxLength(Constants.MaximumLengths.StringColumn)]
         public string Email { get; set; }
 
+        public bool Verified { get; set; }
+
         public virtual ICollection<Playlist> Playlists { get; set; } = new List<Playlist>();
+        public virtual ICollection<Token> Tokens { get; set; } = new List<Token>();
     }
 }

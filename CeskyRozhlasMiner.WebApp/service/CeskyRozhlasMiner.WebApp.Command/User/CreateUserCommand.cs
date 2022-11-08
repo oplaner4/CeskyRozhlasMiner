@@ -37,17 +37,26 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
         {
             var dto = request.User;
 
+            if (!string.IsNullOrEmpty(dto.Password))
+            {
+                // Password will be used after creation.
+                // This can indicate that user tries to set
+                // invalid "New password"
+                throw new BadRequestException($"{nameof(dto.Password)} must be null or empty.");
+            }
+
             bool emailAlreadyUsed = await Database.Users.AnyAsync(e => !e.Deleted && e.Email == dto.Email, cancellationToken);
 
             if (emailAlreadyUsed)
             {
-                throw new BadRequestException($"Email adress already used.");
+                throw new NotAcceptableException($"Email adress already used.");
             }
 
             var model = new Data.Models.User()
             {
                 DisplayName = dto.DisplayName,
                 Email = dto.Email,
+                Verified = false,
             };
 
             model.PasswordHash = request.GeneratePasswordHash
@@ -59,7 +68,6 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
             await Database.SaveChangesAsync(cancellationToken);
 
             await Mediator.Publish(new UserCreatedDomainEvent(model), cancellationToken);
-
             return Mapper.Map<UserDto>(model);
         }
     }

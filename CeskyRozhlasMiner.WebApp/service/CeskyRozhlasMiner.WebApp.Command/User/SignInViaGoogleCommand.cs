@@ -65,6 +65,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
                     {
                         Email = payload.Email,
                         DisplayName = payload.Name,
+                        Verified = true,
                     },
                     GeneratePasswordHash = false,
                 }, cancellationToken);

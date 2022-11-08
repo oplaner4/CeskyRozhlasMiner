@@ -1,7 +1,7 @@
 import { ApiClient, ApiException, GetSongsForPlaylistDto, PlaylistDto, RozhlasStation } from 'app/generated/backend';
 import React, { useEffect, useState } from 'react';
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
-import { Box, Button, Chip, Grid, Tooltip, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Chip, Grid, Tooltip, Typography } from '@mui/material';
 import { useSetRecoilState } from 'recoil';
 import { appAlertsAtom } from 'app/state/atom';
 import { getErrorMessage } from 'app/utils/utilities';
@@ -9,12 +9,12 @@ import AppDataGrid from 'app/components/AppDataGrid';
 import { dateTimeFormatter, dateTimeValueFormatter } from 'app/utils/grid';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute, UseRoutes } from 'app/components/AppRoutes';
-import { ArrowBack, Refresh } from '@mui/icons-material';
+import { ArrowBack, Info, Refresh } from '@mui/icons-material';
 import dayjsAsUtc from 'app/utils/dayjsAsUtc';
 
 const Songs: React.FC = () => {
     const setAppAlerts = useSetRecoilState(appAlertsAtom);
-    const [data, setData] = useState<GetSongsForPlaylistDto|null>(null);
+    const [data, setData] = useState<GetSongsForPlaylistDto | null>(null);
     const [playlist, setPlaylist] = useState<PlaylistDto | null>(null);
 
     const [loading, setLoading] = useState<boolean>(true);
@@ -69,7 +69,8 @@ const Songs: React.FC = () => {
                                     Showing first{' '}
                                     <Typography component="span" fontWeight="bold">
                                         {result.maxLimit}
-                                    </Typography>{' '} of{' '}
+                                    </Typography>{' '}
+                                    of{' '}
                                     <Typography component="span" fontWeight="bold">
                                         {result.totalCount}
                                     </Typography>{' '}
@@ -110,9 +111,12 @@ const Songs: React.FC = () => {
                         <Box mb={2}>
                             <Box mb={1}>
                                 <Typography variant="h6" component="h5">
-                                    Found <Typography component="span" variant="inherit" color="secondary.main">
+                                    Found{' '}
+                                    <Typography component="span" variant="inherit" color="secondary.main">
                                         {data === null ? null : data.totalCount}
-                                    </Typography> on playlist <Typography component="span" variant="inherit" color="secondary.main">
+                                    </Typography>{' '}
+                                    on playlist{' '}
+                                    <Typography component="span" variant="inherit" color="secondary.main">
                                         {playlist.name}
                                     </Typography>
                                 </Typography>
@@ -175,17 +179,30 @@ const Songs: React.FC = () => {
                     }}
                 />
             </Box>
-            <Tooltip title="Back to playlists">
-                <Button
-                    variant="contained"
-                    color={'dark' as 'inherit'}
-                    onClick={() => {
-                        navigate(UseRoutes[AppRoute.Playlists].path);
-                    }}>
-                    <ArrowBack />
-                    Back
-                </Button>
-            </Tooltip>
+
+            <ButtonGroup>
+                <Tooltip title="Back to playlists">
+                    <Button
+                        variant="contained"
+                        color={'dark' as 'inherit'}
+                        onClick={() => {
+                            navigate(UseRoutes[AppRoute.Playlists].path);
+                        }}>
+                        <ArrowBack />
+                        Back
+                    </Button>
+                </Tooltip>
+                <Tooltip title="See information">
+                    <Button
+                        variant="contained"
+                        color={'info'}
+                        onClick={() => {
+                            navigate(`${UseRoutes[AppRoute.PlaylistInfo].path}?id=${playlistId}`);
+                        }}>
+                        <Info /> Information
+                    </Button>
+                </Tooltip>
+            </ButtonGroup>
         </Box>
     );
 };

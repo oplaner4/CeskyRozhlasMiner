@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\CeskyRozhlasMiner.Lib\CeskyRozhlasMiner.Lib.csproj" />
+    <ProjectReference Include="..\..\..\CeskyRozhlasMiner.Time\CeskyRozhlasMiner.Time.csproj" />
     <ProjectReference Include="..\CeskyRozhlasMiner.WebApp.Data\CeskyRozhlasMiner.WebApp.Data.csproj" />
   </ItemGroup>
 

@@ -2,6 +2,7 @@
 using CeskyRozhlasMiner.Lib.Playlist.Json.Day;
 using CeskyRozhlasMiner.Lib.Playlist.Json.Now;
 using CeskyRozhlasMiner.Lib.Playlist.Json.Now.Data;
+using CeskyRozhlasMiner.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,10 @@ namespace CeskyRozhlasMiner.Lib.Playlist
     /// </summary>
     public class PlaylistMiner
     {
-        private static DateOnly _today = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, Settings.RozhlasTimeZoneInfo));
-        private DateOnly _from = _today;
-        private DateOnly _to = _today;
+        private ITimeProvider _timeProvider;
+        private DateOnly _today;
+        private DateOnly _from;
+        private DateOnly _to;
 
         /// <summary>
         /// Stations to mine from.
@@ -66,21 +68,10 @@ namespace CeskyRozhlasMiner.Lib.Playlist
         /// </summary>
         /// <param name="stations">Enumerable stations to be set. If null 
         /// then all stations are considered.</param>
-        public PlaylistMiner(IEnumerable<RozhlasStation> stations = null)
+        public PlaylistMiner(ITimeProvider time, IEnumerable<RozhlasStation> stations = null)
         {
             SetSourceStations(stations);
-        }
-
-        /// <summary>
-        /// Initializes miner from any date in the past until now.
-        /// </summary>
-        /// <param name="from">Mine from the specific date</param>
-        /// <param name="stations">Enumerable stations to be set. If null 
-        /// then all stations are considered.</param>
-        public PlaylistMiner(DateOnly from, IEnumerable<RozhlasStation> stations = null)
-        {
-            From = from;
-            SetSourceStations(stations);
+            InitTime(time);
         }
 
         /// <summary>
@@ -90,11 +81,13 @@ namespace CeskyRozhlasMiner.Lib.Playlist
         /// <param name="to">Mine to the specific date</param>
         /// <param name="stations">Enumerable stations to be set. If null 
         /// then all stations are considered.</param>
-        public PlaylistMiner(DateOnly from, DateOnly to, IEnumerable<RozhlasStation> stations = null)
+        /// <param name="timeProvider">Injected time provider.</param>
+        public PlaylistMiner(ITimeProvider timeProvider, DateOnly from, DateOnly to, IEnumerable<RozhlasStation> stations = null)
         {
             From = from;
             To = to;
             SetSourceStations(stations);
+            InitTime(timeProvider);
         }
 
 
@@ -107,11 +100,13 @@ namespace CeskyRozhlasMiner.Lib.Playlist
         ///  ('Kind' property must be set to 'Utc').</param>
         /// <param name="stations">Enumerable stations to be set. If null 
         /// then all stations are considered.</param>
-        public PlaylistMiner(DateTime fromUtc, DateTime toUtc, IEnumerable<RozhlasStation> stations = null)
+        /// <param name="timeProvider">Injected time provider.</param>
+        public PlaylistMiner(ITimeProvider timeProvider, DateTime fromUtc, DateTime toUtc, IEnumerable<RozhlasStation> stations = null)
         {
             From = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(fromUtc, Settings.RozhlasTimeZoneInfo));
             To = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(toUtc, Settings.RozhlasTimeZoneInfo));
             SetSourceStations(stations);
+            InitTime(timeProvider);
         }
 
         /// <summary>
@@ -179,12 +174,12 @@ namespace CeskyRozhlasMiner.Lib.Playlist
             }
         }
 
-        private static async IAsyncEnumerable<PlaylistSong> GetSongsInDayForStation(DateOnly date, RozhlasStation station)
+        private async IAsyncEnumerable<PlaylistSong> GetSongsInDayForStation(DateOnly date, RozhlasStation station)
         {
             string uri = new PlaylistUriConstructor(station).Day(date);
             string briefLogInfo = $"{nameof(GetSongsInDayForStation)} Date: {date} Station: {station}";
 
-            JsonMiner<PlaylistDay> miner = new(uri, briefLogInfo);
+            JsonMiner<PlaylistDay> miner = new(_timeProvider, uri, briefLogInfo);
             (bool success, PlaylistDay day) = await miner.Fetch();
 
             if (success)
@@ -196,12 +191,12 @@ namespace CeskyRozhlasMiner.Lib.Playlist
             }
         }
 
-        private static async Task<PlaylistSong> GetSongNowForStation(RozhlasStation station)
+        private async Task<PlaylistSong> GetSongNowForStation(RozhlasStation station)
         {
             string briefLogInfo = $"{nameof(GetSongsInDayForStation)} Station: {station}";
             string uri = new PlaylistUriConstructor(station).Now();
 
-            JsonMiner<PlaylistNow> miner = new(uri, briefLogInfo);
+            JsonMiner<PlaylistNow> miner = new(_timeProvider, uri, briefLogInfo);
             (bool success, PlaylistNow now) = await miner.Fetch();
 
             if (success && now.Data.InterpretStatus() == PlaylistNowDataStatus.OnAir)
@@ -234,6 +229,14 @@ namespace CeskyRozhlasMiner.Lib.Playlist
             {
                 SourceStations = stations.ToHashSet();
             }
+        }
+
+        private void InitTime(ITimeProvider timeProvider)
+        {
+            _timeProvider = timeProvider;
+            _today = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(_timeProvider.UtcNow, Settings.RozhlasTimeZoneInfo));
+            _from = _today;
+            _to = _today;
         }
     }
 }

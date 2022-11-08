@@ -1,4 +1,5 @@
-﻿using CeskyRozhlasMiner.WebApp.API.Immutable;
+﻿using CeskyRozhlasMiner.Time;
+using CeskyRozhlasMiner.WebApp.API.Immutable;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -41,7 +42,9 @@ namespace Microsoft.DSX.ProjectTemplate.API
         {
             SettingsAccessor settings = new();
             _configuration.Bind(settings);
-            services.AddSingleton(settings);
+            services
+                .AddSingleton(settings)
+                .AddSingleton<ITimeProvider>(new RealTimeProvider());
 
             services
                 .AddDbConnections(_configuration, _environment)

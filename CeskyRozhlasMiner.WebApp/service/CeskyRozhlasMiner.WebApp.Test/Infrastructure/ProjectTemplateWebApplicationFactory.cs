@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using CeskyRozhlasMiner.Time;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.DSX.ProjectTemplate.Data;
@@ -54,6 +55,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Infrastructure
                 {
                     services
                         .AddSingleton<IEmailService, FakeEmailService>()
+                        .AddSingleton<ITimeProvider>(new FakeTimeProvider(DateTime.UtcNow))
                         .RemoveAll(typeof(IHostedService));
                 })
                 .ConfigureServices((_, services) =>

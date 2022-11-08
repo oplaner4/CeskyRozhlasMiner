@@ -9,6 +9,8 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
     {
         public string DisplayName { get; set; }
 
+        public bool Verified { get; set; }
+
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             ValidationHelper<UserDto> helper = new ValidationHelper<UserDto>(this);

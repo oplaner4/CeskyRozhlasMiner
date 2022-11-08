@@ -10,7 +10,7 @@ const FormattedErrorMessage = ({exception}: FormattedErrorMessageProps): React.R
         return <Box component={List} dense p={0}>
             {Object.keys(exception.errors).map(er => {
                 return <ListItem key={er}>
-                    {exception.errors[er]}
+                    {exception.errors[er].join(' ')}
                 </ListItem>
             })}
         </Box>;

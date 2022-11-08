@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeskyRozhlasMiner.App", "CeskyRozhlasMiner.App\CeskyRozhlasMiner.App.csproj", "{FD700A25-EEC8-4DCA-A08B-B620E966DACA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeskyRozhlasMiner.WpfApp", "CeskyRozhlasMiner.WpfApp\CeskyRozhlasMiner.WpfApp.csproj", "{FD700A25-EEC8-4DCA-A08B-B620E966DACA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeskyRozhlasMiner.Lib", "CeskyRozhlasMiner.Lib\CeskyRozhlasMiner.Lib.csproj", "{E420A6FE-7380-4979-8675-63E42F1832D2}"
 EndProject
@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{BFA2FE
 		CeskyRozhlasMiner.WebApp\docker-compose.yml = CeskyRozhlasMiner.WebApp\docker-compose.yml
 		CeskyRozhlasMiner.WebApp\dockerfile = CeskyRozhlasMiner.WebApp\dockerfile
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeskyRozhlasMiner.Time", "CeskyRozhlasMiner.Time\CeskyRozhlasMiner.Time.csproj", "{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +157,26 @@ Global
 		{49DB7546-B600-4FD8-BA58-C37F370855C6}.Release|x64.Build.0 = Release|Any CPU
 		{49DB7546-B600-4FD8-BA58-C37F370855C6}.Release|x86.ActiveCfg = Release|Any CPU
 		{49DB7546-B600-4FD8-BA58-C37F370855C6}.Release|x86.Build.0 = Release|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Debug|ARM.Build.0 = Debug|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Debug|x64.Build.0 = Debug|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Debug|x86.Build.0 = Debug|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Release|ARM.Build.0 = Release|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Release|ARM64.Build.0 = Release|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Release|x64.ActiveCfg = Release|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Release|x64.Build.0 = Release|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Release|x86.ActiveCfg = Release|Any CPU
+		{2C0D400F-0B26-4F23-AF3E-56BA6E8C15CF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

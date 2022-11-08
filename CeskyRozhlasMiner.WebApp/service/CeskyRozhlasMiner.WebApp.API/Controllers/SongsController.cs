@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DSX.ProjectTemplate.Command.Song;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,7 +21,8 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// </summary>
         /// <param name="mediator">Mediator instance from dependency injection.</param>
         /// <param name="settings">App settings accessor from dependency injection.</param>
-        public SongsController(IMediator mediator, SettingsAccessor settings) : base(mediator) {
+        public SongsController(IMediator mediator, SettingsAccessor settings) : base(mediator)
+        {
             _settings = settings;
         }
 

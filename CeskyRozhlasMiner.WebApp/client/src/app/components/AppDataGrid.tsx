@@ -1,4 +1,4 @@
-import { DataGrid, DataGridProps, GridToolbar } from "@mui/x-data-grid"
+import { DataGrid, DataGridProps, GridToolbar } from "@mui/x-data-grid";
 import { gridPageSizes } from "app/utils/grid";
 import { useState } from "react";
 

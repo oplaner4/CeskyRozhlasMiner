@@ -1,0 +1,92 @@
+﻿<Window x:Class="CeskyRozhlasMiner.WpfApp.Dialogs.SettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CeskyRozhlasMiner.WpfApp.Dialogs"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="Height"
+        Title="SettingsDialog" Height="auto" Width="510">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"></RowDefinition>
+      <RowDefinition Height="40"></RowDefinition>
+    </Grid.RowDefinitions>
+    <StackPanel Orientation="Vertical" Grid.Row="0">
+      <StackPanel Margin="10" Orientation="Horizontal">
+        <TextBlock VerticalAlignment="Center">Fetch range</TextBlock>
+        <Separator Width="40" Visibility="Hidden"></Separator>
+        <DatePicker Width="168" Name="MineFrom" Margin="0 0 0 0"></DatePicker>
+        <TextBlock VerticalAlignment="Center" Padding="15 0">-</TextBlock>
+        <DatePicker Width="168" Name="MineTo" Margin="0 0 59 0"></DatePicker>
+      </StackPanel>
+
+      <StackPanel Margin="10" Orientation="Horizontal">
+        <TextBlock VerticalAlignment="Center">Source stations</TextBlock>
+        <Separator Width="22" Visibility="Hidden"></Separator>
+        <ListBox Name="SourceStations" Width="200" Height="100">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked}"
+                        Tag="{Binding Value}" Margin="0 5 0 0" />
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </StackPanel>
+
+      <StackPanel Margin="10" Orientation="Horizontal">
+        <TextBlock VerticalAlignment="Center">Days of week</TextBlock>
+        <Separator Width="33" Visibility="Hidden"></Separator>
+        <ListBox Name="DaysOfWeek" Width="200" Height="100">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked}"
+                        Tag="{Binding Value}" Margin="0 5 0 0" />
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </StackPanel>
+      <StackPanel Margin="10" Orientation="Horizontal">
+        <TextBlock VerticalAlignment="Center">Played range</TextBlock>
+        <Separator Width="35" Visibility="Hidden"></Separator>
+        <TextBox Name="PlayedFromHour" Width="25"/>
+        <TextBlock VerticalAlignment="Center" Padding="5 0">:</TextBlock>
+        <TextBox Name="PlayedFromMinute" Width="25"/>
+        <TextBlock VerticalAlignment="Center" Padding="5 0">:</TextBlock>
+        <TextBox Name="PlayedFromSecond" Width="25"/>
+        <TextBlock VerticalAlignment="Center" Padding="15 0">-</TextBlock>
+        <TextBox Name="PlayedToHour" Width="25"/>
+        <TextBlock VerticalAlignment="Center" Padding="5 0">:</TextBlock>
+        <TextBox Name="PlayedToMinute" Width="25"/>
+        <TextBlock VerticalAlignment="Center" Padding="5 0">:</TextBlock>
+        <TextBox Name="PlayedToSecond" Width="25"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="10 10 0 2">
+        <TextBlock VerticalAlignment="Center" >Specific artists</TextBlock>
+        <Separator Width="28" Visibility="Hidden"></Separator>
+        <TextBox Name="ArtistsBox" Width="250" />
+        <Separator Width="10" Visibility="Hidden"></Separator>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="10 0 0 10">
+        <TextBlock VerticalAlignment="Center" FontSize="9" Margin="103 0 0 0">(separated by comma)</TextBlock>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="10 10 0 2">
+        <TextBlock VerticalAlignment="Center" >Specific tracks</TextBlock>
+        <Separator Width="28" Visibility="Hidden"></Separator>
+        <TextBox Name="TracksBox" Width="250" />
+        <Separator Width="10" Visibility="Hidden"></Separator>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="10 0 0 10">
+        <TextBlock VerticalAlignment="Center" FontSize="9" Margin="103 0 0 0">(separated by comma)</TextBlock>
+      </StackPanel>
+    </StackPanel>
+    <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Right">
+      <StackPanel Margin="10" Orientation="Horizontal">
+        <Button Name="ResetBtn" Click="ResetBtn_Click" FontSize="13" Padding="10 0" Margin="0 0 80 0">Reset</Button>
+        <Button Name="OkBtn" Click="OkBtn_Click" FontSize="13" Padding="10 0" Margin="0 0 10 0">Ok</Button>
+        <Button Name="CancelBtn" Click="CancelBtn_Click" FontSize="13" Padding="10 0">Cancel</Button>
+      </StackPanel>
+    </StackPanel>
+  </Grid>
+</Window>

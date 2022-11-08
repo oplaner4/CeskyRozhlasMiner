@@ -1,6 +1,7 @@
 ﻿using CeskyRozhlasMiner.Lib.Common;
 using CeskyRozhlasMiner.Lib.Diagnostics;
 using CeskyRozhlasMiner.Lib.Playlist.Json.Day.Data;
+using CeskyRozhlasMiner.Time;
 using System;
 
 namespace CeskyRozhlasMiner.Lib.Playlist
@@ -38,7 +39,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist
             {
                 PlayedAt = TimeZoneInfo.ConvertTimeToUtc(playedAt, Settings.RozhlasTimeZoneInfo);
             }
-            
+
             SourceStation = sourceStation;
         }
 
@@ -77,15 +78,16 @@ namespace CeskyRozhlasMiner.Lib.Playlist
             return $"{Artist} - {Title}";
         }
 
-        public string ToCsvRow(char separator)
+        public string ToCsvRow()
         {
-            return $"{Artist}{separator}{Title}{separator}" +
-                $"{PlayedAt}{separator}{SourceStation}";
+            char separator = Settings.CsvSeparator;
+            return $"{Artist}{separator}{Title}{separator}{PlayedAt}{separator}{SourceStation}";
         }
 
-        public static PlaylistSong FromCsvRow(string row, char separator)
+        /// <param name="time">Injected time provider.</param>
+        public static PlaylistSong FromCsvRow(ITimeProvider timeProvider, string row)
         {
-            string[] parts = row.Split(separator);
+            string[] parts = row.Split(Settings.CsvSeparator);
 
             if (parts.Length >= 4
                 && DateTime.TryParse(parts[2], out DateTime playedAt)
@@ -97,7 +99,7 @@ namespace CeskyRozhlasMiner.Lib.Playlist
             }
 
             string message = $"Unable to parse csv row: {row}";
-            Logging.SaveRecord(Logging.Severity.Error, nameof(FromCsvRow),
+            new Logging(timeProvider).SaveRecord(Logging.Severity.Error, nameof(FromCsvRow),
                 message);
             throw new FormatException(message);
         }

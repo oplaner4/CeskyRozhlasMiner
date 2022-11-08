@@ -17,5 +17,10 @@ namespace CeskyRozhlasMiner.WebApp.API.Immutable.Own
         /// </summary>
         public int SongsFetchLimit { get; set; }
 
+        /// <summary>
+        /// Expiration interval of token in minutes.
+        /// </summary>
+        public int TokenExpirationMinutes { get; set; }
+
     }
 }

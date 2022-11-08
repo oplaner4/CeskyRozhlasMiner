@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CeskyRozhlasMiner.Lib.Common;
 using CeskyRozhlasMiner.Lib.Playlist;
+using CeskyRozhlasMiner.Time;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Command.Playlist;
@@ -23,8 +24,8 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
 
     public class GetSongsWithLimitForPlaylist : IRequest<GetSongsForPlaylistDto>
     {
-        public int SongsLimit { get; set; }
         public int PlaylistId { get; set; }
+        public int SongsLimit { get; set; }
     }
 
     public class GetCurrentlyPlayingSongs : IRequest<IEnumerable<SongDto>> { }
@@ -41,27 +42,31 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
         private readonly object _extendFetchRangeLock = new();
         private readonly object _addRangeLock = new();
         private readonly object _fetchNewStationsLock = new();
+        private readonly ITimeProvider _timeProvider;
 
         public SongQueryHandler(
             IMediator mediator,
             ProjectTemplateDbContext database,
             IMapper mapper,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            ITimeProvider timeProvider)
             : base(mediator, database, mapper, httpContextAccessor)
         {
             _fetchedSongs = new();
+            _timeProvider = timeProvider;
         }
 
         /// <summary>
-        /// Must be used in critical section. It does not save changes to database.
+        /// Must be used in critical section.
         /// </summary>
         private async Task FetchSongs(DateTime from, DateTime to, IEnumerable<RozhlasStation> stations, CancellationToken cancellationToken)
         {
             List<Data.Models.Song> songsToSave = new();
 
-            await foreach (var song in new PlaylistMiner(from, to, stations).GetSongs().WithCancellation(cancellationToken))
+            await foreach (var song in new PlaylistMiner(_timeProvider, from, to, stations).GetSongs().WithCancellation(cancellationToken))
             {
-                if (song.PlayedAt >= from && song.PlayedAt <= to) {
+                if (song.PlayedAt >= from && song.PlayedAt <= to)
+                {
                     var dbSong = Mapper.Map<Data.Models.Song>(song);
                     _fetchedSongs.Add(dbSong);
                     songsToSave.Add(dbSong);
@@ -96,7 +101,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
                 await FetchSongs(range.To.AddMilliseconds(1), wantedTo, range.SourceStations.Select(x => x.Station), cancellationToken);
             }
 
-            DateTime utcNow = DateTime.UtcNow;
+            DateTime utcNow = _timeProvider.UtcNow;
 
             if (wantedTo > utcNow && range.To < utcNow)
             {
@@ -167,7 +172,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
 
                 if (_relevantStartsAndRanges.TryGetValue(actual, out var range))
                 {
-                    lock(_fetchNewStationsLock)
+                    lock (_fetchNewStationsLock)
                     {
                         Task.WaitAll(new Task[] { FetchNewStations(range, cancellationToken) }, cancellationToken);
                     }
@@ -186,7 +191,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
                     nextStart = actual.AddDays(1);
                     DateTime to = nextStart.AddMilliseconds(-1);
 
-                    DateTime utcNow = DateTime.UtcNow;
+                    DateTime utcNow = _timeProvider.UtcNow;
                     FetchRange newRange = new()
                     {
                         From = actual,
@@ -227,12 +232,12 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Song
         {
             List<SongDto> result = new();
 
-            await foreach (var song in new PlaylistMiner().GetSongsNow().WithCancellation(cancellationToken))
+            await foreach (var song in new PlaylistMiner(_timeProvider).GetSongsNow().WithCancellation(cancellationToken))
             {
                 result.Add(Mapper.Map<SongDto>(song));
             }
 
-            return result.OrderByDescending(s => s.PlayedAt);
+            return result.OrderByDescending(s => s.PlayedAt).ThenBy(s => s.SourceStation);
         }
     }
 }

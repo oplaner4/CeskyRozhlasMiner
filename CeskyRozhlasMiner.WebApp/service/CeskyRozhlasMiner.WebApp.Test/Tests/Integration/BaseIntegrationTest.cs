@@ -1,4 +1,5 @@
 using AutoMapper;
+using CeskyRozhlasMiner.Time;
 using Microsoft.DSX.ProjectTemplate.API;
 using Microsoft.DSX.ProjectTemplate.Data.Abstractions;
 using Microsoft.DSX.ProjectTemplate.Test.Infrastructure;
@@ -30,6 +31,8 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Integration
 
         protected IMapper Mapper { get; }
 
+        protected FakeTimeProvider FakeTimeProvider { get; }
+
         protected BaseIntegrationTest()
         {
             _factory = new ProjectTemplateWebApplicationFactory<Startup>();
@@ -39,6 +42,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Integration
             Client.DefaultRequestVersion = new Version(2, 0);
 
             Mapper = _factory.Services.GetRequiredService<IMapper>();
+            FakeTimeProvider = (FakeTimeProvider)_factory.Services.GetRequiredService<ITimeProvider>();
         }
 
         [TestCleanup]

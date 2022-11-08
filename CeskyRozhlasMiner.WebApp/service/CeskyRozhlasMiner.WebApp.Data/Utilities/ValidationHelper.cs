@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Net.Mail;
 
 namespace CeskyRozhlasMiner.WebApp.Data.Utilities
 {
@@ -39,8 +39,8 @@ namespace CeskyRozhlasMiner.WebApp.Data.Utilities
             readableName ??= prop;
 
             string email = (string)_objType.GetProperty(prop).GetValue(_obj);
-            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            if (!regex.Match(email).Success)
+
+            if (!MailAddress.TryCreate(email, out MailAddress parsed) || parsed.Address != email)
             {
                 yield return new ValidationResult($"{readableName} is not valid adress.", new[] { prop });
             }
@@ -59,9 +59,10 @@ namespace CeskyRozhlasMiner.WebApp.Data.Utilities
             string value = (string)_objType.GetProperty(prop).GetValue(_obj);
             readableName ??= prop;
 
-            if (value.Length < Constants.MimimumLengths.Password)
+            if (value == null || value.Length < Constants.MimimumLengths.Password)
             {
                 yield return new ValidationResult($"{readableName} must be minimum {Constants.MimimumLengths.Password} characters.", new[] { prop });
+                yield break;
             }
 
             if (!value.Any(char.IsDigit))
@@ -71,7 +72,7 @@ namespace CeskyRozhlasMiner.WebApp.Data.Utilities
 
             if (value.All(char.IsLetterOrDigit))
             {
-                yield return new ValidationResult($"{readableName} must contain one special character.", new[] { prop });
+                yield return new ValidationResult($"{readableName} must contain at least one special character.", new[] { prop });
             }
         }
 

@@ -1,11 +1,11 @@
 import React from 'react';
-import { Typography, Box, Button } from '@mui/material';
+import { Typography, Box, Button, ButtonGroup } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute, UseRoutes } from 'app/components/AppRoutes';
 import CurrentlyPlaying from 'app/components/songs/CurrentlyPlaying';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from 'app/state/atom';
-import { ArrowForward, List as ListIcon } from '@mui/icons-material';
+import { AppRegistration, ArrowForward, List as ListIcon, Login, Person } from '@mui/icons-material';
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
@@ -19,14 +19,11 @@ const Home: React.FC = () => {
             <Box mb={3}>
                 <Box display="inline-block" textAlign={{ md: 'right' }}>
                     <Box mb={2}>
-                    <Typography variant="body1" component="p">
-                        Let's see what's playing in Cesky rozhlas radio stations across Czech Republic.
-                    </Typography>
+                        <Typography variant="body1" component="p">
+                            Let's see what's playing in Cesky rozhlas radio stations across Czech Republic.
+                        </Typography>
                     </Box>
-                    <Button
-                        onClick={() => navigate(UseRoutes[AppRoute.About].path)}
-                        variant="contained"
-                        color="info">
+                    <Button onClick={() => navigate(UseRoutes[AppRoute.About].path)} variant="contained" color="info">
                         About app <ArrowForward />
                     </Button>
                 </Box>
@@ -35,9 +32,14 @@ const Home: React.FC = () => {
             <CurrentlyPlaying updateIntervalSeconds={60} />
 
             {user === null ? (
-                <Button onClick={() => navigate(UseRoutes[AppRoute.UserSignIn].path)} variant="contained" color="info">
-                    Sign in
-                </Button>
+                <ButtonGroup>
+                    <Button onClick={() => navigate(UseRoutes[AppRoute.UserSignIn].path)} variant="contained" color="primary">
+                        <Login /> Sign in
+                    </Button>
+                    <Button onClick={() => navigate(UseRoutes[AppRoute.UserSignUp].path)} variant="contained" color="secondary">
+                        <Person /> Sign up
+                    </Button>
+                </ButtonGroup>
             ) : (
                 <Button
                     onClick={() => navigate(UseRoutes[AppRoute.Playlists].path)}

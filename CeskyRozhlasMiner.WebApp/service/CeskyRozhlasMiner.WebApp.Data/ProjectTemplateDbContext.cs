@@ -25,6 +25,7 @@ namespace Microsoft.DSX.ProjectTemplate.Data
         public DbSet<FetchRangeSourceStation> FetchRangeSourceStations { get; set; }
         public DbSet<FetchRange> FetchRanges { get; set; }
         public DbSet<Song> Songs { get; set; }
+        public DbSet<Token> Tokens { get; set; }
 
         public override int SaveChanges()
         {
@@ -97,6 +98,11 @@ namespace Microsoft.DSX.ProjectTemplate.Data
 
             modelBuilder.Entity<FetchRange>()
                 .OwnsMany(range => range.SourceStations);
+
+            modelBuilder.Entity<Token>()
+                .HasOne(token => token.Owner)
+                .WithMany(owner => owner.Tokens)
+                .HasForeignKey(token => token.OwnerId);
         }
 
         private static void ConfigureSeedData(ModelBuilder modelBuilder)

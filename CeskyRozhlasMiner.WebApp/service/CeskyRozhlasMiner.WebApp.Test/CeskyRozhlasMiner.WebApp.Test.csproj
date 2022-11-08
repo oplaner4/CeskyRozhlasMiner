@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CeskyRozhlasMiner.Time\CeskyRozhlasMiner.Time.csproj" />
     <ProjectReference Include="..\CeskyRozhlasMiner.WebApp.API\CeskyRozhlasMiner.WebApp.API.csproj" />
   </ItemGroup>
 

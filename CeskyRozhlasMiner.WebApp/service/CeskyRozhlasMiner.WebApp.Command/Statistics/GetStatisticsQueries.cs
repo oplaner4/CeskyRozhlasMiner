@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Command.Song;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;

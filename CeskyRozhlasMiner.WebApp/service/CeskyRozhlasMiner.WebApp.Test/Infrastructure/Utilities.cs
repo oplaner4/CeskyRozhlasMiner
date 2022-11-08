@@ -24,7 +24,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Infrastructure
 
                 var db = scope.ServiceProvider.GetRequiredService<ProjectTemplateDbContext>();
                 db.Database.EnsureCreated();
-                (new TestDataSeeder(db, loggerFactory.CreateLogger<TestDataSeeder>())).SeedTestData();
+                new TestDataSeeder(db, loggerFactory.CreateLogger<TestDataSeeder>()).SeedTestData();
 
                 logger.LogInformation("Database configuration completed");
             }

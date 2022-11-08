@@ -17,15 +17,27 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
 
             foreach (var result in helper.CheckStringNotEmptyAndCorrectLength(nameof(DisplayName), "Name")
                 .Concat(helper.CheckStringValidEmailAdress(nameof(Email)))
-                .Concat(helper.CheckValidPassword(nameof(NewPassword), "Password"))
-                .Concat(helper.CheckStringNotEmptyAndCorrectLength(nameof(NewPasswordConfirm), "Confirmation password")))
+            )
+            {
+                yield return result;
+            }
+
+            bool creating = string.IsNullOrEmpty(Password);
+
+            if (!creating && string.IsNullOrEmpty(NewPassword))
+            {
+                // User does not want to change password
+                yield break;
+            }
+
+            foreach (var result in helper.CheckValidPassword(nameof(NewPassword), "New password"))
             {
                 yield return result;
             }
 
             if (NewPassword != NewPasswordConfirm)
             {
-                yield return new ValidationResult($"Passwords are not equal.", new[] { nameof(NewPassword), nameof(NewPasswordConfirm) });
+                yield return new ValidationResult($"Passwords are not equal.", new[] { nameof(NewPasswordConfirm) });
             }
         }
     }

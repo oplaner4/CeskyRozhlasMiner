@@ -1,11 +1,17 @@
 ﻿using CeskyRozhlasMiner.Lib.Common;
+using CeskyRozhlasMiner.Time;
 using System;
 using System.IO;
 
 namespace CeskyRozhlasMiner.Lib.Diagnostics
 {
+    /// <summary>
+    /// Logging utility
+    /// </summary>
     public class Logging
     {
+        private readonly ITimeProvider _timeProvider;
+
         public enum Severity
         {
             Error,
@@ -13,11 +19,20 @@ namespace CeskyRozhlasMiner.Lib.Diagnostics
             Success
         }
 
-        public static async void SaveRecord(
+        /// <summary>
+        /// Initializes utility.
+        /// </summary>
+        /// <param name="time">Injected time provider.</param>
+        public Logging(ITimeProvider time)
+        {
+            _timeProvider = time;
+        }
+
+        public async void SaveRecord(
             Severity severity, string title, string message)
         {
             string row =
-                $"{DateTime.Now}{Settings.CsvSeparator}{severity}{Settings.CsvSeparator}" +
+                $"{_timeProvider.UtcNow}{Settings.CsvSeparator}{severity}{Settings.CsvSeparator}" +
                 $"{title}{Settings.CsvSeparator}{message}{Environment.NewLine}";
 
             if (File.Exists(Settings.LoggingCsvFile))
