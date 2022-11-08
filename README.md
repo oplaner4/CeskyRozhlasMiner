@@ -4,7 +4,7 @@ Free, easy to use, .NET desktop application for analysing playlists from Cesky R
 Current stable version: **1.2.0**
 
 ## Demo
-![alt text](https://raw.githubusercontent.com/oplaner4/CeskyRozhlasMiner/master/CeskyRozhlasMiner.App/preview.png)
+![alt text](https://raw.githubusercontent.com/oplaner4/CeskyRozhlasMiner/master/CeskyRozhlasMiner.WpfApp/preview.png)
 
 ### Features
 CeskyRozhlasMiner supports:
