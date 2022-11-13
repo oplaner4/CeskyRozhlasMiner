@@ -13,6 +13,7 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            DisplayName = XssPrevention.Sanitize(DisplayName);
             ValidationHelper<UserDto> helper = new ValidationHelper<UserDto>(this);
             return helper.CheckStringNotEmptyAndCorrectLength(nameof(DisplayName), "Name").ToList();
         }

@@ -1,5 +1,4 @@
 ﻿using CeskyRozhlasMiner.Lib.Common;
-using CeskyRozhlasMiner.Time;
 using CeskyRozhlasMiner.WebApp.Data.Utilities;
 using FluentAssertions;
 using Microsoft.DSX.ProjectTemplate.Data;
@@ -7,7 +6,6 @@ using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using Microsoft.DSX.ProjectTemplate.Data.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
 {
@@ -43,7 +41,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
             var validationResults = dto.Validate(validationContext);
 
             validationResults.Should().HaveCountGreaterThan(0);
-            validationResults.FirstOrDefault(validationResult => validationResult.MemberNames.Any(memberName => memberName.Equals(nameof(TokenDto.Value)))).Should().NotBeNull();
+            FindMember(validationResults, nameof(TokenDto.Value)).Should().NotBeNull();
         }
 
         [DataTestMethod]
@@ -62,7 +60,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
             var validationResults = dto.Validate(validationContext);
 
             validationResults.Should().HaveCountGreaterThan(0);
-            validationResults.FirstOrDefault(validationResult => validationResult.MemberNames.Any(memberName => memberName.Equals(nameof(TokenDto.Value)))).Should().NotBeNull();
+            FindMember(validationResults, nameof(TokenDto.Value)).Should().NotBeNull();
         }
     }
 }

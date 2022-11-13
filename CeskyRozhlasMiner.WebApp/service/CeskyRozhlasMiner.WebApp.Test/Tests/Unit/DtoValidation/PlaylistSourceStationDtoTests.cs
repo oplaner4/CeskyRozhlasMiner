@@ -16,6 +16,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
         [DataTestMethod]
         [DataRow("", RozhlasStation.Vltava)]
         [DataRow(null, RozhlasStation.Zurnal)]
+        [DataRow("    ", RozhlasStation.Plus)]
         [DataRow("Listening this every day", RozhlasStation.Pohoda)]
         public void PlaylistSourceStationDtoValidation_Valid_NoErrors(string description, RozhlasStation station)
         {
@@ -32,6 +33,24 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
             validationResults.Should().HaveCount(0);
         }
 
+        [DataTestMethod]
+        [DataRow("The best station")]
+        [DataRow("Give me an example of better station")]
+        [DataRow("Good music on good station")]
+        public void PlaylistSourceStationDtoValidation_DescriptionRemoveXss_NoErrors(string description)
+        {
+            var dto = new PlaylistSourceStationDto
+            {
+                Description = $"<script>console.log('{description}')</script>{description}",
+            };
+
+            var validationContext = new ValidationContext(dto);
+            var validationResults = dto.Validate(validationContext);
+
+            dto.Description.Should().Be(description);
+            validationResults.Should().HaveCount(0);
+        }
+
         [TestMethod]
         public void PlaylistSourceStationDtoValidation_DescriptionTooLong_HasValidationErrors()
         {
@@ -45,7 +64,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
             var validationResults = dto.Validate(validationContext);
 
             validationResults.Should().HaveCountGreaterThan(0);
-            validationResults.FirstOrDefault(validationResult => validationResult.MemberNames.Any(memberName => memberName.Equals(nameof(PlaylistSourceStationDto.Description)))).Should().NotBeNull();
+            FindMember(validationResults, nameof(PlaylistSourceStationDto.Description)).Should().NotBeNull();
         }
     }
 }

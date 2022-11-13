@@ -13,6 +13,7 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            DisplayName = XssPrevention.Sanitize(DisplayName);
             ValidationHelper<UserSetDto> helper = new ValidationHelper<UserSetDto>(this);
 
             foreach (var result in helper.CheckStringNotEmptyAndCorrectLength(nameof(DisplayName), "Name")
@@ -26,7 +27,7 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
 
             if (!creating && string.IsNullOrEmpty(NewPassword))
             {
-                // User does not want to change password
+                // User does not want to change password.
                 yield break;
             }
 

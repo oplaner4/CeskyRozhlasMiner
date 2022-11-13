@@ -43,7 +43,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
             var validationResults = dto.Validate(validationContext);
 
             validationResults.Should().HaveCountGreaterThan(0);
-            validationResults.FirstOrDefault(validationResult => validationResult.MemberNames.Any(memberName => memberName.Equals(nameof(UserAuthenticateDto.Email)))).Should().NotBeNull();
+            FindMember(validationResults, nameof(UserAuthenticateDto.Email)).Should().NotBeNull();
         }
 
 
@@ -63,7 +63,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
             var validationResults = dto.Validate(validationContext);
 
             validationResults.Should().HaveCountGreaterThan(0);
-            validationResults.FirstOrDefault(validationResult => validationResult.MemberNames.Any(memberName => memberName.Equals(nameof(UserAuthenticateDto.Password)))).Should().NotBeNull();
+            FindMember(validationResults, nameof(UserAuthenticateDto.Password)).Should().NotBeNull();
         }
     }
 }

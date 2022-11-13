@@ -19,6 +19,8 @@ namespace Microsoft.DSX.ProjectTemplate.Data.DTOs
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            Name = XssPrevention.Sanitize(Name);
+
             foreach (var result in new ValidationHelper<PlaylistDto>(this).CheckStringsNotEmptyAndCorrectLength(nameof(Name)))
             {
                 yield return result;

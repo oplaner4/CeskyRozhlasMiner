@@ -75,7 +75,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
             var validationResults = dto.Validate(validationContext);
 
             validationResults.Should().HaveCountGreaterThan(0);
-            validationResults.FirstOrDefault(validationResult => validationResult.MemberNames.Any(memberName => memberName.Equals(nameof(UserSetDto.Email)))).Should().NotBeNull();
+            FindMember(validationResults, nameof(UserSetDto.Email)).Should().NotBeNull();
         }
 
         [DataTestMethod]
@@ -101,7 +101,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
             var validationResults = dto.Validate(validationContext);
 
             validationResults.Should().HaveCountGreaterThan(0);
-            validationResults.FirstOrDefault(validationResult => validationResult.MemberNames.Any(memberName => memberName.Equals(nameof(UserSetDto.NewPassword)))).Should().NotBeNull();
+            FindMember(validationResults, nameof(UserSetDto.NewPassword)).Should().NotBeNull();
         }
     }
 }

@@ -57,7 +57,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
             var validationResults = dto.Validate(validationContext);
 
             validationResults.Should().HaveCountGreaterThan(0);
-            validationResults.FirstOrDefault(validationResult => validationResult.MemberNames.Any(memberName => memberName.Equals(nameof(PlaylistDto.Name)))).Should().NotBeNull();
+            FindMember(validationResults, nameof(PlaylistDto.Name)).Should().NotBeNull();
         }
 
         [TestMethod]
@@ -74,7 +74,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
             var validationResults = dto.Validate(validationContext);
 
             validationResults.Should().HaveCountGreaterThan(0);
-            validationResults.FirstOrDefault(validationResult => validationResult.MemberNames.Any(memberName => memberName.Equals(nameof(PlaylistDto.Name)))).Should().NotBeNull();
+            FindMember(validationResults, nameof(PlaylistDto.Name)).Should().NotBeNull();
         }
 
         [TestMethod]
@@ -82,10 +82,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
         {
             var dto = new PlaylistDto
             {
-                Name = RandomFactory.GetCompanyName(),
-                SourceStations = new(),
-                From = DateTime.UtcNow.AddDays(-5),
-                To = DateTime.UtcNow.AddDays(-3),
+                SourceStations = new()
             };
 
             var validationContext = new ValidationContext(dto);
@@ -94,7 +91,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
 
             validationResults.Should().HaveCountGreaterThan(0);
 
-            validationResults.FirstOrDefault(validationResult => validationResult.MemberNames.Any(memberName => memberName.Equals(nameof(PlaylistDto.SourceStations)))).Should().NotBeNull();
+            FindMember(validationResults, nameof(PlaylistDto.SourceStations)).Should().NotBeNull();
         }
 
 
@@ -104,13 +101,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
             var dto = new PlaylistDto
             {
                 Name = RandomFactory.GetCompanyName(),
-                SourceStations = new()
-                    {
-                        new() {
-                         Description = "Wanna sport?",
-                         Station = CeskyRozhlasMiner.Lib.Common.RozhlasStation.ZurnalSport,
-                        }
-                    }
+                SourceStations = new(),
             };
 
             foreach (var range in new (DateTime, DateTime)[] {
