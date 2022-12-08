@@ -34,7 +34,7 @@ namespace Microsoft.DSX.ProjectTemplate.Command.User
 
             List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.Name, dto.Email),
+                new(ClaimTypes.Name, dto.Email),
                 new(ClaimTypes.NameIdentifier, dto.Id.ToString())
             };
 

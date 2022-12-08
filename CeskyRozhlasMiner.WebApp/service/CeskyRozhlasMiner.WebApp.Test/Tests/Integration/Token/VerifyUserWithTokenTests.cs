@@ -1,19 +1,14 @@
 ﻿using CeskyRozhlasMiner.Time;
 using CeskyRozhlasMiner.WebApp.Data.Utilities;
 using FluentAssertions;
-using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using Microsoft.DSX.ProjectTemplate.Data.Utilities;
 using Microsoft.DSX.ProjectTemplate.Test.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.CodeCoverage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 
 namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Integration.Token
@@ -32,16 +27,21 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Integration.Token
             FakeTimeProvider.UtcNow = DateTime.UtcNow.AddHours(23);
 
             // Act
-            using var response = await Client.PostAsJsonAsync("/api/tokens", Mapper.Map<TokenDto>(randomToken));
+            using var response = await Client.PutAsJsonAsync("/api/tokens", Mapper.Map<TokenDto>(randomToken));
 
             // Assert
             var result = await EnsureObject<UserDto>(response);
-            randomToken.Owner.Id.Should().Be(result.Id);
+            randomToken.OwnerId.Should().Be(result.Id);
 
             Data.Models.User user = null;
             ServiceProvider.ExecuteWithDbScope(db => user = db.Users.FirstOrDefault(u => u.Id == result.Id));
             user.Should().NotBeNull();
             user.Verified.Should().Be(true);
+
+            Data.Models.Token token = null;
+            ServiceProvider.ExecuteWithDbScope(db => token = db.Tokens.FirstOrDefault(t => t.Id == randomToken.Id));
+            token.Should().NotBeNull();
+            token.UsedCount.Should().BeGreaterThan(0);
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Integration.Token
             FakeTimeProvider.UtcNow = DateTime.UtcNow.AddHours(70);
 
             // Act
-            using var response = await Client.PostAsJsonAsync("/api/tokens", Mapper.Map<TokenDto>(randomToken));
+            using var response = await Client.PutAsJsonAsync("/api/tokens", Mapper.Map<TokenDto>(randomToken));
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);

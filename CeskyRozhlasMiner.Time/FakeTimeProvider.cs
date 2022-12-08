@@ -2,7 +2,7 @@
 
 namespace CeskyRozhlasMiner.Time
 {
-    public class FakeTimeProvider: ITimeProvider
+    public class FakeTimeProvider : ITimeProvider
     {
         public FakeTimeProvider(DateTime fakeUtcNow)
         {

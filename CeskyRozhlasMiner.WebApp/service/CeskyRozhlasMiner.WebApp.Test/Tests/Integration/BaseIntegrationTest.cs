@@ -1,7 +1,9 @@
 using AutoMapper;
 using CeskyRozhlasMiner.Time;
+using CeskyRozhlasMiner.WebApp.Test.Infrastructure;
 using Microsoft.DSX.ProjectTemplate.API;
 using Microsoft.DSX.ProjectTemplate.Data.Abstractions;
+using Microsoft.DSX.ProjectTemplate.Data.Models;
 using Microsoft.DSX.ProjectTemplate.Test.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -61,6 +63,24 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Integration
             using IServiceScope scope = ServiceProvider.CreateScope();
             var emailService = (FakeEmailService)scope.ServiceProvider.GetRequiredService<IEmailService>();
             return emailService.GetSentCount();
+        }
+
+        /// <summary>
+        /// Make an action authorized or unauthorized.
+        /// </summary>
+        /// <param name="isAuthorized">True if the action should be authorized.</param>
+        protected static void SetupAuthorization(bool isAuthorized)
+        {
+            FakeAuthHandler.FakeUser = isAuthorized ? FakeAuthHandler.FakeDefaultUser : null;
+        }
+
+        /// <summary>
+        /// Set specific authenticated user.
+        /// </summary>
+        /// <param name="user">User to set.</param>
+        protected static void SetupAuthenticatedUser(User user)
+        {
+            FakeAuthHandler.FakeUser = user;
         }
     }
 }

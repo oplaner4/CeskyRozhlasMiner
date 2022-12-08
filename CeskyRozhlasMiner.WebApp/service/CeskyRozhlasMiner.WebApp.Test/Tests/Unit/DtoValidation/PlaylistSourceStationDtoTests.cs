@@ -5,7 +5,6 @@ using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using Microsoft.DSX.ProjectTemplate.Data.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit.DtoValidation
 {

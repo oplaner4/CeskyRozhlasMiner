@@ -29,7 +29,7 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// Verify user with token.
         /// </summary>
         /// <param name="dto">Token DTO.</param>
-        [HttpPost]
+        [HttpPut]
         public async Task<ActionResult<UserDto>> VerifyUser([FromBody] TokenDto dto)
         {
             return Ok(await Mediator.Send(new VerifyUserWithTokenCommand()
@@ -43,7 +43,7 @@ namespace Microsoft.DSX.ProjectTemplate.API.Controllers
         /// Send a new token for verification of user.
         /// </summary>
         [Authorize]
-        [HttpPut]
+        [HttpPost]
         public async Task<ActionResult<bool>> SendNewToken()
         {
             return Ok(await Mediator.Send(new SendNewTokenCommand()));

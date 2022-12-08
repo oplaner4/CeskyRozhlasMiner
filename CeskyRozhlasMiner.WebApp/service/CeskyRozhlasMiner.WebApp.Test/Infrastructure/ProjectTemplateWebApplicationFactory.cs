@@ -1,4 +1,6 @@
 ﻿using CeskyRozhlasMiner.Time;
+using CeskyRozhlasMiner.WebApp.Test.Infrastructure;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -63,6 +65,12 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Infrastructure
                     var serviceProvider = new ServiceCollection()
                         .AddEntityFrameworkInMemoryDatabase()
                         .BuildServiceProvider();
+
+                    services.AddAuthentication(options =>
+                    {
+                        options.DefaultAuthenticateScheme = FakeAuthHandler.AuthScheme;
+                        options.DefaultChallengeScheme = FakeAuthHandler.AuthScheme;
+                    }).AddScheme<AuthenticationSchemeOptions, FakeAuthHandler>(FakeAuthHandler.AuthScheme, _ => { });
 
                     services
                         .AddDbContext<ProjectTemplateDbContext>(options =>

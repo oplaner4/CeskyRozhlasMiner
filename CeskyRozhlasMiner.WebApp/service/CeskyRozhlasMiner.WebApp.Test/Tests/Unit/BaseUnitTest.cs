@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using CeskyRozhlasMiner.Time;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.Abstractions;
 using Microsoft.DSX.ProjectTemplate.Data.Services;
@@ -13,8 +11,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit
@@ -27,8 +23,6 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit
         protected Mock<IMediator> MockMediator { get; set; } = new();
 
         protected static IMapper Mapper => new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>()).CreateMapper();
-
-        protected Mock<IAuthorizationService> MockAuthorizationService { get; set; } = new();
 
         protected Mock<IEmailService> MockEmailService { get; set; } = new();
 
@@ -56,16 +50,6 @@ namespace Microsoft.DSX.ProjectTemplate.Test.Tests.Unit
                     logger.LogInformation($"From {from} | To: {to} | Subject: '{subject}' | Body: '{body}'");
                     return Task.CompletedTask;
                 });
-
-            // by default, action is authorized
-            SetupAuthorization(true);
-        }
-
-        protected void SetupAuthorization(bool isAuthorized)
-        {
-            MockAuthorizationService
-                .Setup(x => x.AuthorizeAsync(It.IsAny<ClaimsPrincipal>(), null, It.IsAny<IEnumerable<IAuthorizationRequirement>>()))
-                .ReturnsAsync(isAuthorized ? AuthorizationResult.Success() : AuthorizationResult.Failed());
         }
 
         /// <summary>

@@ -1,9 +1,4 @@
 ﻿using Ganss.Xss;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CeskyRozhlasMiner.WebApp.Data.Utilities
 {
@@ -17,7 +12,8 @@ namespace CeskyRozhlasMiner.WebApp.Data.Utilities
         /// <param name="result">Buffer to fill.</param>
         /// <returns><see cref="true"/> if sanitization was necessary, otherwise 
         /// <see cref="false"/>.</returns>
-        public static bool Sanitize(string input, out string result) {
+        public static bool Sanitize(string input, out string result)
+        {
             result = Sanitize(input);
             return input != result;
         }

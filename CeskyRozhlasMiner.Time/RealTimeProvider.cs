@@ -2,7 +2,7 @@
 
 namespace CeskyRozhlasMiner.Time
 {
-    public class RealTimeProvider: ITimeProvider
+    public class RealTimeProvider : ITimeProvider
     {
         public DateTime UtcNow => DateTime.UtcNow;
     }

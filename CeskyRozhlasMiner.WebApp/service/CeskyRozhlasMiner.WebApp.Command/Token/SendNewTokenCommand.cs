@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
+using Microsoft.DSX.ProjectTemplate.Data.Events;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +24,8 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Token
         public async Task<bool> Handle(SendNewTokenCommand request, CancellationToken cancellationToken)
         {
             var token = await Mediator.Send(new GenerateTokenCommand(), cancellationToken);
-            await Task.CompletedTask;
+
+            await Mediator.Publish(new TokenGeneratedDomainEvent(token), cancellationToken);
             return true;
         }
     }

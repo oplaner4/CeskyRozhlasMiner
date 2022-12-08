@@ -1,5 +1,4 @@
-﻿using CeskyRozhlasMiner.Lib.Common;
-using CeskyRozhlasMiner.WebApp.Data.Utilities;
+﻿using CeskyRozhlasMiner.WebApp.Data.Utilities;
 using FluentAssertions;
 using Microsoft.DSX.ProjectTemplate.Data;
 using Microsoft.DSX.ProjectTemplate.Data.DTOs;

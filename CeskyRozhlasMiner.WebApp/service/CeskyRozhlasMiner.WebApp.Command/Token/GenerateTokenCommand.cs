@@ -3,8 +3,6 @@ using CeskyRozhlasMiner.WebApp.Data.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.DSX.ProjectTemplate.Data;
-using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,7 +23,6 @@ namespace Microsoft.DSX.ProjectTemplate.Command.Token
 
         public async Task<Data.Models.Token> Handle(GenerateTokenCommand request, CancellationToken cancellationToken)
         {
-
             var token = new Data.Models.Token()
             {
                 Value = TokenValueGenerator.GetNewValue(),
