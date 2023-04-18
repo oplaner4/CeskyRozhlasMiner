@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="Meziantou.WpfFontAwesome" Version="5.15.4" />
+    <PackageReference Include="WPF-UI" Version="3.0.0-preview.1" />
   </ItemGroup>
 
   <ItemGroup>

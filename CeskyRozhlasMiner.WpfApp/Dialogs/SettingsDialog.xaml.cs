@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using CeskyRozhlasMiner.Time;
 
 namespace CeskyRozhlasMiner.WpfApp.Dialogs
 {
@@ -226,7 +227,7 @@ namespace CeskyRozhlasMiner.WpfApp.Dialogs
 
         private void ResetBtn_Click(object sender, RoutedEventArgs e)
         {
-            Model = new SettingsDialogModel();
+            Model = new SettingsDialogModel(new Lib.Playlist.PlaylistMiner(new RealTimeProvider()));
             SetByModel();
         }
     }

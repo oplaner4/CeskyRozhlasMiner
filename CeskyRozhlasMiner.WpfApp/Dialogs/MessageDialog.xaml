@@ -11,15 +11,15 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="*"></RowDefinition>
-      <RowDefinition Height="40"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
     </Grid.RowDefinitions>
     <StackPanel Orientation="Vertical" Grid.Row="0" Margin="10">
       <TextBlock TextAlignment="Center" TextWrapping="Wrap" Name="MessageBlock" FontSize="14">Text</TextBlock>
     </StackPanel>
     <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Right">
       <StackPanel Margin="10" Orientation="Horizontal">
-        <Button Name="OkBtn" Click="OkBtn_Click" FontSize="13" Padding="10 0">Ok</Button>
-        <Button Name="CancelBtn" Click="CancelBtn_Click" FontSize="13" Padding="10 0" Width="0">Cancel</Button>
+        <Button Name="OkBtn" Click="OkBtn_Click" FontSize="13" Padding="20,5">Ok</Button>
+        <Button Name="CancelBtn" Click="CancelBtn_Click" FontSize="13" Padding="20,5" Width="0">Cancel</Button>
       </StackPanel>
     </StackPanel>
   </Grid>

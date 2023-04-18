@@ -11,7 +11,7 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="*"></RowDefinition>
-      <RowDefinition Height="40"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
     </Grid.RowDefinitions>
     <StackPanel Orientation="Vertical" Grid.Row="0">
       <StackPanel Margin="10" Orientation="Horizontal">
@@ -22,14 +22,19 @@
         <DatePicker Width="168" Name="MineTo" Margin="0 0 59 0"></DatePicker>
       </StackPanel>
 
-      <StackPanel Margin="10" Orientation="Horizontal">
+      <StackPanel Margin="10,0,10,20" Orientation="Horizontal">
         <TextBlock VerticalAlignment="Center">Source stations</TextBlock>
         <Separator Width="22" Visibility="Hidden"></Separator>
         <ListBox Name="SourceStations" Width="200" Height="100">
+          <ListBox.ItemContainerStyle>
+            <Style TargetType="ListBoxItem">
+              <Setter Property="Padding" Value="10,2" />
+            </Style>
+          </ListBox.ItemContainerStyle>
           <ListBox.ItemTemplate>
             <DataTemplate>
               <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked}"
-                        Tag="{Binding Value}" Margin="0 5 0 0" />
+                        Tag="{Binding Value}" />
             </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
@@ -38,11 +43,17 @@
       <StackPanel Margin="10" Orientation="Horizontal">
         <TextBlock VerticalAlignment="Center">Days of week</TextBlock>
         <Separator Width="33" Visibility="Hidden"></Separator>
-        <ListBox Name="DaysOfWeek" Width="200" Height="100">
+        <ListBox Name="DaysOfWeek" Width="200" Height="100" VerticalAlignment="Top">
+          <ListBox.ItemContainerStyle>
+            <Style TargetType="ListBoxItem">
+              <Setter Property="Padding" Value="10,2" />
+            </Style>
+          </ListBox.ItemContainerStyle>
           <ListBox.ItemTemplate>
             <DataTemplate>
-              <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked}"
-                        Tag="{Binding Value}" Margin="0 5 0 0" />
+              <CheckBox Content="{Binding Label}"
+                        IsChecked="{Binding IsChecked}"
+                        Tag="{Binding Value}" />
             </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
@@ -50,17 +61,17 @@
       <StackPanel Margin="10" Orientation="Horizontal">
         <TextBlock VerticalAlignment="Center">Played range</TextBlock>
         <Separator Width="35" Visibility="Hidden"></Separator>
-        <TextBox Name="PlayedFromHour" Width="25"/>
+        <TextBox Name="PlayedFromHour" />
         <TextBlock VerticalAlignment="Center" Padding="5 0">:</TextBlock>
-        <TextBox Name="PlayedFromMinute" Width="25"/>
+        <TextBox Name="PlayedFromMinute" />
         <TextBlock VerticalAlignment="Center" Padding="5 0">:</TextBlock>
-        <TextBox Name="PlayedFromSecond" Width="25"/>
+        <TextBox Name="PlayedFromSecond" />
         <TextBlock VerticalAlignment="Center" Padding="15 0">-</TextBlock>
-        <TextBox Name="PlayedToHour" Width="25"/>
+        <TextBox Name="PlayedToHour" />
         <TextBlock VerticalAlignment="Center" Padding="5 0">:</TextBlock>
-        <TextBox Name="PlayedToMinute" Width="25"/>
+        <TextBox Name="PlayedToMinute" />
         <TextBlock VerticalAlignment="Center" Padding="5 0">:</TextBlock>
-        <TextBox Name="PlayedToSecond" Width="25"/>
+        <TextBox Name="PlayedToSecond" />
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="10 10 0 2">
         <TextBlock VerticalAlignment="Center" >Specific artists</TextBlock>
@@ -83,9 +94,9 @@
     </StackPanel>
     <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Right">
       <StackPanel Margin="10" Orientation="Horizontal">
-        <Button Name="ResetBtn" Click="ResetBtn_Click" FontSize="13" Padding="10 0" Margin="0 0 80 0">Reset</Button>
-        <Button Name="OkBtn" Click="OkBtn_Click" FontSize="13" Padding="10 0" Margin="0 0 10 0">Ok</Button>
-        <Button Name="CancelBtn" Click="CancelBtn_Click" FontSize="13" Padding="10 0">Cancel</Button>
+        <Button Name="ResetBtn" Click="ResetBtn_Click" FontSize="13" Padding="20 5" Margin="0 0 80 0">Reset</Button>
+        <Button Name="OkBtn" Click="OkBtn_Click" FontSize="13" Padding="20 5" Margin="0 0 10 0">Ok</Button>
+        <Button Name="CancelBtn" Click="CancelBtn_Click" FontSize="13" Padding="20 5">Cancel</Button>
       </StackPanel>
     </StackPanel>
   </Grid>

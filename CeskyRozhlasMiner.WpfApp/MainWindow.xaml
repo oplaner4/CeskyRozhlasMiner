@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="clr-namespace:Meziantou.WpfFontAwesome;assembly=Meziantou.WpfFontAwesome"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:local="clr-namespace:CeskyRozhlasMiner.WpfApp"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
@@ -11,11 +12,11 @@
 >
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="20"></RowDefinition>
-      <RowDefinition Height="30"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
       <RowDefinition Height="Auto"></RowDefinition>
       <RowDefinition Height="*"></RowDefinition>
-      <RowDefinition Height="10"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
       <RowDefinition Height="Auto"></RowDefinition>
     </Grid.RowDefinitions>
     <Menu Grid.Row="0">
@@ -59,16 +60,24 @@
     <DataGrid Name="DataList" Grid.Row="3"
               AutoGenerateColumns="False"
               ItemsSource="{Binding}"
-              BeginningEdit="DataListItem_Click">
+              BeginningEdit="DataListItem_Click"
+              Margin="10,10,10,10"
+              MaxWidth="1500"
+              MinWidth="600"
+              HorizontalAlignment="Left"
+              GridLinesVisibility="None"
+              BorderThickness="0"
+              HeadersVisibility="Column"
+              >
       <DataGrid.Columns>
-        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="280"></DataGridTextColumn>
-        <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" Width="230"></DataGridTextColumn>
-        <DataGridTextColumn Header="Station" Binding="{Binding SourceStation}" Width="100"></DataGridTextColumn>
-        <DataGridTextColumn Header="At" Binding="{Binding PlayedAt, StringFormat='HH:mm, dd.MM.yyyy'}" Width="100"></DataGridTextColumn>
+        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="1*"></DataGridTextColumn>
+        <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" Width="1*"></DataGridTextColumn>
+        <DataGridTextColumn Header="Station" Binding="{Binding SourceStation}" Width="120"></DataGridTextColumn>
+        <DataGridTextColumn Header="At" Binding="{Binding PlayedAt, StringFormat='HH:mm, dd.MM.yyyy'}" Width="150"></DataGridTextColumn>
       </DataGrid.Columns>
     </DataGrid>
 
-    <ProgressBar Name="FetchProgress" Grid.Row="4" Foreground="#ed2e38"></ProgressBar>
+    <ProgressBar BorderThickness="0" Name="FetchProgress" Grid.Row="4" Foreground="#ed2e38"></ProgressBar>
     
     <StatusBar Grid.Row="5" Padding="10 5">
       <StatusBar.ItemsPanel>

@@ -6,30 +6,42 @@
         xmlns:local="clr-namespace:CeskyRozhlasMiner.WpfApp.Dialogs"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Title="LeaderBoardDialog" Height="350" Width="500">
+        Title="LeaderBoardDialog" Height="490" Width="520">
     <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="40"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
       <RowDefinition Height="*"></RowDefinition>
-      <RowDefinition Height="40"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
     </Grid.RowDefinitions>
     <StackPanel Orientation="Vertical" Grid.Row="0">
       <StackPanel Margin="10" Orientation="Horizontal">
         <TextBlock VerticalAlignment="Center">Take songs</TextBlock>
         <Separator Width="10" Visibility="Hidden"></Separator>
-        <TextBox Width="40" Name="TakeSongs" Margin="0 0 10 0"></TextBox>
-        <Button Name="TakeSongsSetBtn" Click="TakeSongsSetBtn_Click" FontSize="13" Padding="10 0">Set</Button>
+        <TextBox Width="40" Padding="2" Name="TakeSongs" Margin="0,0,10,0"></TextBox>
+        <Button Name="TakeSongsSetBtn" Click="TakeSongsSetBtn_Click" Padding="10 2">Set</Button>
       </StackPanel>
     </StackPanel>
-    <DataGrid Name="DataList" AutoGenerateColumns="False" ItemsSource="{Binding}" Grid.Row="1" BeginningEdit="DataList_BeginningEdit">
+    <DataGrid Name="DataList"
+              AutoGenerateColumns="False"
+              ItemsSource="{Binding}"
+              Grid.Row="1"
+              BeginningEdit="DataList_BeginningEdit"
+              Margin="10,10,10,10"
+              MaxWidth="500"
+              MinWidth="300"
+              HorizontalAlignment="Left"
+              GridLinesVisibility="None"
+              BorderThickness="0"
+              HeadersVisibility="Column"
+    >
       <DataGrid.Columns>
-        <DataGridTextColumn Header="Song" Binding="{Binding Key}"></DataGridTextColumn>
-        <DataGridTextColumn Header="Played count" Binding="{Binding Value}"></DataGridTextColumn>
+        <DataGridTextColumn Header="Song" Binding="{Binding Key}" Width="1*"></DataGridTextColumn>
+        <DataGridTextColumn Header="Played count" Binding="{Binding Value}" Width="100"></DataGridTextColumn>
       </DataGrid.Columns>
     </DataGrid>
     <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Grid.Row="2">
       <StackPanel Margin="10" Orientation="Horizontal">
-        <Button Name="CancelBtn" Click="BackBtn_Click" FontSize="13" Padding="10 0">Back</Button>
+        <Button Name="CancelBtn" Click="BackBtn_Click" FontSize="13" Padding="20 5">Back</Button>
       </StackPanel>
     </StackPanel>
   </Grid>

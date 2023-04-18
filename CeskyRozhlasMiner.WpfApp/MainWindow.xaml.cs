@@ -272,12 +272,21 @@ namespace CeskyRozhlasMiner.WpfApp
 
         private void EditSettings_Click(object sender, RoutedEventArgs e)
         {
-            EditSettingsDialog();
+            SettingsDialogModel settings = new(_miner)
+            {
+                PlayedFrom = _settingsModel.PlayedFrom,
+                PlayedTo = _settingsModel.PlayedTo,
+                DaysOfWeek = _settingsModel.DaysOfWeek.ToHashSet(),
+                Artists = _settingsModel.Artists?.ToHashSet(),
+                Tracks = _settingsModel.Tracks?.ToHashSet(),
+            };
+
+            EditSettingsDialog(settings);
         }
 
-        private void EditSettingsDialog()
+        private void EditSettingsDialog(SettingsDialogModel settings)
         {
-            SettingsDialog dialog = new(_settingsModel)
+            SettingsDialog dialog = new(settings)
             {
                 Owner = this,
             };
@@ -346,11 +355,17 @@ namespace CeskyRozhlasMiner.WpfApp
         {
             PlaylistSong song = (PlaylistSong)e.Row.DataContext;
 
-            _settingsModel.Tracks = new() { song.Title };
-            _settingsModel.Artists = new() { song.Artist };
-
             e.Cancel = true;
-            EditSettingsDialog();
+
+            SettingsDialogModel settings = new(_miner)
+            {
+                PlayedFrom = _settingsModel.PlayedFrom,
+                PlayedTo = _settingsModel.PlayedTo,
+                DaysOfWeek = _settingsModel.DaysOfWeek.ToHashSet(),
+                Artists = new() { song.Artist },
+                Tracks = new() { song.Title },
+            };
+            EditSettingsDialog(settings);
         }
     }
 }
