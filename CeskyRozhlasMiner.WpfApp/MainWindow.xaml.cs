@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using CeskyRozhlasMiner.WpfApp.Dialogs;
-using CeskyRozhlasMiner.Lib.Common;
 using CeskyRozhlasMiner.Lib.Playlist;
 using CeskyRozhlasMiner.Lib.Playlist.DataProcessing;
 using System;
